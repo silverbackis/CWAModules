@@ -3,6 +3,7 @@ import { compile } from '~/.nuxt/utils'
 import { setResponseCookies } from './utilities'
 
 const MAX_REDIRECTS = process.env.MAX_REDIRECTS || 10
+let currentPath = null
 
 Middleware.initErrorHandler = function ({ store: { state }, error }) {
   if (state.error) {
@@ -10,19 +11,19 @@ Middleware.initErrorHandler = function ({ store: { state }, error }) {
   }
 };
 
-Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res }) {
+Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res, $bwstarter }) {
   // Middleware defined on pages - prevent route loading for each page depth
   const path = compile(route.path)(route.params) || '/'
-  if (path === state.currentRoute) {
+  if (path === currentPath) {
     return
   }
-  commit('setCurrentRoute', path)
+  currentPath = path
   let routeData, response
   try {
-    response = await dispatch('fetchRoute', { path })
+    response = await $bwstarter.getRoute(path);
     routeData = response.data
   } catch (err) {
-    response = await dispatch('layout/init')
+    response = await $bwstarter.getLayout();
     process.server && setResponseCookies(res, response)
 
     if (err.response && err.response.status) {
@@ -60,5 +61,5 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     }
   }
 
-  await dispatch('initRoute', routeData)
+  await $bwstarter.initRoute(routeData)
 };
