@@ -1,6 +1,6 @@
 import { Storage, LAYOUTS_MODULE, COMPONENTS_MODULE } from './storage'
 import RefreshToken from './refresh_token'
-import { cookiesToHeaders } from './utilities'
+import { cookiesToHeaders, setJwtCookie } from './utilities'
 
 const logging = process.env.NODE_ENV === 'development';
 const TOKEN_EXPIRE_BUFFER_SECS = 10;
@@ -26,39 +26,51 @@ const flattenComponentData = function (locations) {
 export default class BWStarter {
   constructor (ctx, options) {
     // this.options = options
+    this.error = ctx.error
     this.$axios = ctx.$axios
     options.initialState = {
       error: null,
       apiUrl: process.env.API_URL_BROWSER + '/',
-      content: []
+      content: [],
+      notifications: []
     };
     options.initialState[TOKEN_KEY] = null;
     this.$storage = new Storage(ctx, options);
     this.__initInterceptor(ctx);
+    if(process.server) {
+      this.__initSession(ctx);
+    }
+  }
+
+  __initSession({ req: { session }, res }) {
+    if (session && session.authToken) {
+      setJwtCookie(res, session.authToken)
+      this.$storage.setState(TOKEN_KEY, session.authToken)
+    }
   }
 
   __initInterceptor({ req, res }) {
     // --------
     // Private refresh functions
     // --------
-    const handleRefreshError = (refreshError) => {
-      this.$storage.setState(TOKEN_KEY, null);
+    const handleRefreshError = async (refreshError) => {
+      await this.logout();
       logging && console.warn('refreshError', refreshError);
       if (refreshError.statusCode >= 500 && refreshError.statusCode < 600) {
         return Promise.reject(refreshError)
       }
     };
 
-    const serverRefresh = async () => {
+    const serverRefresh = async (config) => {
       try {
         let result = await RefreshToken(req, res, false);
         this.$storage.setState(TOKEN_KEY, result)
       } catch (refreshError) {
-        return handleRefreshError(refreshError)
+        return handleRefreshError(refreshError, config)
       }
     };
 
-    const clientRefresh = async () => {
+    const clientRefresh = async (config) => {
       try {
         let { data } = await this.$axios.post(
           'refresh_token',
@@ -67,7 +79,7 @@ export default class BWStarter {
         )
         this.$storage.setState(TOKEN_KEY, data.token)
       } catch (refreshError) {
-        return handleRefreshError(refreshError)
+        return handleRefreshError(refreshError, config)
       }
     };
 
@@ -96,7 +108,7 @@ export default class BWStarter {
         authDiff < TOKEN_EXPIRE_BUFFER_SECS &&
         !config.refreshTokenRequest
       ) {
-        process.server ? await serverRefresh() : await clientRefresh()
+        process.server ? await serverRefresh(config) : await clientRefresh(config)
       }
       return addHeaders(config)
     })
@@ -127,10 +139,6 @@ export default class BWStarter {
           reject(err)
         })
     })
-  }
-
-  getAll (urls) {
-    return Promise.all(urls.map(url => this.request({ url })))
   }
 
   getRoute (route) {
@@ -196,5 +204,33 @@ export default class BWStarter {
     Object.keys(components).forEach((componentId) => {
       this.$storage.setState(componentId, components[componentId], COMPONENTS_MODULE);
     })
+  }
+
+  setResponseErrorPage (error) {
+    if (error.response && error.response.status) {
+      this.error({statusCode: error.response.status, message: error.response.statusText, url: error.response.config.url})
+    } else {
+      this.error({statusCode: error.statusCode || 500, message: 'Unexpected server erroror', url: error.message})
+      console.error(error)
+    }
+  }
+
+  logout () {
+    this.$axios.post('/logout',
+      {
+        _action: this.$storage.get('getApiUrl', 'logout')
+      },
+      {
+        baseURL: null
+      }
+    )
+      .then(() => {
+        this.$storage.setState(TOKEN_KEY, null);
+        // this.addNotification('You have successfully logged out')
+        // this.$cookie.delete('PHPSESSID')
+      })
+      .catch((err) => {
+        console.warn(err)
+      })
   }
 }

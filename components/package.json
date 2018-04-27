@@ -1,0 +1,11 @@
+{
+    "name": "@bwstarter/components",
+    "version": "1.0.0",
+    "description": "",
+    "licence": "MIT",
+    "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
+    "main": "lib/module/index.js",
+    "dependencies": {
+        "@bwstarter/core": "^1.0.0"
+    }
+}

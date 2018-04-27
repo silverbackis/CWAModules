@@ -2,9 +2,11 @@ import Vue from 'vue'
 import jwtDecode from 'jwt-decode'
 const { join } = require('path');
 import _ from 'lodash'
+import { actions as form_actions, getters as form_getters, mutations as form_mutations } from "./storage_form";
 
 export const LAYOUTS_MODULE = ['layouts']
 export const COMPONENTS_MODULE = ['components']
+export const FORMS_MODULE = ['forms']
 
 export class Storage {
   constructor(ctx, options) {
@@ -48,14 +50,32 @@ export class Storage {
       mutations: {
         SET (state, { key, value }) {
           Vue.set(state, key, value)
+        },
+        addNotification (state, msg) {
+          let noti = {
+            id: new Date().getTime() + ':' + state.notifications.length,
+            message: msg
+          }
+          state.notifications.push(noti)
+        },
+        removeNotification (state, index) {
+          state.notifications.splice(index, 1)
+        },
+        clearNotifications (state) {
+          state.notifications = {}
         }
       }
     };
     this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
       preserveState: this.preserveModuleState()
     });
+    this.__initComponentsModule();
+    this.__initLayoutsModule();
+    this.__initFormsModule();
+    this.state = this.ctx.store.state[this.options.vuex.namespace]
+  }
 
-
+  __initComponentsModule() {
     const componentsModule = {
       namespaced: true,
       state: () => {
@@ -70,7 +90,9 @@ export class Storage {
     this.ctx.store.registerModule([this.options.vuex.namespace, ...COMPONENTS_MODULE], componentsModule, {
       preserveState: this.preserveModuleState(COMPONENTS_MODULE)
     });
+  }
 
+  __initLayoutsModule() {
     const layoutsModule = {
       namespaced: true,
       state: () => {
@@ -99,8 +121,19 @@ export class Storage {
     this.ctx.store.registerModule([this.options.vuex.namespace, ...LAYOUTS_MODULE], layoutsModule, {
       preserveState: this.preserveModuleState(LAYOUTS_MODULE)
     });
+  }
 
-    this.state = this.ctx.store.state[this.options.vuex.namespace]
+  __initFormsModule() {
+    const storeModule = {
+      namespaced: true,
+      state: () => ({}),
+      getters: form_getters,
+      mutations: form_mutations,
+      actions: form_actions
+    };
+    this.ctx.store.registerModule([this.options.vuex.namespace, ...FORMS_MODULE], storeModule, {
+      preserveState: this.preserveModuleState(FORMS_MODULE)
+    });
   }
 
   setState (key, value, modules = []) {
@@ -123,9 +156,18 @@ export class Storage {
     )
   }
 
-  get (method, modules = []) {
+  get (method, args = [], modules = []) {
     let path = [ this.options.vuex.namespace, ...modules, method ]
-    return this.ctx.store.getters[join(...path)]
+    let value = this.ctx.store.getters[join(...path)]
+    if (!(value instanceof Function)) {
+      return value
+    }
+    return value(...args)
+  }
+
+  action (action, args = {}, modules = []) {
+    let path = [ this.options.vuex.namespace, ...modules, action ]
+    this.ctx.store.dispatch(join(...path), args)
   }
 }
 

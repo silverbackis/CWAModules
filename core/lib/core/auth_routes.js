@@ -4,7 +4,7 @@ import RefreshToken from "./refresh_token"
 
 const logging = process.env.NODE_ENV === 'development'
 
-export default (router) => {
+export default function(router) {
   router.post('/login', (req, res = null) => {
     // Only allow post requests to API
     let session = req.session

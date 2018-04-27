@@ -23,15 +23,14 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     response = await $bwstarter.getRoute(path);
     routeData = response.data
   } catch (err) {
-    response = await $bwstarter.getLayout();
-    process.server && setResponseCookies(res, response)
-
-    if (err.response && err.response.status) {
-      error({statusCode: err.response.status, message: err.response.statusText})
-    } else {
-      error({statusCode: err.statusCode || 500, message: 'Error fetching from API (routeLoader)'})
-      console.warn(err)
+    try{
+      response = await $bwstarter.getLayout();
+    }catch(err) {
+      $bwstarter.setResponseErrorPage(err)
+      return
     }
+    process.server && setResponseCookies(res, response)
+    $bwstarter.setResponseErrorPage(err)
     return
   }
   process.server && setResponseCookies(res, response)
