@@ -1,4 +1,4 @@
 {
     "private": true,
-    "workspaces": ["core", "components", "bulma-components"]
+    "workspaces": ["core", "components", "bulma"]
 }
