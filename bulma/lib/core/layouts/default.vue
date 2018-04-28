@@ -20,6 +20,7 @@
       </div>
     </footer>
     <notifications />
+    <admin-bar v-if="$bwstarter.isAdmin" />
   </div>
 </template>
 
@@ -33,7 +34,8 @@
     components: {
       BulmaNavbar,
       AppLink,
-      Notifications
+      Notifications,
+      AdminBar: () => import('../components/Admin/AdminBar')
     },
     computed: {
       ...mapGetters({
@@ -103,4 +105,5 @@
       &.authorized
         background-color: $grey-dark
         color: $white
+        margin-bottom: 2.5rem
 </style>
