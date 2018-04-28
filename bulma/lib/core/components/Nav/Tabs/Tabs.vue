@@ -8,7 +8,7 @@
       <ul>
         <bulma-tab-item v-for="(component, index) in _items"
                         :key="index"
-                        :component="getComponent(component)"
+                        :component="getComponent(component['@id'])"
         />
       </ul>
     </nav>

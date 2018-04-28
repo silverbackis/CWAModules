@@ -5,6 +5,9 @@
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
     "main": "lib/module/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
     "dependencies": {
         "@nuxtjs/axios": "^5.3.1",
         "jwt-decode": "^2.2.0",

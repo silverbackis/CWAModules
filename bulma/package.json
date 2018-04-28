@@ -5,6 +5,9 @@
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
     "main": "lib/module/index.js",
+    "publishConfig": {
+        "access": "public"
+    },
     "dependencies": {
         "@bwstarter/components": "^1.0.0",
         "@bwstarter/core": "^1.0.0"

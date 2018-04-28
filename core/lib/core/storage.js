@@ -43,8 +43,13 @@ export class Storage {
         getContent: state => (depth) => {
           return state.content ? (state.content[depth] || false) : false
         },
-        getComponent: state => (id) => {
-          return state.components[id] || null
+        userRoles: (state, getters) => {
+          const user = getters.user
+          return user ? user.roles : []
+        },
+        hasRole: (state, getters) => (role) => {
+          const roles = getters.userRoles
+          return roles.indexOf(role) !== -1
         }
       },
       mutations: {
@@ -80,6 +85,11 @@ export class Storage {
       namespaced: true,
       state: () => {
         return {}
+      },
+      getters: {
+        getComponent: state => (id) => {
+          return state[id] || null
+        }
       },
       mutations: {
         SET (state, { key, value }) {
@@ -136,12 +146,16 @@ export class Storage {
     });
   }
 
+  commit (mutation, args = [], modules = []) {
+    let path = [ this.options.vuex.namespace, ...modules, mutation ];
+    this.ctx.store.commit(join(...path), ...args)
+  }
+
   setState (key, value, modules = []) {
-    let path = [ this.options.vuex.namespace, ...modules, 'SET' ];
-    this.ctx.store.commit(join(...path), {
+    this.commit('SET', [{
       key,
       value
-    })
+    }], modules)
     return value
   }
 

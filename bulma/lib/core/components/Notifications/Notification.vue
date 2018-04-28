@@ -15,14 +15,11 @@
       }
     },
     methods: {
-      ...mapMutations({
-        removeNotification: 'notifications/removeNotification'
-      }),
       hideNotification () {
         if (!this.removing) {
           this.removing = true
           this.$el.removeChild(this.$el.querySelector('.delete'))
-          this.removeNotification(this.index)
+          this.$bwstarter.removeNotification(this.index)
         }
       }
     },

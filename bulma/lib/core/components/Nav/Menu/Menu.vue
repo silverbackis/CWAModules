@@ -39,7 +39,7 @@
         let currentGroup = []
         let previousItem
         this.navItems.forEach((navItem) => {
-          navItem = this.getComponent(navItem)
+          navItem = this.getComponent(navItem['@id'])
           if (previousItem && (previousItem.menuLabel || navItem.menuLabel)) {
             groups.push(currentGroup)
             currentGroup = []

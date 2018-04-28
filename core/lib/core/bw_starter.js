@@ -226,11 +226,27 @@ export default class BWStarter {
     )
       .then(() => {
         this.$storage.setState(TOKEN_KEY, null);
-        // this.addNotification('You have successfully logged out')
+        this.addNotification('You have successfully logged out')
         // this.$cookie.delete('PHPSESSID')
       })
       .catch((err) => {
         console.warn(err)
       })
+  }
+
+  get isAdmin () {
+    return this.$storage.get('hasRole', ['ROLE_ADMIN'])
+  }
+
+  addNotification (message) {
+    this.$storage.commit('addNotification', [message])
+  }
+
+  removeNotification (index) {
+    this.$storage.commit('removeNotification', [index])
+  }
+
+  clearNotifications (index) {
+    this.$storage.commit('clearNotifications')
   }
 }

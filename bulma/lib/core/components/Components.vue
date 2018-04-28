@@ -49,7 +49,7 @@
     },
     computed: {
       ...mapGetters({
-        getComponent: 'bwstarter/getComponent'
+        getComponent: 'bwstarter/components/getComponent'
       }),
       _components () {
         return this.pageData.componentLocations.map(loc => loc.component)

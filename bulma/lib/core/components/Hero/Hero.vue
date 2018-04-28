@@ -7,10 +7,12 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            {{ injectDynamicData(component.title) }}
+            <cms-text-input v-if="$bwstarter.isAdmin" :model="injectDynamicData(component.title)" placeholder="Enter page title here" />
+            <span v-else>{{ injectDynamicData(component.title) }}</span>
           </h1>
           <h2 class="subtitle">
-            {{ injectDynamicData(component.subtitle) }}
+            <cms-text-input v-if="$bwstarter.isAdmin" :model="injectDynamicData(component.subtitle)" placeholder="Enter optional subtitle here" />
+            <span v-else>{{ injectDynamicData(component.subtitle) }}</span>
           </h2>
         </div>
       </div>
@@ -54,7 +56,29 @@
       }
     },
     components: {
-      BulmaTabs: () => import('~/.nuxt/bwstarter/bulma/components/Nav/Tabs/Tabs.vue')
+      BulmaTabs: () => import('~/.nuxt/bwstarter/bulma/components/Nav/Tabs/Tabs.vue'),
+      cmsTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
     }
   }
 </script>
+
+<style lang="sass">
+  @import ~assets/css/_vars
+
+  .hero
+    h1,
+    h2
+      .cms-text-input
+        display: inline-block
+        position: relative
+        width: 100%
+        background: transparent
+        border: 1px solid $grey-light
+        color: inherit
+        font-size: inherit
+        padding: .5rem
+        &::placeholder
+          color: $grey-light
+    h2 .cms-text-input
+      margin-top: .5rem
+</style>

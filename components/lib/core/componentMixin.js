@@ -18,7 +18,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      getComponent: 'bwstarter/getComponent'
+      getComponent: 'bwstarter/components/getComponent'
     }),
     containerClass () {
       return !this.nested ? ['container'] : []
