@@ -50,7 +50,7 @@ export const actions = {
       commit('setFormCancelToken', { formId, cancelToken })
     }
   }
-};
+}
 
 export const getters = {
   getForm: (state) => (formId) => {
@@ -92,7 +92,7 @@ export const getters = {
     _.set(submitObj, searchResult, value)
     return submitObj
   }
-};
+}
 
 export const mutations = {
   setForm (state, { formData }) {
@@ -152,4 +152,4 @@ export const mutations = {
   setFormCancelToken (state, { formId, cancelToken }) {
     Vue.set(state[ formId ], 'cancelToken', cancelToken)
   }
-};
+}

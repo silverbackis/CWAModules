@@ -1,8 +1,9 @@
 <template>
   <div class="content quill-editor"
-       v-quill:cmsQuill="editorOption"
-       @ready="onEditorReady()"
-       v-html="model"
+       v-quill:quill="editorOptions"
+       v-model="dataModel"
+       @ready="editorReady"
+       ref="quillEditor"
   ></div>
 </template>
 
@@ -14,13 +15,14 @@
     mixins: [_Input],
     data () {
       return {
-        editorOption: {
+        editorOptions: {
           modules: {
             toolbar: [
               [{ 'header': [1, 2, 3, 4, false] }],
               ['bold', 'italic', 'underline', 'strike'],
               ['blockquote'],
               [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+              ['link'],
               ['code', 'code-block'],
               ['clean']
             ]
@@ -29,8 +31,11 @@
       }
     },
     methods: {
-      onEditorReady: function () {
-
+      editorReady() {
+        // Initialize again, the innerHTML used to fetch HTML may remove whitespace between tags
+        this.$bwstarter.initAdminInput(this.adminInputData({
+          model: this.$refs.quillEditor.querySelector('.ql-editor').innerHTML
+        }));
       }
     }
   }

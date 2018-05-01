@@ -7,11 +7,21 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            <cms-text-input v-if="$bwstarter.isAdmin" :model="injectDynamicData(component.title)" placeholder="Enter page title here" />
+            <cms-text-input v-if="$bwstarter.isAdmin"
+                            :model="injectDynamicData(component.title)"
+                            :componentId="component['@id']"
+                            componentField="title"
+                            placeholder="Enter page title here"
+            />
             <span v-else>{{ injectDynamicData(component.title) }}</span>
           </h1>
           <h2 class="subtitle">
-            <cms-text-input v-if="$bwstarter.isAdmin" :model="injectDynamicData(component.subtitle)" placeholder="Enter optional subtitle here" />
+            <cms-text-input v-if="$bwstarter.isAdmin"
+                            :model="injectDynamicData(component.subtitle)"
+                            :componentId="component['@id']"
+                            componentField="subtitle"
+                            placeholder="Enter optional subtitle here"
+            />
             <span v-else>{{ injectDynamicData(component.subtitle) }}</span>
           </h2>
         </div>

@@ -155,7 +155,7 @@ const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
       }
     },
     created () {
-      this.$bwstarter.$storage.action('init', this.form, FORMS_MODULE)
+      this.$bwstarter.$storage.dispatch('init', this.form, FORMS_MODULE)
     }
   }
 </script>

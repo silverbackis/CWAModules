@@ -2,7 +2,10 @@
   <component-wrapper v-if="component" :nested="nested">
     <div :class="containerClass">
       <div v-if="$bwstarter.isAdmin">
-        <editor :model="injectDynamicData(component.content)" />
+        <editor :model="injectDynamicData(component.content)"
+                :componentId="component['@id']"
+                componentField="content"
+        />
       </div>
       <div v-else
            class="content"

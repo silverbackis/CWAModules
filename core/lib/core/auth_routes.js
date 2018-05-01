@@ -1,10 +1,10 @@
 import { cookiesToHeaders, setJwtCookie, clearJwtCookie, setResponseCookies } from './utilities'
 import axios from 'axios'
-import RefreshToken from "./refresh_token"
+import RefreshToken from './refresh_token'
 
 const logging = process.env.NODE_ENV === 'development'
 
-export default function(router) {
+export default function (router) {
   router.post('/login', (req, res = null) => {
     // Only allow post requests to API
     let session = req.session

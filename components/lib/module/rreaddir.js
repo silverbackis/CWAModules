@@ -1,5 +1,5 @@
-const { readdirSync, statSync } = require('fs');
-const { join } = require('path');
+const { readdirSync, statSync } = require('fs')
+const { join } = require('path')
 
 /**
  * Sync is best/fastest
@@ -9,7 +9,7 @@ const { join } = require('path');
  * @param subDir
  * @returns Array
  */
-module.exports = function rreaddirSync(dir, allFiles = [], subDir = '') {
+module.exports = function rreaddirSync (dir, allFiles = [], subDir = '') {
   const files = readdirSync(dir)
   files.forEach(f => {
     if (statSync(join(dir, f)).isDirectory()) {
@@ -19,4 +19,4 @@ module.exports = function rreaddirSync(dir, allFiles = [], subDir = '') {
     }
   })
   return allFiles
-};
+}

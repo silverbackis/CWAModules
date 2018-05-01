@@ -10,5 +10,12 @@
     },
     "dependencies": {
         "@bwstarter/core": "^1.0.0"
-    }
+    },
+    "scripts": {
+        "lint": "eslint lib ",
+        "lint-fix": "eslint --fix lib"
+    },
+    "eslintIgnore": [
+        "lib/module/plugin.template.js"
+    ]
 }

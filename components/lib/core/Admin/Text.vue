@@ -1,5 +1,5 @@
 <template>
-  <input v-model="model"
+  <input v-model="dataModel"
          :placeholder="placeholder"
          class="cms-text-input"
   />

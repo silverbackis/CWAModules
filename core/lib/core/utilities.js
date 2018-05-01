@@ -5,7 +5,7 @@ const XSRF_COOKIE = process.env.XSRF_HEADER || 'XSRF-TOKEN'
 const IS_DEV = process.env.NODE_ENV === 'development'
 const COOKIE_DOMAIN = process.env.COOKIE_DOMAIN || 'localhost'
 
-export const setResponseCookies = function(res, axiosRes) {
+export const setResponseCookies = function (res, axiosRes) {
   let cookies = setCookie.parse(axiosRes)
   for (let cookie of cookies) {
     const isXsrf = cookie.name === XSRF_COOKIE
@@ -13,15 +13,15 @@ export const setResponseCookies = function(res, axiosRes) {
   }
 }
 
-export const setJwtCookie = function(res, token) {
+export const setJwtCookie = function (res, token) {
   res.cookie(JWT_COOKIE, token, { path: '/', domain: COOKIE_DOMAIN, secure: !IS_DEV, httpOnly: true })
 }
 
-export const clearJwtCookie = function(res) {
+export const clearJwtCookie = function (res) {
   res.clearCookie(JWT_COOKIE, { path: '/', domain: COOKIE_DOMAIN })
 }
 
-export const cookiesToHeaders = function(cookies) {
+export const cookiesToHeaders = function (cookies) {
   return {
     'X-XSRF-TOKEN': cookies[XSRF_COOKIE] || '',
     'Cookie': 'PHPSESSID=' + cookies['PHPSESSID'] || ''

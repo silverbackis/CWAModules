@@ -15,5 +15,12 @@
         "set-cookie-parser": "^2.1.1",
         "vue-cookie": "^1.1.4",
         "vue-quill-editor": "^3.0.6"
-    }
+    },
+    "scripts": {
+        "lint": "eslint lib ",
+        "lint-fix": "eslint --fix lib"
+    },
+    "eslintIgnore": [
+        "lib/module/plugin.template.js"
+    ]
 }

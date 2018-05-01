@@ -79,7 +79,7 @@
         children: this.input.children,
         disableValidation: this.disableValidation
       }
-      this.$bwstarter.$storage.action('initInput', args, FORMS_MODULE)
+      this.$bwstarter.$storage.dispatch('initInput', args, FORMS_MODULE)
       this.resolveInputComponent()
     }
   }

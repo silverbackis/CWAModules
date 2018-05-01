@@ -1,7 +1,7 @@
 <template>
   <div :class="barClass">
     <div class="level">
-      <div class="level-left">
+      <div class="level-left has-padding">
         <div class="level-item">
           <label class="checkbox custom">
             <input type="checkbox" v-model="autoSaveLocal" class="custom">
@@ -13,16 +13,13 @@
         </div>
       </div>
       <div class="level-right">
-        <div v-if="!isModified">
+        <div class="has-padding" v-if="!isModified">
           All changes saved
         </div>
         <div v-else class="level-item">
           <div class="level-item">
-            <a href="#">show changes</a>
-          </div>
-          <div class="level-item">
-            <a href="#" class="button is-small is-success">
-              Save
+            <a @click="$bwstarter.save()" class="button is-small is-success is-uppercase is-radiusless">
+              Save Changes
             </a>
           </div>
         </div>
@@ -32,6 +29,8 @@
 </template>
 
 <script>
+  import { ADMIN_MODULE } from "~/.nuxt/bwstarter/storage";
+
   export default {
     data () {
       return {
@@ -41,7 +40,7 @@
     },
     computed: {
       isModified() {
-        return this.autoSaveLocal
+        return false // this.$bwstarter.$storage.get('isModified', [], ADMIN_MODULE)
       },
       barClass () {
         return {
@@ -58,6 +57,18 @@
 <style lang="sass">
   @import '~assets/css/_vars'
 
+  @keyframes pulse
+    0%
+      transform: scale(1)
+    6%
+      box-shadow: 0 0 0 0 rgba(darken($success, 4%), 1), 0 0 0 0 rgba($success, 1)
+    8%
+      transform: scale(1.04)
+    15%
+      transform: scale(1)
+    45%, 100%
+      box-shadow: 0 .2rem 0 1rem rgba($warning, 0), 0 0 .1rem .4rem rgba($success, -.1)
+
   .admin-bar
     position: fixed
     background: $success
@@ -65,11 +76,23 @@
     width: 100%
     left: 0
     bottom: 0
-    padding: .2rem .5rem
     &.is-modified
       background: $warning
     .level
       height: 100%
+      .has-padding
+        padding: 0 .5rem
+      .level-right
+        height: 100%
+        .level-item,
+        .button
+          height: 100%
+        .button
+          backface-visibility: hidden
+          -webkit-font-smoothing: subpixel-antialiased
+          transform: translateZ(0)
+          animation: pulse 2s infinite ease-out
+          box-shadow: 0 0 0 0 rgba($success, 0)
     .checkbox
       margin-top: 0
       &:hover

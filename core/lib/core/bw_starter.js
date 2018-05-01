@@ -1,10 +1,10 @@
-import { Storage, LAYOUTS_MODULE, COMPONENTS_MODULE } from './storage'
+import { Storage, LAYOUTS_MODULE, COMPONENTS_MODULE, ADMIN_MODULE } from './storage'
 import RefreshToken from './refresh_token'
 import { cookiesToHeaders, setJwtCookie } from './utilities'
 
-const logging = process.env.NODE_ENV === 'development';
-const TOKEN_EXPIRE_BUFFER_SECS = 10;
-const TOKEN_KEY = 'token';
+const logging = process.env.NODE_ENV === 'development'
+const TOKEN_EXPIRE_BUFFER_SECS = 10
+const TOKEN_KEY = 'token'
 const DEFAULT_LAYOUT = '/layouts/default'
 
 const flattenComponentData = function (locations) {
@@ -21,7 +21,7 @@ const flattenComponentData = function (locations) {
     }
   })
   return components
-};
+}
 
 export default class BWStarter {
   constructor (ctx, options) {
@@ -33,42 +33,42 @@ export default class BWStarter {
       apiUrl: process.env.API_URL_BROWSER + '/',
       content: [],
       notifications: []
-    };
-    options.initialState[TOKEN_KEY] = null;
-    this.$storage = new Storage(ctx, options);
-    this.__initInterceptor(ctx);
-    if(process.server) {
-      this.__initSession(ctx);
+    }
+    options.initialState[TOKEN_KEY] = null
+    this.$storage = new Storage(ctx, options)
+    this.__initInterceptor(ctx)
+    if (process.server) {
+      this.__initSession(ctx)
     }
   }
 
-  __initSession({ req: { session }, res }) {
+  __initSession ({ req: { session }, res }) {
     if (session && session.authToken) {
       setJwtCookie(res, session.authToken)
       this.$storage.setState(TOKEN_KEY, session.authToken)
     }
   }
 
-  __initInterceptor({ req, res }) {
+  __initInterceptor ({ req, res }) {
     // --------
     // Private refresh functions
     // --------
     const handleRefreshError = async (refreshError) => {
-      await this.logout();
-      logging && console.warn('refreshError', refreshError);
+      await this.logout()
+      logging && console.warn('refreshError', refreshError)
       if (refreshError.statusCode >= 500 && refreshError.statusCode < 600) {
         return Promise.reject(refreshError)
       }
-    };
+    }
 
     const serverRefresh = async (config) => {
       try {
-        let result = await RefreshToken(req, res, false);
+        let result = await RefreshToken(req, res, false)
         this.$storage.setState(TOKEN_KEY, result)
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
-    };
+    }
 
     const clientRefresh = async (config) => {
       try {
@@ -81,28 +81,39 @@ export default class BWStarter {
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
-    };
+    }
 
     // --------
     // Adjust requests to include auth + xsrf headers
     // --------
     const addHeaders = (config) => {
-      const token = process.server ? req.session.authToken : this.$storage.getState('token');
+      const token = process.server ? req.session.authToken : this.$storage.getState('token')
       if (token) {
         config.headers.Authorization = 'Bearer ' + token
       }
       if (process.server) {
-        let headers = cookiesToHeaders(req.cookies);
+        let headers = cookiesToHeaders(req.cookies)
         config.headers = Object.assign(config.headers, headers)
       }
       return config
-    };
+    }
 
     // --------
     // Intercept requests with expired token
     // --------
     this.$axios.interceptors.request.use(async (config) => {
-      const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null;
+      // const noBaseUrl = (config.baseURL === null || config.baseURL === '')
+      // let isApiRequest = false
+      // if (!noBaseUrl) {
+      //   const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl')
+      //   isApiRequest = API_URL.startsWith(config.baseURL)
+      // }
+      // if (!isApiRequest) {
+      //   return config
+      // }
+
+      // Add API request headers
+      const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null
       if (
         this.user &&
         authDiff < TOKEN_EXPIRE_BUFFER_SECS &&
@@ -115,11 +126,11 @@ export default class BWStarter {
   }
 
   get token () {
-    return this.$storage.getState(TOKEN_KEY);
+    return this.$storage.getState(TOKEN_KEY)
   }
 
   get user () {
-    return this.$storage.get('user');
+    return this.$storage.get('user')
   }
 
   request ({ url, data, cancelToken = null, method = 'GET', validateStatus = status => (status >= 200 && status < 300) }) {
@@ -145,7 +156,7 @@ export default class BWStarter {
     return this.request({ url: '/routes/' + route })
   }
 
-  async getLayout (url=DEFAULT_LAYOUT) {
+  async getLayout (url = DEFAULT_LAYOUT) {
     let response = await this.request({ url })
     const data = response.data
     this.$storage.setState(data['@id'], data, LAYOUTS_MODULE)
@@ -164,7 +175,7 @@ export default class BWStarter {
       obj = Object.assign({}, obj)
       delete obj.parent
       return obj
-    };
+    }
     let contentArray = [withoutParent(content)]
     while (content.parent) {
       contentArray.unshift(withoutParent(content.parent))
@@ -202,7 +213,7 @@ export default class BWStarter {
 
   setComponents (components) {
     Object.keys(components).forEach((componentId) => {
-      this.$storage.setState(componentId, components[componentId], COMPONENTS_MODULE);
+      this.$storage.setState(componentId, components[componentId], COMPONENTS_MODULE)
     })
   }
 
@@ -225,7 +236,7 @@ export default class BWStarter {
       }
     )
       .then(() => {
-        this.$storage.setState(TOKEN_KEY, null);
+        this.$storage.setState(TOKEN_KEY, null)
         this.addNotification('You have successfully logged out')
         // this.$cookie.delete('PHPSESSID')
       })
@@ -246,7 +257,19 @@ export default class BWStarter {
     this.$storage.commit('removeNotification', [index])
   }
 
-  clearNotifications (index) {
-    this.$storage.commit('clearNotifications')
+  initAdminInput (data) {
+    this.$storage.commit('initAdminInput', [data], ADMIN_MODULE)
+  }
+
+  destroyAdminInput (data) {
+    this.$storage.commit('destroyAdminInput', [data], ADMIN_MODULE)
+  }
+
+  setAdminInputModel (data) {
+    this.$storage.commit('setModel', [data], ADMIN_MODULE)
+  }
+
+  save () {
+    return this.$storage.dispatch('save', null, ADMIN_MODULE)
   }
 }

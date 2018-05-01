@@ -3,6 +3,6 @@ import ComponentWrapper from './ComponentWrapper'
 
 ComponentMixin.components = {
   ComponentWrapper
-};
+}
 
-export default ComponentMixin;
+export default ComponentMixin

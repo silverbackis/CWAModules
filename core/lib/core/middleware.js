@@ -9,7 +9,7 @@ Middleware.initErrorHandler = function ({ store: { state }, error }) {
   if (state.error) {
     error(state.error)
   }
-};
+}
 
 Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res, $bwstarter }) {
   // Middleware defined on pages - prevent route loading for each page depth
@@ -20,12 +20,12 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
   currentPath = path
   let routeData, response
   try {
-    response = await $bwstarter.getRoute(path);
+    response = await $bwstarter.getRoute(path)
     routeData = response.data
   } catch (err) {
-    try{
-      response = await $bwstarter.getLayout();
-    }catch(err) {
+    try {
+      response = await $bwstarter.getLayout()
+    } catch (err) {
       $bwstarter.setResponseErrorPage(err)
       return
     }
@@ -51,7 +51,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     while (
       routeData.redirect &&
       redirects <= MAX_REDIRECTS
-      ) {
+    ) {
       routeData = routeData.redirect
       redirects++
     }
@@ -61,4 +61,4 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
   }
 
   await $bwstarter.initRoute(routeData)
-};
+}
