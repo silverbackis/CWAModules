@@ -102,15 +102,15 @@ export default class BWStarter {
     // Intercept requests with expired token
     // --------
     this.$axios.interceptors.request.use(async (config) => {
-      const noBaseUrl = (config.baseURL === null || config.baseURL === '')
-      let isApiRequest = false
-      if (!noBaseUrl) {
-        const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl')
-        isApiRequest = API_URL.startsWith(config.baseURL)
-      }
-      if (!isApiRequest) {
-        return config
-      }
+      // const noBaseUrl = (config.baseURL === null || config.baseURL === '')
+      // let isApiRequest = false
+      // if (!noBaseUrl) {
+      //   const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl')
+      //   isApiRequest = API_URL.startsWith(config.baseURL)
+      // }
+      // if (!isApiRequest) {
+      //   return config
+      // }
 
       // Add API request headers
       const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null

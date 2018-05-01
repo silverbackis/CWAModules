@@ -9,7 +9,7 @@
       </header>
       <nuxt />
     </div>
-    <footer :class="{'footer': true, 'authorized': !!token}">
+    <footer :class="{'footer': true, 'authorized': !!token, 'admin': $bwstarter.isAdmin}">
       <div class="container has-text-centered has-text-weight-bold">
         <div v-if="!token">
           Try out the admin?&nbsp;&nbsp;<app-link class="button is-small is-dark is-outlined" to="/login">Login</app-link>
@@ -105,5 +105,6 @@
       &.authorized
         background-color: $grey-dark
         color: $white
+      &.admin
         margin-bottom: 2.5rem
 </style>

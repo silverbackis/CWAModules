@@ -40,7 +40,7 @@
     },
     computed: {
       isModified() {
-        return false // this.$bwstarter.$storage.get('isModified', [], ADMIN_MODULE)
+        return this.$bwstarter.$storage.get('isModified', [], ADMIN_MODULE)
       },
       barClass () {
         return {
