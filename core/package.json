@@ -9,6 +9,7 @@
         "access": "public"
     },
     "dependencies": {
+        "@bwstarter/server": "^1.0.0",
         "@nuxtjs/axios": "^5.3.1",
         "jwt-decode": "^2.2.0",
         "lodash": "^4.17.10",

@@ -1,0 +1,25 @@
+{
+    "name": "@bwstarter/server",
+    "version": "1.0.0",
+    "description": "",
+    "licence": "MIT",
+    "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
+    "main": "dist/routes.js",
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "build": "webpack-cli --config ./webpack.config.js"
+    },
+    "dependencies": {
+        "axios": "^0.18.0",
+        "set-cookie-parser": "^2.1.1"
+    },
+    "devDependencies": {
+        "babel-core": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "uglifyjs-webpack-plugin": "^1.2.5",
+        "webpack": "^4.6.0",
+        "webpack-cli": "^2.1.2"
+    }
+}

@@ -37,5 +37,4 @@ export default {
     text-align: center;
     .exclamation
       fill: $grey-lighter
-
 </style>
