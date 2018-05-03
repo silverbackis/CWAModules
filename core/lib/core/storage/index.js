@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
-import { actions as formActions, getters as formGetters, mutations as formMutations } from './storage_form'
-import { state as adminState, actions as adminActions, getters as adminGetters, mutations as adminMutations } from './storage_admin'
+import { actions as formActions, getters as formGetters, mutations as formMutations } from './form'
+import { state as adminState, actions as adminActions, getters as adminGetters, mutations as adminMutations } from './admin'
 const { join } = require('path')
 
 export const LAYOUTS_MODULE = ['layouts']

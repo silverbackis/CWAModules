@@ -15,7 +15,7 @@
   import { mapActions, mapMutations, mapGetters } from 'vuex'
   import FormMixin from './_Mixin'
   import axios from 'axios'
-  import { FORMS_MODULE } from '~/.nuxt/bwstarter/storage'
+  import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
 
 const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
 

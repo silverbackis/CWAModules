@@ -10,7 +10,6 @@ export const mutations = {
   initAdminInput (state, { componentId, componentField, model, postSaveFn }) {
     if (!state.endpoints[componentId]) {
       Vue.set(state.endpoints, componentId, {
-        submitting: false,
         inputs: {}
       })
     }
@@ -24,8 +23,17 @@ export const mutations = {
     let field = state.endpoints[componentId].inputs[componentField]
     field.model = model
   },
-  setSavedModel (state, { componentId, componentField, model }) {
-    state.endpoints[componentId].inputs[componentField].savedModel = model
+  updateComponent (state, data) {
+    const id = data['@id']
+    let endpoint = state.endpoints[id]
+    if (endpoint) {
+      const componentFields = Object.keys(data)
+      componentFields.forEach((field) => {
+        if (endpoint.inputs[field]) {
+          Vue.set(endpoint.inputs[field], 'savedModel', data[field])
+        }
+      })
+    }
   },
   destroyAdminInput (state, { componentId, componentField }) {
     if (state.endpoints[componentId]) {
@@ -34,6 +42,12 @@ export const mutations = {
         Vue.delete(state.endpoints, componentId)
       }
     }
+  },
+  setSubmitting (state, { endpointKey, value }) {
+    Vue.set(state.submitting, endpointKey, value)
+  },
+  deleteSubmitting (state, endpointKey) {
+    Vue.delete(state.submitting, endpointKey)
   }
 }
 
@@ -53,8 +67,11 @@ export const getters = {
     }
     return checkEndpoint(endpointKey)
   },
-  isSubmiting: (state) => {
-    return Object.keys(state.submitting).length
+  isSubmitting: (state) => (endpointKey = null) => {
+    if (!endpointKey) {
+      return Object.keys(state.submitting).length > 0
+    }
+    return Boolean(state.submitting[endpointKey])
   }
 }
 
@@ -77,12 +94,12 @@ export const actions = {
     })
     return endpoints
   },
-  async save ({ state, dispatch }) {
+  async save ({ state, dispatch, commit }) {
     let patchEndpoints = await dispatch('modifiedEndpoints')
     // Cancel patches we are going to send again if they still exist (therefore not completed)
     Object.keys(state.submitting).forEach((submittingKey) => {
       if (patchEndpoints[submittingKey]) {
-        state.submitting[submittingKey].cancel('Duplicate request cancelled: A new request has been to this endpoint')
+        state.submitting[submittingKey].cancel('Original request cancelled, a new request has been made')
       }
     })
 
@@ -90,11 +107,13 @@ export const actions = {
     Object.keys(patchEndpoints).forEach((endpointKey) => {
       // create a cancel token for the request
       const cancel = CancelToken.source()
-      state.submitting[endpointKey] = cancel
+      commit('setSubmitting', {endpointKey, value: cancel})
+
       this.$axios
         .put(endpointKey, patchEndpoints[endpointKey], { cancelToken: cancel.token })
         .then(({ data }) => {
-          console.log('Patch done', data)
+          commit('updateComponent', data)
+          commit('deleteSubmitting', endpointKey)
         })
     })
   }

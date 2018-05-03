@@ -1,18 +1,18 @@
-// const merge = require('lodash/merge')
-// const defaults = require('./defaults')
+const merge = require('lodash/merge')
+const defaults = require('./defaults')
 const { resolve, join } = require('path')
-const rreaddir = require('./rreaddir')
+const rreaddir = require('@bwstarter/core/lib/module/rreaddir')
 
 const libRoot = resolve(__dirname, '..')
 
 module.exports = function (moduleOptions) {
-  // const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
-  return copyCore.call(this)
+  const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
+  copyCore.call(this, options)
 }
 
-async function copyCore () {
+function copyCore (options) {
   const coreRoot = resolve(libRoot, 'core')
-  let files = await rreaddir(coreRoot)
+  let files = rreaddir(coreRoot)
   for (const file of files) {
     this.addTemplate({
       src: resolve(coreRoot, file),

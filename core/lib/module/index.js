@@ -2,21 +2,22 @@ const { resolve, join } = require('path')
 const { readdirSync } = require('fs')
 const merge = require('lodash/merge')
 const defaults = require('./defaults')
+const rreaddir = require('./rreaddir')
 
 const libRoot = resolve(__dirname, '..')
 
 module.exports = function (moduleOptions) {
   const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
-  copyCore.call(this)
   copyPlugins.call(this, options)
-}
+  copyCore.call(this)
+};
 
 function copyCore () {
   const coreRoot = resolve(libRoot, 'core')
-  for (const file of readdirSync(coreRoot)) {
+  for (const file of rreaddir(coreRoot)) {
     this.addTemplate({
       src: resolve(coreRoot, file),
-      fileName: join('bwstarter', file)
+      fileName: join('bwstarter/core', file)
     })
   }
 }
@@ -24,7 +25,7 @@ function copyCore () {
 function copyPlugins (options) {
   this.addPlugin({
     src: resolve(__dirname, 'plugin.template.js'),
-    fileName: join('bwstarter', 'plugin.js'),
+    fileName: join('bwstarter/core', 'plugin.js'),
     options
   })
 
@@ -33,7 +34,7 @@ function copyPlugins (options) {
   for (const file of readdirSync(pluginsRoot)) {
     let { dst } = this.addTemplate({
       src: resolve(pluginsRoot, file),
-      fileName: join('bwstarter/' + dir, file)
+      fileName: join('bwstarter/core/' + dir, file)
     })
     this.options.plugins.push(resolve(this.options.buildDir, dst))
   }

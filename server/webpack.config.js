@@ -4,28 +4,33 @@ module.exports = [
   {
     mode: 'production',
     entry: {
-      routes: path.resolve(__dirname + '/src/routes.js'),
-      refresh_jwt: path.resolve(__dirname + '/src/refresh_jwt.js'),
-      utilities: path.resolve(__dirname + '/src/utilities.js')
+      index: path.resolve(__dirname + '/src/index.js')
     },
     output: {
       path: path.resolve(__dirname + '/dist/'),
       filename: '[name].js',
-      libraryTarget: 'commonjs'
+      sourceMapFilename: '[name].map',
+      libraryTarget: 'commonjs2'
     },
     module: {
       rules: [
         {
           test: /\.js$/,
           loader: 'babel-loader',
+          options: {
+            presets: ['env']
+          },
           include: __dirname,
-          exclude: /node_modules/
+          exclude: [/node_modules/]
         }
       ]
     },
     externals: {
       axios: 'axios',
       "set-cookie-parser": 'set-cookie-parser'
+    },
+    resolve: {
+      mainFields: ["module", "main"]
     }
   }
 ];

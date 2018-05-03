@@ -1,6 +1,6 @@
 {
     "name": "@bwstarter/components",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,13 +9,11 @@
         "access": "public"
     },
     "dependencies": {
+        "@bwstarter/server": "^1.0.0",
         "@bwstarter/core": "^1.0.0"
     },
     "scripts": {
         "lint": "eslint lib ",
         "lint-fix": "eslint --fix lib"
-    },
-    "eslintIgnore": [
-        "lib/module/plugin.template.js"
-    ]
+    }
 }

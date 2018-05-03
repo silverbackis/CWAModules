@@ -1,10 +1,10 @@
-import { getFormId } from '~/.nuxt/bwstarter/utilities'
-import { FORMS_MODULE } from '~/.nuxt/bwstarter/storage'
+import { Utilities } from '~/.nuxt/bwstarter/core/server'
+import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
 
 export default {
   computed: {
     formId () {
-      return getFormId(this.form.vars)
+      return Utilities.getFormId(this.form.vars)
     },
     storeForm () {
       return this.$bwstarter.$storage.get('getForm', [this.formId], FORMS_MODULE)

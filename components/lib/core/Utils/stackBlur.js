@@ -46,8 +46,7 @@ export default function (context, topX, topY, width, height, radius) {
       return
     }
   } catch (e) {
-    alert('Cannot access image')
-    throw new Error('unable to access image data: ' + e)
+    throw new Error('Unable to access image data', e)
   }
 
   let pixels = imageData.data

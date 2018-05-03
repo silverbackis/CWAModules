@@ -1,8 +1,8 @@
 <template>
   <div :class="barClass">
     <div class="level">
-      <div class="level-left has-padding">
-        <div class="level-item">
+      <div class="level-left">
+        <div class="level-item has-padding">
           <label class="checkbox custom">
             <input type="checkbox" v-model="autoSaveLocal" class="custom">
             <div class="indicator"></div>
@@ -18,9 +18,10 @@
         </div>
         <div v-else class="level-item">
           <div class="level-item">
-            <a @click="$bwstarter.save()" class="button is-small is-success is-uppercase is-radiusless">
-              Save Changes
-            </a>
+            <button @click="$bwstarter.save()"
+                    class="button is-small is-success is-uppercase is-radiusless"
+                    :disabled="isSubmitting == 1"
+            />
           </div>
         </div>
       </div>
@@ -29,25 +30,69 @@
 </template>
 
 <script>
-  import { ADMIN_MODULE } from "~/.nuxt/bwstarter/storage";
+  import { ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage";
 
   export default {
+    props: {
+      autoSave: {
+        type: Boolean,
+        required: false,
+        default: false
+      },
+      autoSaveCookie: {
+        type: Boolean,
+        required: false,
+        default: true
+      }
+    },
     data () {
       return {
         autoSaveLocal: false,
-        cookieExpires: '6M'
+        cookieExpires: '6M',
+        cookieName: 'autosave'
       }
     },
     computed: {
       isModified() {
         return this.$bwstarter.$storage.get('isModified', [], ADMIN_MODULE)
       },
+      isSubmitting() {
+        return this.$bwstarter.$storage.get('isSubmitting', [], ADMIN_MODULE)
+      },
       barClass () {
         return {
           'admin-bar': true,
           'has-text-white': !this.isModified,
           'has-text-weight-bold': true,
-          'is-modified': this.isModified
+          'is-modified': this.isModified,
+          'is-submitting': this.isSubmitting
+        }
+      },
+      autoSaveVars () {
+        return [this.isModified, this.isSubmitting, this.autoSaveLocal]
+      }
+    },
+    watch: {
+      autoSaveVars: function () {
+        if (this.autoSaveLocal && this.isModified) {
+          this.$bwstarter.save()
+        }
+      },
+      autoSaveLocal: function (newVal) {
+        if (newVal) {
+          this.$cookie.set(this.cookieName, true, { expires: this.cookieExpires })
+        } else {
+          this.$cookie.set(this.cookieName, false, { expires: this.cookieExpires })
+        }
+      }
+    },
+    mounted () {
+      this.autoSaveLocal = this.autoSave
+      if (this.autoSaveCookie) {
+        let curCookie = this.$cookie.get(this.cookieName)
+        if (curCookie !== null) {
+          this.$cookie.set(this.cookieName, curCookie, { expires: this.cookieExpires })
+          this.autoSaveLocal = curCookie === 'true'
         }
       }
     }
@@ -91,8 +136,13 @@
           backface-visibility: hidden
           -webkit-font-smoothing: subpixel-antialiased
           transform: translateZ(0)
-          animation: pulse 2s infinite ease-out
           box-shadow: 0 0 0 0 rgba($success, 0)
+          &[disabled]:before
+            content: 'Saving...'
+          &:not([disabled])
+            animation: pulse 2s infinite ease-out
+            &:before
+              content: 'Save Changes'
     .checkbox
       margin-top: 0
       &:hover

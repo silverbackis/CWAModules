@@ -1,9 +1,9 @@
-import Middleware from '../middleware'
+import Middleware from '../../../middleware'
 import { compile } from '~/.nuxt/utils'
-import { setResponseCookies } from './utilities'
+import { Utilities } from '../server'
 
 const MAX_REDIRECTS = process.env.MAX_REDIRECTS || 10
-let currentPath = null
+const logging = process.env.NODE_ENV === 'development'
 
 Middleware.initErrorHandler = function ({ store: { state }, error }) {
   if (state.error) {
@@ -12,12 +12,14 @@ Middleware.initErrorHandler = function ({ store: { state }, error }) {
 }
 
 Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res, $bwstarter }) {
+  const currentPath = state.bwstarter.currentRoute
   // Middleware defined on pages - prevent route loading for each page depth
   const path = compile(route.path)(route.params) || '/'
   if (path === currentPath) {
+    logging && console.log('Page not loading, already at path ' + path)
     return
   }
-  currentPath = path
+  commit('bwstarter/SET', { key: 'currentRoute', value: path })
   let routeData, response
   try {
     response = await $bwstarter.getRoute(path)
@@ -29,11 +31,11 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
       $bwstarter.setResponseErrorPage(err)
       return
     }
-    process.server && setResponseCookies(res, response)
+    process.server && Utilities.setResponseCookies(res, response)
     $bwstarter.setResponseErrorPage(err)
     return
   }
-  process.server && setResponseCookies(res, response)
+  process.server && Utilities.setResponseCookies(res, response)
 
   if (!routeData) {
     console.warn(routeData)

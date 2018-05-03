@@ -1,5 +1,5 @@
 import { mapMutations } from 'vuex'
-import { FORMS_MODULE } from '~/.nuxt/bwstarter/storage'
+import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
 
 export default {
   props: {

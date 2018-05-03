@@ -1,6 +1,5 @@
 import { Storage, LAYOUTS_MODULE, COMPONENTS_MODULE, ADMIN_MODULE } from './storage'
-import RefreshToken from './refresh_token'
-import { cookiesToHeaders, setJwtCookie } from './utilities'
+import { BWServer, Utilities }  from './server'
 
 const logging = process.env.NODE_ENV === 'development'
 const TOKEN_EXPIRE_BUFFER_SECS = 10
@@ -44,7 +43,7 @@ export default class BWStarter {
 
   __initSession ({ req: { session }, res }) {
     if (session && session.authToken) {
-      setJwtCookie(res, session.authToken)
+      Utilities.setJwtCookie(res, session.authToken)
       this.$storage.setState(TOKEN_KEY, session.authToken)
     }
   }
@@ -63,7 +62,7 @@ export default class BWStarter {
 
     const serverRefresh = async (config) => {
       try {
-        let result = await RefreshToken(req, res, false)
+        let result = await BWServer.jwtRefresh(req, res, false)
         this.$storage.setState(TOKEN_KEY, result)
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
@@ -92,7 +91,7 @@ export default class BWStarter {
         config.headers.Authorization = 'Bearer ' + token
       }
       if (process.server) {
-        let headers = cookiesToHeaders(req.cookies)
+        let headers = Utilities.cookiesToHeaders(req.cookies)
         config.headers = Object.assign(config.headers, headers)
       }
       return config
@@ -228,9 +227,7 @@ export default class BWStarter {
 
   logout () {
     this.$axios.post('/logout',
-      {
-        _action: this.$storage.get('getApiUrl', 'logout')
-      },
+      {},
       {
         baseURL: null
       }

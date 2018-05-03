@@ -22,8 +22,8 @@
               ['bold', 'italic', 'underline', 'strike'],
               ['blockquote'],
               [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-              ['link'],
               ['code', 'code-block'],
+              ['link'],
               ['clean']
             ]
           }

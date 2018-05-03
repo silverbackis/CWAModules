@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import { FORMS_MODULE } from '~/.nuxt/bwstarter/storage'
+  import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
   export default {
     props: {
       input: {
@@ -26,6 +26,10 @@
       disableValidation: {
         type: Boolean,
         default: false
+      },
+      cssFramework: {
+        type: String,
+        default: 'bulma'
       }
     },
     data () {
@@ -42,7 +46,7 @@
     },
     computed: {
       inputComponentDir () {
-        return this.wrapped ? 'bulma' : ''
+        return this.wrapped ? this.cssFramework : ''
       },
       inputName () {
         return this.input.vars.full_name

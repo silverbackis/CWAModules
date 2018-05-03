@@ -1,4 +1,4 @@
-import { getFormId } from './utilities'
+import { Utilities } from '../server'
 import axios from 'axios'
 import _ from 'lodash'
 import Vue from 'vue'
@@ -8,7 +8,7 @@ const AxiosCancelToken = axios.CancelToken
 export const actions = {
   init ({ commit, state }, form) {
     const formData = form.vars
-    const formId = getFormId(formData)
+    const formId = Utilities.getFormId(formData)
     if (!state[ formId ]) {
       commit('setForm', {
         formData: {
@@ -96,7 +96,7 @@ export const getters = {
 
 export const mutations = {
   setForm (state, { formData }) {
-    let formId = getFormId(formData.vars)
+    let formId = Utilities.getFormId(formData.vars)
     Vue.set(
       state,
       formId,
