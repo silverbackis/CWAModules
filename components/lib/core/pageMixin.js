@@ -35,7 +35,6 @@ export default {
       return this.$vnode.data.nuxtChildDepth
     },
     childKey () {
-      console.log('childKey', this.$route.params['page' + (this.depth+1)])
       return this.$route.params['page' + (this.depth+1)]
     }
   },
