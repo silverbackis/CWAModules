@@ -1,5 +1,4 @@
 const { resolve, join } = require('path')
-const { readdirSync } = require('fs')
 const merge = require('lodash/merge')
 const defaults = require('./defaults')
 const rreaddir = require('./rreaddir')
@@ -31,11 +30,14 @@ function copyPlugins (options) {
 
   const dir = 'plugins'
   const pluginsRoot = resolve(libRoot, dir)
-  for (const file of readdirSync(pluginsRoot)) {
+  for (const file of rreaddir(pluginsRoot)) {
     let { dst } = this.addTemplate({
       src: resolve(pluginsRoot, file),
       fileName: join('bwstarter/core/' + dir, file)
     })
-    this.options.plugins.push(resolve(this.options.buildDir, dst))
+    this.options.plugins.push({
+      src: resolve(this.options.buildDir, dst),
+      ssr: file !== 'quill.js'
+    })
   }
 }
