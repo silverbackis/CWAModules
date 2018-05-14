@@ -7,18 +7,18 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            <cms-text-input v-if="$bwstarter.isAdmin"
+            <admin-text-input v-if="$bwstarter.isAdmin"
                             :model="injectDynamicData(component.title)"
-                            :componentId="component['@id']"
+                            :componentId="endpoint"
                             componentField="title"
                             placeholder="Enter page title here"
             />
             <span v-else>{{ injectDynamicData(component.title) }}</span>
           </h1>
           <h2 class="subtitle">
-            <cms-text-input v-if="$bwstarter.isAdmin"
+            <admin-text-input v-if="$bwstarter.isAdmin"
                             :model="injectDynamicData(component.subtitle)"
-                            :componentId="component['@id']"
+                            :componentId="endpoint"
                             componentField="subtitle"
                             placeholder="Enter optional subtitle here"
             />
@@ -67,7 +67,7 @@
     },
     components: {
       BulmaTabs: () => import('~/.nuxt/bwstarter/bulma/components/Nav/Tabs/Tabs.vue'),
-      cmsTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
+      AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
     }
   }
 </script>

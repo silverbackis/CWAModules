@@ -14,8 +14,10 @@
 <script>
   import { mapGetters } from 'vuex'
   import _ from 'lodash'
+  import ComponentsMixin from '../components'
 
   export default {
+    mixins: [ComponentsMixin],
     props: {
       pageData: {
         type: Object,
@@ -30,21 +32,9 @@
         required: true
       }
     },
-    components: {
-      BulmaHero: () => import('./Hero/Hero.vue'),
-      BulmaContent: () => import('./Content/Content.vue'),
-      BulmaTabs: () => import('./Nav/Tabs/Tabs.vue'),
-      BulmaMenu: () => import('./Nav/Menu/Menu.vue'),
-      BulmaForm: () => import('./Form/Form.vue'),
-      BulmaFeatureColumns: () => import('./Feature/Columns/FeatureColumns.vue'),
-      BulmaFeatureStacked: () => import('./Feature/Stacked/FeatureStacked.vue'),
-      BulmaFeatureTextList: () => import('./Feature/TextList/FeatureTextList.vue'),
-      BulmaGallery: () => import('./Gallery/Gallery.vue'),
-      BulmaCollection: () => import('./Collection/Collection.vue')
-    },
     methods: {
       name (component) {
-        return 'bulma-' + component['@type']
+        return component['@type']
       }
     },
     computed: {
@@ -55,7 +45,7 @@
         return this.pageData.componentLocations.map(loc => loc.component)
       },
       dynamicData () {
-        return _.omit(this.pageData, ['@id', '@type', 'componentLocations', 'parent', 'layout'])
+        return _.omit(this.pageData, ['@type', 'componentLocations', 'parent', 'layout'])
       }
     }
   }

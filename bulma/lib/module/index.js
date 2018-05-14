@@ -8,7 +8,32 @@ const libRoot = resolve(__dirname, '..')
 module.exports = function (moduleOptions) {
   const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
   copyCore.call(this, options)
+  initPages.call(this, options)
+  copyPlugin.call(this, options)
+}
 
+function copyCore () {
+  const coreRoot = resolve(libRoot, 'core')
+  let files = rreaddir(coreRoot)
+  for (const file of files) {
+    if (file.startsWith('layouts/')) {
+      this.addLayout({
+        src: resolve(coreRoot, file),
+        fileName: join('bwstarter/bulma', file)
+      })
+    } else {
+      this.addTemplate({
+        src: resolve(coreRoot, file),
+        fileName: join('bwstarter/bulma', file)
+      })
+      if (file === 'error.vue') {
+        this.options.ErrorPage = join(this.options.buildDir, 'bwstarter/bulma', file)
+      }
+    }
+  }
+}
+
+function initPages(options) {
   this.extendRoutes((routes, resolve) => {
     let loginExists = routes.some((route) => {
       return route.name === 'login'
@@ -42,23 +67,10 @@ module.exports = function (moduleOptions) {
   })
 }
 
-async function copyCore () {
-  const coreRoot = resolve(libRoot, 'core')
-  let files = await rreaddir(coreRoot)
-  for (const file of files) {
-    if (file.startsWith('layouts/')) {
-      this.addLayout({
-        src: resolve(coreRoot, file),
-        fileName: join('bwstarter/bulma', file)
-      })
-    } else {
-      let { dst } = this.addTemplate({
-        src: resolve(coreRoot, file),
-        fileName: join('bwstarter/bulma', file)
-      })
-      if (file === 'error.vue') {
-        this.options.ErrorPage = join(this.options.buildDir, 'bwstarter/bulma', file)
-      }
-    }
-  }
+function copyPlugin (options) {
+  this.addPlugin({
+    src: resolve(__dirname, 'components.template.js'),
+    fileName: join('bwstarter/bulma', 'components.js'),
+    options
+  })
 }

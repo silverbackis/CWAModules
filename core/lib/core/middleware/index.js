@@ -12,14 +12,14 @@ Middleware.initErrorHandler = function ({ store: { state }, error }) {
 }
 
 Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res, $bwstarter }) {
-  const currentPath = state.bwstarter.currentRoute
+  const currentPath = state.bwstarter.currentPath
   // Middleware defined on pages - prevent route loading for each page depth
   const path = compile(route.path)(route.params) || '/'
   if (path === currentPath) {
     logging && console.log('Page not loading, already at path ' + path)
     return
   }
-  commit('bwstarter/SET', { key: 'currentRoute', value: path })
+  commit('bwstarter/SET', { key: 'currentPath', value: path })
   let routeData, response
   try {
     response = await $bwstarter.getRoute(path)

@@ -27,6 +27,9 @@ export default {
       return this.component.componentGroups.map(({ componentLocations }) => {
         return componentLocations.map(loc => loc.component)
       })
+    },
+    endpoint () {
+      return (this.dynamicData && this.dynamicData.dynamic) ? this.dynamicData['@id'] : this.component['@id']
     }
   },
   methods: {

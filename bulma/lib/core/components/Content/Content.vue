@@ -3,7 +3,7 @@
     <div :class="containerClass">
       <div v-if="$bwstarter.isAdmin">
         <editor :model="injectDynamicData(component.content)"
-                :componentId="component['@id']"
+                :componentId="endpoint"
                 componentField="content"
         />
       </div>
