@@ -1,6 +1,6 @@
 <template>
   <div :class="barClass">
-    <div class="level">
+    <div class="level is-mobile">
       <div class="level-left">
         <div class="level-item has-padding">
           <label class="checkbox custom">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+  import debounce from 'lodash/debounce'
   import { ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage";
 
   export default {
@@ -49,7 +50,8 @@
       return {
         autoSaveLocal: false,
         cookieExpires: '6M',
-        cookieName: 'autosave'
+        cookieName: 'autosave',
+        saveDebounced: null
       }
     },
     computed: {
@@ -75,7 +77,7 @@
     watch: {
       autoSaveVars: function () {
         if (this.autoSaveLocal && this.isModified) {
-          this.$bwstarter.save()
+          this.$bwstarter.save(true)
         }
       },
       autoSaveLocal: function (newVal) {
@@ -127,6 +129,8 @@
       height: 100%
       .has-padding
         padding: 0 .5rem
+      .level-item
+        margin: 0
       .level-right
         height: 100%
         .level-item,

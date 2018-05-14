@@ -266,7 +266,7 @@ export default class BWStarter {
     this.$storage.commit('setModel', [data], ADMIN_MODULE)
   }
 
-  save () {
-    return this.$storage.dispatch('save', null, ADMIN_MODULE)
+  save (debounce = false) {
+    return this.$storage.dispatch(debounce ? 'debouncedSave' : 'save', null, ADMIN_MODULE)
   }
 }
