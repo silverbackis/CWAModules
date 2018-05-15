@@ -35,7 +35,6 @@
           }
         }
         newLink.innerHTML = anchor.innerHTML
-        console.log(newLink)
         return newLink
       }
     },

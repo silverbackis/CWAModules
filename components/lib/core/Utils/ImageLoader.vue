@@ -179,6 +179,7 @@ Author modified: Daniel <daniel@silverback.is>
       margin-top: -8px
       margin-left: -8px
     &.contain
+      position: relative
       .image-small
         max-width: 100%
         max-height: 100%
