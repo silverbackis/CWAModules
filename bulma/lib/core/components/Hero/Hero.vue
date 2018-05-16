@@ -1,21 +1,12 @@
 <template>
   <div v-if="component">
-    <component-wrapper :className="['hero', className]"
+    <component-wrapper :className="className"
                        :extendClass="false"
                        :nested="nested"
     >
       <div class="hero-body">
         <div class="container">
           <div class="columns is-vcentered">
-            <div v-if="hasImage"
-                 class="column is-narrow"
-            >
-              <image-loader class="image hero-image"
-                            :src="getApiUrl(imageData.thumbnailPath)"
-                            :smallSrc="getApiUrl(imageData.placeholderPath)"
-                            :alt="component.title"
-              />
-            </div>
             <div class="column">
               <h1 class="title">
                 <admin-text-input v-if="$bwstarter.isAdmin"
@@ -35,6 +26,15 @@
                 />
                 <span v-else>{{ injectDynamicData(component.subtitle) }}</span>
               </h2>
+            </div>
+            <div v-if="hasImage"
+                 class="column is-narrow"
+            >
+              <image-loader class="image hero-image"
+                            :src="getApiUrl(imageData.thumbnailPath)"
+                            :smallSrc="getApiUrl(imageData.placeholderPath)"
+                            :alt="component.title"
+              />
             </div>
           </div>
         </div>
@@ -75,7 +75,12 @@
         return (this.component && this.component.filePath)
       },
       className () {
-        let className = [this.component.className] || ['is-primary', 'is-bold']
+        let className = ['hero']
+        if (this.component.className) {
+          className.push(this.component.className)
+        } else {
+          className.push(...['is-primary', 'is-bold'])
+        }
         if (this.hasImage) {
           className.push('has-image')
         }
@@ -88,15 +93,6 @@
         }
         return groups[0].componentLocations[0].component
       },
-      // style () {
-      //   if (!this.hasImage) {
-      //     return {}
-      //   }
-      //   let imagePath = this.injectDynamicData(this.component.filePath)
-      //   return {
-      //     backgroundImage: `url("` + this.getApiUrl(imagePath) + `")`
-      //   }
-      // },
       imageData() {
         if (!this.component) {
           return {}
@@ -121,12 +117,8 @@
   @import ~assets/css/_vars
 
   .hero
-    &.has-image
-      background: 50% 0 no-repeat
-      background-size: cover
-      .container
-        text-shadow: 2px 2px 3px rgba($white, .6), -1px -1px 2px rgba($white, .3)
-      +tablet
+    +tablet
+      &.has-image
         .column.is-narrow
           max-width: 30%
     h1,
