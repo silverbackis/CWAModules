@@ -132,7 +132,7 @@ export const actions = {
     const saveDebounce = _debounce(async () => {
       dispatch('save', patchEndpoints)
       Object.keys(patchEndpoints).forEach((endpointKey) => {
-        commit('deleteWaitingToSubmit', { endpointKey })
+        commit('deleteWaitingToSubmit', endpointKey)
       })
     }, 250)
     Object.keys(patchEndpoints).forEach((endpointKey) => {
