@@ -36,6 +36,9 @@ export default {
     },
     childKey () {
       return this.$route.params['page' + (this.depth+1)]
+    },
+    realPageData () {
+      return this.pageData || this.componentGroup
     }
   },
   transition () {
