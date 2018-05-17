@@ -105,6 +105,9 @@
       } catch (err) {
         console.error('Could not load form', err)
       }
+    },
+    beforeDestroy() {
+      this.destroyForm(this.formId)
     }
   }
 </script>

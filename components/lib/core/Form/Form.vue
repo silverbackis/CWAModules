@@ -17,7 +17,8 @@
   import axios from 'axios'
   import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
 
-const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
+  const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
+  const DESTROY_CANCEL_MESSAGE = 'destroyed'
 
   export default {
     mixins: [FormMixin],
@@ -156,6 +157,14 @@ const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
     },
     created () {
       this.$bwstarter.$storage.dispatch('init', this.form, FORMS_MODULE)
+    },
+    beforeDestroy() {
+      if (this.cancelToken) {
+        this.cancelToken.cancel(DESTROY_CANCEL_MESSAGE)
+      }
+      if (this.isValid) {
+        this.destroyForm(this.formId)
+      }
     }
   }
 </script>

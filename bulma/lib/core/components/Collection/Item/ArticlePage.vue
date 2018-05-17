@@ -50,6 +50,8 @@
   .card-image
     min-height: 50px
     .image,
-    .image-loader .image-placeholder
+    .image-loader .image-placeholder,
+    .image-small
       width: 100%
+      min-height: 50px
 </style>

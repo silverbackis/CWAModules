@@ -21,11 +21,6 @@ Author modified: Daniel <daniel@silverback.is>
          class="image-placeholder"
          ref="imagePlaceholder"
     />
-    <canvas v-show="loadedRes === 'low'"
-            :key="'canvas'"
-            ref="canvas"
-            class="image-small"
-    />
     <transition-group name="fade"
                       tag="div"
                       :class="imageHolderClass"
@@ -38,6 +33,11 @@ Author modified: Daniel <daniel@silverback.is>
            :alt="alt"
            :class="imageClass" />
     </transition-group>
+    <canvas v-show="loadedRes === 'low'"
+            :key="'canvas'"
+            ref="canvas"
+            class="image-small"
+    />
     <div v-show="loadedRes !== 'high'"
          :key="'loader'"
          class="loader-outer"
@@ -113,6 +113,7 @@ Author modified: Daniel <daniel@silverback.is>
         let ctx = loResCanvas.getContext('2d')
         loResCanvas.width = matchSizeEl.clientWidth || matchSizeEl.width
         loResCanvas.height = matchSizeEl.clientHeight || matchSizeEl.height
+        this.portrait = loResCanvas.width < loResCanvas.height
         if (this.cover) {
           canvasCover(ctx, loResImg)
         } else {

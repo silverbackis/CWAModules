@@ -56,6 +56,10 @@ export const getters = {
   getForm: (state) => (formId) => {
     return !state[ formId ] ? null : state[ formId ]
   },
+  isValid: (state, getters) => (formId) => {
+    let form = getters.getForm(formId)
+    return form ? form.vars.valid : null
+  },
   getInput: (state, getters) => (formId, inputName) => {
     let form = getters.getForm(formId)
     return !form ? null : form.children[ inputName ]
@@ -126,6 +130,9 @@ export const mutations = {
   setInputValidationResult (state, { formId, inputName, valid, errors }) {
     Vue.set(state[ formId ].children[ inputName ].vars, 'valid', valid)
     Vue.set(state[ formId ].children[ inputName ].vars, 'errors', errors)
+  },
+  destroy (state, formId) {
+    Vue.delete(state, formId)
   },
 
   // --------
