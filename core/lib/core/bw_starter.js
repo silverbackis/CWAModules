@@ -15,8 +15,10 @@ const flattenComponentData = function (locations) {
         components = Object.assign(components, flattenComponentData(componentLocations))
       }
     })
-    if (component.childComponentGroup) {
-      components = Object.assign(components, flattenComponentData(component.childComponentGroup.componentLocations))
+    if (component.componentGroups) {
+      for(let { componentLocations } of component.componentGroups) {
+        components = Object.assign(components, flattenComponentData(componentLocations))
+      }
     }
   })
   return components

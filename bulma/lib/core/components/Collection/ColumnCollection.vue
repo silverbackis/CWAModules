@@ -1,16 +1,17 @@
 <template>
-  <component-wrapper :nested="nested">
-    <div :class="containerClass">
-      <div class="collection-columns columns is-mobile">
-        <component :is="itemComponent"
-                   v-for="item in component.collection"
-                   v-if="getComponentObject(item) instanceof Object"
-                   :component="getComponentObject(item)"
-                   :key="item['@id']"
-        />
-      </div>
+  <div class="section column-collection">
+    <h4 class="is-size-4" v-if="component.title">{{ component.title }}</h4>
+    <hr v-if="component.title" />
+    <div class="columns is-mobile is-centered" :class="containerClass">
+      <component :is="itemComponent"
+                 v-for="item in component.collection"
+                 v-if="getComponentObject(item) instanceof Object"
+                 :component="getComponentObject(item)"
+                 :key="item['@id']"
+                 type="column"
+      />
     </div>
-  </component-wrapper>
+  </div>
 </template>
 
 <script>
@@ -51,8 +52,11 @@
 </script>
 
 <style lang="sass">
-  @import ~bulma/sass/utilities/mixins
-  +mobile
-    .collection-columns
-      justify-content: center
+  @import "~assets/css/vars"
+
+  .column-collection
+    background: $grey-lightest
+    padding: 1.5rem
+    hr
+      margin: .3rem 0 1.5rem 0
 </style>

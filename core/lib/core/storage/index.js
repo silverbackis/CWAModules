@@ -45,6 +45,17 @@ export class Storage {
         getContent: state => (depth) => {
           return state.content ? (state.content[depth] || false) : false
         },
+        getContentById: state => (id) => {
+          if (!state.content) {
+            return null
+          }
+          for(let content of state.content) {
+            if (content['@id'] === id) {
+              return content
+            }
+          }
+          return null
+        },
         userRoles: (state, getters) => {
           const user = getters.user
           return user ? user.roles : []

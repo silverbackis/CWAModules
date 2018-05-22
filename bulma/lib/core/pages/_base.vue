@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div :class="$route.name">
     <bulma-components v-if="realPageData && realPageData.componentLocations.length"
                       :pageData="realPageData"
                       :depth="depth"

@@ -6,7 +6,7 @@
                :component="getComponent(component['@id'])"
                :nested="nested"
                :depth="depth"
-               :dynamicData="dynamicData"
+               :dynamicData="dynamicDataObj"
     />
   </div>
 </template>
@@ -23,6 +23,10 @@
         type: Object,
         required: true
       },
+      dynamicData: {
+        type: Object,
+        required: false
+      },
       depth: {
         type: Number,
         required: true
@@ -34,7 +38,7 @@
     },
     methods: {
       name (component) {
-        return component['@type']
+        return component.componentName || component['@type']
       }
     },
     computed: {
@@ -44,8 +48,8 @@
       _components () {
         return this.pageData.componentLocations.map(loc => loc.component)
       },
-      dynamicData () {
-        return _.omit(this.pageData, ['@type', 'componentLocations', 'parent', 'layout'])
+      dynamicDataObj () {
+        return this.dynamicData || _.omit(this.pageData, ['@type', 'componentLocations', 'parent', 'layout'])
       }
     }
   }

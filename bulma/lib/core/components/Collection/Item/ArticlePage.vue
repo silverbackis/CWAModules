@@ -1,6 +1,6 @@
 <template>
-  <div class="column is-10-mobile is-6-tablet is-4-desktop is-3-fullhd">
-    <div class="card">
+  <div :class="cardClass">
+    <div class="card is-inline-block">
       <component :is="linkComponent" class="card-image" :to="toRoute">
         <image-loader
           class="image"
@@ -33,20 +33,39 @@
       ImageLoader,
       AppLink
     },
+    props: {
+      type: {
+        type: String,
+        required: false
+      }
+    },
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       linkComponent () {
-        return this.component.routes.length ? 'app-link' : 'div'
+        return (this.component.routes.length) ? 'app-link' : 'div'
       },
       toRoute () {
         if (this.component.routes.length) return this.component.routes[0].route
         return null
+      },
+      cardClass() {
+        return {
+          'article-card column': true,
+          'is-10-mobile is-6-tablet is-4-desktop is-3-fullhd': this.type !== 'column',
+          'is-12 has-text-centered-mobile': this.type === 'column'
+        };
       }
     }
   }
 </script>
 
 <style lang="sass">
+  @import ~bulma/sass/utilities/mixins
+  .article-card.is-12
+    .card
+      max-width: 250px
+      +desktop
+        max-width: 350px
   .card-image
     min-height: 50px
     .image,
