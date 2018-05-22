@@ -1,6 +1,6 @@
 {
     "name": "@bwstarter/components",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,7 +9,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/core": "^0.1.2",
+        "@bwstarter/core": "^0.2.0",
         "@bwstarter/server": "^0.1.0"
     },
     "scripts": {
