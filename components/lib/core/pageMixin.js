@@ -38,7 +38,10 @@ export default {
       return this.$route.params['page' + (this.depth+1)]
     },
     realPageData () {
-      return this.componentGroup || this.pageData
+      if (this.componentGroup && this.componentGroup.length) {
+        return this.componentGroup
+      }
+      return this.pageData
     }
   },
   transition () {
@@ -48,8 +51,6 @@ export default {
     }
   },
   created() {
-    if (!this.componentGroup) {
-      this.pageData = this.$bwstarter.$storage.get('getContent', [this.depth])
-    }
+    this.pageData = this.$bwstarter.$storage.get('getContent', [this.depth])
   }
 }
