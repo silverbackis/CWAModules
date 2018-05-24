@@ -2,9 +2,10 @@
   <div class="section column-collection">
     <h4 class="is-size-4" v-if="component.title">{{ component.title }}</h4>
     <hr v-if="component.title" />
-    <div class="columns is-mobile is-centered" :class="containerClass">
+    <div class="columns is-mobile is-centered"
+         :class="containerClass"
+         v-for="item in component.collection">
       <component :is="itemComponent"
-                 v-for="item in component.collection"
                  v-if="getComponentObject(item) instanceof Object"
                  :component="getComponentObject(item)"
                  :key="item['@id']"

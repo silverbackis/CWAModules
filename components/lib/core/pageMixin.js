@@ -38,7 +38,11 @@ export default {
       return this.$route.params['page' + (this.depth+1)]
     },
     realPageData () {
-      if (this.componentGroup && this.componentGroup.componentLocations && this.componentGroup.componentLocations.length) {
+      if (
+        this.componentGroup &&
+        this.componentGroup.componentLocations &&
+        this.componentGroup.componentLocations.length
+      ) {
         return this.componentGroup
       }
       return this.pageData

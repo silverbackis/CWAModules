@@ -3,11 +3,13 @@
     <div class="card is-inline-block">
       <component :is="linkComponent" class="card-image" :to="toRoute">
         <image-loader
-          class="image"
+          class="article-image"
           :src="getApiUrl(component.thumbnailPath || component.filePath)"
           :smallSrc="component.placeholderPath ? getApiUrl(component.placeholderPath) : null"
           :alt="component.title"
+          :cover="true"
         />
+        <img src="/img/1x1.png" class="square-space" />
       </component>
       <div class="card-content">
         <h4 class="title is-4">{{ component.title }}</h4>
@@ -61,16 +63,33 @@
 
 <style lang="sass">
   @import ~bulma/sass/utilities/mixins
-  .article-card.is-12
+  .article-card
     .card
-      max-width: 250px
-      +desktop
-        max-width: 350px
-  .card-image
-    min-height: 50px
-    .image,
-    .image-loader .image-placeholder,
-    .image-small
       width: 100%
-      min-height: 50px
+      .card-image
+        position: relative
+        display: inline-block
+        overflow: hidden
+        width: 100%
+        .square-space
+          display: block
+          width: 100%
+        .article-image
+          position: absolute
+          top: 0
+          left: 0
+          width: 100%
+          height: 100%
+    &.is-12
+      .card
+        max-width: 250px
+        +desktop
+          max-width: 350px
+  /*.card-image*/
+    /*height: 100px*/
+    /*.image,*/
+    /*.image-loader .image-placeholder,*/
+    /*.image-small*/
+      /*width: 100%*/
+      /*min-height: 50px*/
 </style>

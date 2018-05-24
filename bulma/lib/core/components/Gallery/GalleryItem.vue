@@ -58,3 +58,26 @@
     }
   }
 </script>
+
+<style lang="sass">
+  @import ~bulma/sass/utilities/mixins
+
+  .gallery-thumb
+    width: 100%
+    display: inline-block
+    .gallery-link
+      box-shadow: 1px 2px 3px rgba($black, .1)
+      position: relative
+      display: inline-block
+      overflow: hidden
+      width: 100%
+      .square-space
+        display: block
+        width: 100%
+      .gallery-image
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+</style>

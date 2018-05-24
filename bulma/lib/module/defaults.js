@@ -12,6 +12,7 @@ module.exports = {
     Gallery: '~/.nuxt/bwstarter/bulma/components/Gallery/Gallery.vue',
     Collection: '~/.nuxt/bwstarter/bulma/components/Collection/Collection.vue',
     ColumnCollection: '~/.nuxt/bwstarter/bulma/components/Collection/ColumnCollection.vue',
-    SideColumn: '~/.nuxt/bwstarter/bulma/components/Layouts/SideColumn.vue'
+    SideColumn: '~/.nuxt/bwstarter/bulma/components/Layouts/SideColumn.vue',
+    SimpleImage: '~/.nuxt/bwstarter/bulma/components/Image/SimpleImage.vue'
   }
 };

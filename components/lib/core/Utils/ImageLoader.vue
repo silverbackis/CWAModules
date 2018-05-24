@@ -211,10 +211,8 @@ Author modified: Daniel <daniel@silverback.is>
             width: auto
             max-width: none
         &.portrait
-          position: relative
           width: 100%
           height: 100%
-          margin-top: -100%
           .image
             position: absolute
             top: -50%

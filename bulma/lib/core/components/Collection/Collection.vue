@@ -1,7 +1,7 @@
 <template>
   <component-wrapper :nested="nested">
     <div :class="containerClass">
-      <div class="collection-columns columns is-mobile">
+      <div class="collection-columns columns is-mobile is-multiline">
         <div class="column is-12" v-if="component.title">
           <h4 class="is-size-4">{{ component.title }}</h4>
           <hr />
