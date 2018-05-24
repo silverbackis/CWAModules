@@ -5,7 +5,7 @@
          itemtype="https://schema.org/ImageGallery"
     >
       <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
-        <div class="is-block image-holder" :style="{ width: imageData.width + 'px', height: imageData.height + 'px' }">
+        <div class="is-block image-holder">
           <image-loader class="image simple-image"
                         :src="getApiUrl(imageData.filePath)"
                         :smallSrc="getApiUrl(imageData.placeholderPath)"
