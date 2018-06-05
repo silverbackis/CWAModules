@@ -7,14 +7,14 @@
       <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
         <div class="is-block image-holder">
           <image-loader class="image simple-image"
-                        :src="getApiUrl(imageData.filePath)"
-                        :smallSrc="getApiUrl(imageData.placeholderPath)"
+                        :image="imageData['file:image']"
+                        :placeholder="imageData['file:imagine'].placeholder || null"
                         :cover="false"
                         :alt="caption"
           />
         </div>
-        <meta itemprop="width" :content="imageData.width">
-        <meta itemprop="height" :content="imageData.height">
+        <meta itemprop="width" :content="imageData['file:image'].width">
+        <meta itemprop="height" :content="imageData['file:image'].height">
         <figcaption v-if="caption"
                     itemprop="caption description"
                     v-html="caption"
@@ -60,6 +60,7 @@
       font-size: .8rem
     .image-holder
       position: relative
+      line-height: 0
       .simple-image
         min-height: 50px
         .image,
@@ -68,4 +69,8 @@
           max-width: 100%
           min-width: 100px
           min-height: 50px
+        .portrait ~ .image-small
+          height: 100%
+        .landscape ~ .image-small
+          width: 100%
 </style>

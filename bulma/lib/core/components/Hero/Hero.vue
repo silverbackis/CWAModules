@@ -31,8 +31,8 @@
                  class="column is-narrow"
             >
               <image-loader class="image hero-image"
-                            :src="getApiUrl(imageData.thumbnailPath)"
-                            :smallSrc="getApiUrl(imageData.placeholderPath)"
+                            :image="imageData['file:imagine'].thumbnail.publicPath"
+                            :placeholder="imageData['file:imagine'].placeholder.publicPath"
                             :alt="component.title"
               />
             </div>

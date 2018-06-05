@@ -43,25 +43,9 @@
 </script>
 
 <style lang="sass">
-  @import ~bulma/sass/utilities/mixins
   .feature-horizontal
     .features-title
       margin-bottom: 1.5rem
-
     .column
       margin-top: auto
-
-    .feature-horizontal-item
-      display: block
-      position: relative
-      height: 55px
-      margin: auto auto 1rem
-      min-width: 155px
-      width: 100%
-      +desktop
-        height: 110px
-
-    .hero.is-dark .subtitle a:not(.button)
-      color: $grey-lighter
-      font-weight: bold
 </style>

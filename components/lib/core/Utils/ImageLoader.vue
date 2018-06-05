@@ -6,59 +6,59 @@ Medium blog post: https://www.theodo.fr/blog/2017/02/medium-like-image-loading-w
 Author modified: Daniel <daniel@silverback.is>
 -->
 <template>
-  <transition-group
-    name="fade"
-    tag="div"
-    :class="loaderClass"
-  >
-    <div v-show="loadedRes === null"
-         :key="'placeholder'"
-         class="placeholder"
-    />
-    <img v-show="true"
-         :key="'image-placeholder'"
-         :src="currentSrc"
-         class="image-placeholder"
-         ref="imagePlaceholder"
-    />
-    <transition-group name="fade"
-                      tag="div"
-                      :class="imageHolderClass"
-                      :key="'image-holder'"
-                      v-show="true"
+  <div :class="loaderClass">
+    <canvas class="is-hidden" ref="canvasPlaceholder" />
+    <img v-if="placeholderDataUrl" class="image-placeholder" :src="placeholderDataUrl" />
+
+    <transition-group
+      name="fade"
+      tag="div"
+      :class="{inner: true, 'no-placeholder': !placeholderDataUrl}"
     >
-      <img v-show="loadedRes === 'high'"
-           :key="'image'"
-           :src="src"
-           :alt="alt"
-           :class="imageClass" />
+      <div v-show="loadedRes === null"
+           :key="'placeholder'"
+           class="background"
+      />
+      <transition-group name="fade"
+                        tag="div"
+                        class="image-holder"
+                        :key="'image-holder'"
+                        v-show="true"
+      >
+        <img v-show="loadedRes === 'high'"
+             :key="'image'"
+             :src="imagePath"
+             :alt="alt"
+             class="image" />
+      </transition-group>
+      <canvas v-show="loadedRes === 'low'"
+              :key="'canvas'"
+              ref="canvas"
+              class="image-small"
+      />
+      <div v-show="loadedRes !== 'high'"
+           :key="'loader'"
+           class="loader-outer"
+      >
+        <div class="loader"></div>
+      </div>
     </transition-group>
-    <canvas v-show="loadedRes === 'low'"
-            :key="'canvas'"
-            ref="canvas"
-            class="image-small"
-    />
-    <div v-show="loadedRes !== 'high'"
-         :key="'loader'"
-         class="loader-outer"
-    >
-      <div class="loader"></div>
-    </div>
-  </transition-group>
+  </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import canvasCover from './canvasCover'
   import stackBlur from './stackBlur'
 
   export default {
     props: {
-      src: {
-        type: String,
+      image: {
+        type: Object,
         required: true
       },
-      smallSrc: {
-        type: String,
+      placeholder: {
+        type: Object,
         required: false
       },
       alt: {
@@ -73,61 +73,80 @@ Author modified: Daniel <daniel@silverback.is>
     data: () => ({
       currentSrc: null,
       loadedRes: null,
-      portrait: false
+      portrait: false,
+      placeholderDataUrl: null
     }),
     computed: {
+      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       loaderClass () {
         return [
           'image-loader',
-          this.cover ? 'cover' : 'contain'
-        ]
-      },
-      imageClass () {
-        return [
-          'image'
-        ]
-      },
-      imageHolderClass () {
-        return [
-          'image-holder',
+          this.cover ? 'cover' : 'contain',
           this.portrait ? 'portrait' : 'landscape'
         ]
+      },
+      imagePath () {
+        return this.image ? this.getApiUrl(this.image.publicPath) : null
+      },
+      placeholderPath () {
+        return this.placeholder ? this.getApiUrl(this.placeholder.publicPath) : null
+      }
+    },
+    methods: {
+      setupPlaceholder() {
+        if (this.placeholderPath) {
+          let loResImg = new Image()
+          // HTML5 - send Origin header - no credentials though
+          loResImg.crossOrigin = 'anonymous'
+          let loResCanvas = this.$refs.canvas
+
+          loResImg.onload = () => {
+            let matchSizeEl = this.cover ? this.$el : loResImg
+            let ctx = loResCanvas.getContext('2d')
+            loResCanvas.width = matchSizeEl.clientWidth || matchSizeEl.width
+            loResCanvas.height = matchSizeEl.clientHeight || matchSizeEl.height
+            if (this.cover) {
+              canvasCover(ctx, loResImg)
+            } else {
+              ctx.drawImage(loResImg, 0, 0)
+            }
+            stackBlur(ctx, 0, 0, loResCanvas.width, loResCanvas.height, 8)
+            this.currentSrc = this.placeholderPath
+            this.loadedRes = 'low'
+          }
+          loResImg.src = this.placeholderPath
+          return loResImg
+        }
+        return null
+      },
+      createCanvasPlaceholderDataUrl () {
+        let canvas = this.$refs.canvasPlaceholder;
+        canvas.width = this.cover && this.placeholder ? this.placeholder.width : this.image.width
+        canvas.height = this.cover && this.placeholder ? this.placeholder.height : this.image.height
+        if (canvas.width || canvas.height) {
+          this.placeholderDataUrl = canvas.toDataURL()
+        } else {
+          this.placeholderDataUrl = this.imagePath
+        }
       }
     },
     mounted () {
-      let loResImg = new Image()
-      // HTML5 - send Origin header - no credentials though
-      loResImg.crossOrigin = 'anonymous'
+      this.portrait = this.image.width < this.image.height
+      this.createCanvasPlaceholderDataUrl();
 
-      let hiResImg = new Image()
-      let loResCanvas = this.$refs.canvas
+      let hiResImg = new Image();
+      let loResImg = this.setupPlaceholder();
 
       hiResImg.onload = () => {
-        loResImg.onload = null
+        if (loResImg) {
+          loResImg.onload = null
+        }
         this.portrait = hiResImg.width < hiResImg.height
-        this.currentSrc = this.src
+        this.currentSrc = this.imagePath
         this.loadedRes = 'high'
       }
-      loResImg.onload = () => {
-        let matchSizeEl = this.cover ? this.$el : loResImg
-        let ctx = loResCanvas.getContext('2d')
-        loResCanvas.width = matchSizeEl.clientWidth || matchSizeEl.width
-        loResCanvas.height = matchSizeEl.clientHeight || matchSizeEl.height
-        this.portrait = loResCanvas.width < loResCanvas.height
-        if (this.cover) {
-          canvasCover(ctx, loResImg)
-        } else {
-          ctx.drawImage(loResImg, 0, 0)
-        }
-        stackBlur(ctx, 0, 0, loResCanvas.width, loResCanvas.height, 8)
-        this.currentSrc = this.smallSrc
-        this.loadedRes = 'low'
-      }
-      if (this.smallSrc) { // && that.src.split('.').pop() !== 'svg'
-        this.currentSrc = this.smallSrc
-        loResImg.src = this.smallSrc
-      }
-      hiResImg.src = this.src
+
+      hiResImg.src = this.imagePath
     }
   }
 </script>
@@ -135,73 +154,89 @@ Author modified: Daniel <daniel@silverback.is>
 <style lang="sass">
   @import ~assets/css/_vars
 
-  .fade-enter-active,
-  .fade-leave-active
-    transition: opacity .8s
-
-  .fade-enter,
-  .fade-leave-to
-    opacity: 0
-
   .image-loader
-    .placeholder
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-      background-color: rgba($grey-lightest, 0.1)
-      filter: blur(30px)
+    display: inline-block
+    line-height: 0
+
+    .fade-enter-active,
+    .fade-leave-active
+      transition: opacity .8s
+
+    .fade-enter,
+    .fade-leave-to
+      opacity: 0
+
     .image-placeholder
       position: relative
       display: block
       max-width: 100%
       max-height: 100%
       opacity: 0
-    .image-holder
+    .inner
       position: absolute
       top: 0
       left: 0
       width: 100%
       height: 100%
-    .image-small
-      position: absolute
-      top: 0
-      left: 0
-    .image
-      position: relative
-      display: block
-    .loader-outer
-      position: absolute
-      top: 50%
-      left: 50%
-      width: 16px
-      height: 16px
-      margin-top: -8px
-      margin-left: -8px
+      &.no-placeholder
+        position: relative
+      .background
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        border: 2px dashed rgba($grey-lightest, .75)
+        background: linear-gradient(45deg, rgba($black, .05), rgba($grey-lightest, .15))
+      .image-small
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+      .image-holder
+        position: absolute
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        .image
+          position: relative
+          display: block
+      .loader-outer
+        position: absolute
+        top: 50%
+        left: 50%
+        width: 16px
+        height: 16px
+        margin-top: -8px
+        margin-left: -8px
+
     &.contain
       position: relative
-      .image-small
-        max-width: 100%
-        max-height: 100%
-      .image-holder
-        max-width: 100%
-        max-height: 100%
-        .image
-          display: inline-block
+      .image-placeholder
+        display: inline-block
+      .inner
+        .image-holder
           max-width: 100%
           max-height: 100%
+          .image
+            // display: inline-block
+            max-width: 100%
+            max-height: 100%
     &.cover
+      display: block
       .image-placeholder
         width: 100%
-        height: 100%
-      .image-small
-        width: 100%
-        height: 100%
-      .image-holder
-        min-width: 100%
-        min-height: 100%
-        &.landscape
+      .inner
+        .image-holder
+          min-width: 100%
+          min-height: 100%
+    &.landscape
+      .image-placeholder
+        max-height: 100%
+      .inner
+        .image-holder
           height: 100%
           width: auto
           left: 50%
@@ -210,7 +245,11 @@ Author modified: Daniel <daniel@silverback.is>
             height: 100%
             width: auto
             max-width: none
-        &.portrait
+    &.portrait
+      .image-placeholder
+        max-width: 100%
+      .inner
+        .image-holder
           width: 100%
           height: 100%
           .image

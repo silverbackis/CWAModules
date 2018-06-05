@@ -36,10 +36,11 @@
     methods: {
       convertComponentsToItems (components) {
         return components.map((component) => {
+          const image = component['file:image']
           return {
-            src: component.filePath,
-            w: component.width,
-            h: component.height
+            src: image.publicPath,
+            w: image.width,
+            h: image.height
           }
         })
       }

@@ -4,8 +4,8 @@
       <component :is="linkComponent" class="card-image" :to="toRoute">
         <image-loader
           class="article-image"
-          :src="getApiUrl(component.thumbnailPath || component.filePath)"
-          :smallSrc="component.placeholderPath ? getApiUrl(component.placeholderPath) : null"
+          :image="component['file:imagine'].thumbnail || component['file:image']"
+          :placeholder="component['file:imagine'].placeholderSquare || null"
           :alt="component.title"
           :cover="true"
         />
@@ -24,7 +24,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
@@ -42,7 +41,6 @@
       }
     },
     computed: {
-      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       linkComponent () {
         return (this.component.routes.length) ? 'app-link' : 'div'
       },

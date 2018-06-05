@@ -3,11 +3,12 @@
              :to="toRoute"
              :class="className"
   >
-    <div v-if="component.filePath">
+    <div v-if="component.filePath" class="feature-horizontal-item">
       <image-loader
-        :class="imageClass"
-        :src="getApiUrl(injectDynamicData(component.thumbnailPath) || injectDynamicData(component.filePath))"
-        :smallSrc="injectDynamicData(component.placeholderPath) ? getApiUrl(injectDynamicData(component.placeholderPath)) : null"
+        v-if="image"
+        class="image"
+        :image="image"
+        :placeholder="placeholder"
         :alt="injectDynamicData(component.title)"
       />
     </div>
@@ -28,13 +29,13 @@
       ImageLoader,
       AppLink
     },
-    data () {
-      return {
-        imageClass: 'image feature-horizontal-item'
+    methods: {
+      injectImageData(imageObject) {
+        imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
+        return imageObject
       }
     },
     computed: {
-      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       dynamicComponent () {
         return this.toRoute ? 'app-link' : 'div'
       },
@@ -46,7 +47,47 @@
       },
       toRoute () {
         return this.component.url || (this.component.route ? this.component.route.route : null)
+      },
+      image () {
+        let image;
+        if (this.component['file:imagine']) {
+          image = this.component['file:imagine'].thumbnail
+        } else if (this.component['file:image']) {
+          image = this.component['file:image']
+        } else {
+          //svg
+          image = {
+            publicPath: this.component['file:publicPath']
+          }
+        }
+        if (image) {
+          return this.injectImageData(image)
+        }
+        return null
+      },
+      placeholder () {
+        if (this.component['file:imagine'] && this.component['file:imagine'].placeholder) {
+          return this.injectImageData((this.component['file:imagine'].placeholder))
+        }
+        return null
       }
     }
   }
 </script>
+
+<style lang="sass">
+  @import ~bulma/sass/utilities/mixins
+
+  .feature-horizontal-item
+    display: block
+    position: relative
+    height: 55px
+    margin: auto auto 1rem
+    min-width: 155px
+    width: 100%
+    +desktop
+      height: 110px
+    .image
+      height: 100%
+
+</style>

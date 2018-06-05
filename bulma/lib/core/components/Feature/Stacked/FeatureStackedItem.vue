@@ -5,9 +5,10 @@
                  :to="toRoute"
       >
         <image-loader
+          v-if="image"
           :class="imageClass"
-          :src="getApiUrl(injectDynamicData(component.thumbnailPath) || injectDynamicData(component.filePath))"
-          :smallSrc="injectDynamicData(component.placeholderPath) ? getApiUrl(injectDynamicData(component.placeholderPath)) : null"
+          :image="image"
+          :placeholder="placeholder"
           :alt="injectDynamicData(component.title)"
         />
       </component>
@@ -44,8 +45,13 @@
         imageClass: 'image feature-stacked-item has-text-centered'
       }
     },
+    methods: {
+      injectImageData(imageObject) {
+        imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
+        return imageObject
+      }
+    },
     computed: {
-      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       dynamicComponent () {
         return this.toRoute ? 'app-link' : 'div'
       },
@@ -57,6 +63,29 @@
       },
       toRoute () {
         return this.component.url || (this.component.route ? this.component.route.route : null)
+      },
+      image () {
+        let image;
+        if (this.component['file:imagine']) {
+          image = this.component['file:imagine'].thumbnail
+        } else if (this.component['file:image']) {
+          image = this.component['file:image']
+        } else {
+          //svg
+          image = {
+            publicPath: this.component['file:publicPath']
+          }
+        }
+        if (image) {
+          return this.injectImageData(image)
+        }
+        return null
+      },
+      placeholder () {
+        if (this.component['file:imagine'] && this.component['file:imagine'].placeholder) {
+          return this.injectImageData((this.component['file:imagine'].placeholder))
+        }
+        return null
       }
     }
   }
@@ -68,14 +97,16 @@
   .feature-stacked-item
     display: block
     position: relative
-    height: 100%
-    max-height: 150px
-    width: 100%
-    min-width: 50px
-    max-width: 200px
     margin: auto
-    +mobile
-      width: 200px
     +desktop
       margin: auto auto 1rem
+    .image-placeholder,
+    .image
+      width: 100%
+      min-width: 50px
+      max-width: 200px !important
+      height: 100%
+      max-height: 150px !important
+      +mobile
+        width: 200px
 </style>

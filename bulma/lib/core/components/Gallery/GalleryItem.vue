@@ -5,20 +5,19 @@
     <div class="gallery-thumb">
       <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
         <a class="gallery-link"
-           :href="getApiUrl(item.filePath)"
+           :href="getApiUrl(item['file:image'].publicPath)"
            itemprop="contentUrl"
            @click.prevent="$photoswipe.open(index, items, $el)"
         >
           <image-loader class="image gallery-image"
-                        :src="getApiUrl(item.thumbnailPath)"
-                        :smallSrc="getApiUrl(item.placeholderPath)"
+                        :image="item['file:imagine'].thumbnail"
+                        :placeholder="item['file:imagine'].placeholderSquare || null"
                         :cover="true"
                         :alt="item.title"
           />
-          <img src="/img/1x1.png" class="square-space" />
         </a>
-        <meta itemprop="width" :content="item.width">
-        <meta itemprop="height" :content="item.height">
+        <meta itemprop="width" :content="item['file:image'].width">
+        <meta itemprop="height" :content="item['file:image'].height">
         <figcaption v-if="item.caption"
                     itemprop="caption description" class="sr-only"
                     v-html="item.caption"
@@ -71,13 +70,10 @@
       display: inline-block
       overflow: hidden
       width: 100%
-      .square-space
-        display: block
-        width: 100%
-      .gallery-image
-        position: absolute
-        top: 0
-        left: 0
-        width: 100%
-        height: 100%
+      /*.gallery-image*/
+        /*position: absolute*/
+        /*top: 0*/
+        /*left: 0*/
+        /*width: 100%*/
+        /*height: 100%*/
 </style>
