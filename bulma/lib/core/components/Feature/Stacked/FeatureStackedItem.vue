@@ -3,10 +3,11 @@
     <figure class="column is-narrow">
       <component :is="dynamicComponent"
                  :to="toRoute"
+                 class="feature-stacked-item has-text-centered"
       >
         <image-loader
           v-if="image"
-          :class="imageClass"
+          class="image-loader"
           :image="image"
           :placeholder="placeholder"
           :alt="injectDynamicData(component.title)"
@@ -39,11 +40,6 @@
     components: {
       ImageLoader,
       AppLink
-    },
-    data () {
-      return {
-        imageClass: 'image feature-stacked-item has-text-centered'
-      }
     },
     methods: {
       injectImageData(imageObject) {

@@ -188,6 +188,8 @@ Author modified: Daniel <daniel@silverback.is>
         height: 100%
         border: 2px dashed rgba($grey-lightest, .75)
         background: linear-gradient(45deg, rgba($black, .05), rgba($grey-lightest, .15))
+        min-width: 30px
+        min-height: 30px
       .image-small
         position: absolute
         top: 0
@@ -232,19 +234,20 @@ Author modified: Daniel <daniel@silverback.is>
         .image-holder
           min-width: 100%
           min-height: 100%
-    &.landscape
-      .image-placeholder
-        max-height: 100%
-      .inner
-        .image-holder
-          height: 100%
-          width: auto
-          left: 50%
-          .image
-            margin-left: -50%
+      &.landscape
+        .inner
+          .image-holder
             height: 100%
             width: auto
-            max-width: none
+            left: 50%
+            .image
+              margin-left: -50%
+              height: 100%
+              width: auto
+              max-width: none
+    /*&.landscape*/
+      /*.image-placeholder*/
+        /*height: 100%*/
     &.portrait
       .image-placeholder
         max-width: 100%
