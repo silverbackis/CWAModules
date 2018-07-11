@@ -1,6 +1,6 @@
 {
     "name": "@bwstarter/bulma",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,10 +9,11 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/components": "^0.3.3",
+        "@bwstarter/components": "^0.3.4",
         "@bwstarter/core": "^0.2.3",
         "@bwstarter/server": "^0.1.0",
-        "bulma": "^0.7.1"
+        "bulma": "^0.7.1",
+        "vuedraggable": "^2"
     },
     "scripts": {
         "lint": "eslint lib ",
