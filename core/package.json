@@ -1,6 +1,6 @@
 {
     "name": "@bwstarter/core",
-    "version": "0.2.3",
+    "version": "0.3.5",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,7 +9,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/server": "^0.1.0",
+        "@bwstarter/server": "^0.3.5",
         "@nuxtjs/axios": "^5.3.1",
         "jwt-decode": "^2.2.0",
         "lodash": "^4.17.10",
