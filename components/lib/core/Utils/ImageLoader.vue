@@ -43,6 +43,7 @@ Author modified: Daniel <daniel@silverback.is>
         <div class="loader"></div>
       </div>
     </transition-group>
+    <slot></slot>
   </div>
 </template>
 

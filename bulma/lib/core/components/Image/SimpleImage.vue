@@ -4,7 +4,7 @@
          itemscope
          itemtype="https://schema.org/ImageGallery"
     >
-      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
+      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject" v-if="imageData['file:image']">
         <div class="is-block image-holder">
           <image-loader class="image simple-image"
                         :image="imageData['file:image']"

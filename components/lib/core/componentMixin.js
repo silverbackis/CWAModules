@@ -23,9 +23,14 @@ export default {
     containerClass () {
       return !this.nested ? ['container'] : []
     },
-    childComponents () {
+    childLocationsGrouped () {
       return this.component.componentGroups.map(({ componentLocations }) => {
-        return componentLocations.map(loc => loc.component)
+        return componentLocations
+      })
+    },
+    childComponents () {
+      return this.childLocationsGrouped.map((locations) => {
+        return locations.map(loc => loc.component)
       })
     },
     endpoint () {

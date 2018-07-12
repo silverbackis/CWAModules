@@ -8,8 +8,7 @@
         </div>
         <component :is="itemComponent"
                    v-for="item in component.collection"
-                   v-if="getComponentObject(item) instanceof Object"
-                   :component="getComponentObject(item)"
+                   :component="getStoreComponent(item)"
                    :key="item['@id']"
         />
       </div>
@@ -40,12 +39,6 @@
         this.itemComponent = () => ({
           component: import('./Item/' + resourceParts[resourceParts.length - 1])
         })
-      },
-      getComponentObject (item) {
-        if (item instanceof Object) {
-          return item
-        }
-        return this.getStoreComponent(item)
       }
     },
     created () {

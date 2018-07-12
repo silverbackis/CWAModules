@@ -72,7 +72,7 @@
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       hasImage() {
-        return (this.component && this.component.filePath)
+        return (this.component && this.component.publicPath)
       },
       className () {
         let className = ['hero']
@@ -97,8 +97,8 @@
         if (!this.component) {
           return {}
         }
-        let imagePath = this.injectDynamicData(this.component.filePath)
-        if (imagePath !== this.component.filePath) {
+        let imagePath = this.injectDynamicData(this.component.publicPath)
+        if (imagePath !== this.component.publicPath) {
           //injected from the dynamic page
           return this.dynamicData
         }

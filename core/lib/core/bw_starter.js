@@ -146,6 +146,7 @@ export default class BWStarter {
           resolve(response)
         })
         .catch((err) => {
+          logging && console.warn(err)
           reject(err)
         })
     })
@@ -211,9 +212,18 @@ export default class BWStarter {
   }
 
   setComponents (components) {
-    Object.keys(components).forEach((componentId) => {
-      this.$storage.setState(componentId, components[componentId], COMPONENTS_MODULE)
-    })
+    for(const [componentId, component] of Object.entries(components)) {
+      if(component.collection) {
+        const stringCollection = component.collection.map(item => item['@id'])
+        const collectionObj = component.collection.reduce((obj, item) => {
+          obj[item['@id']] = item
+          return obj
+        }, {})
+        this.setComponents(collectionObj)
+        component.collection = stringCollection
+      }
+      this.$storage.setState(componentId, component, COMPONENTS_MODULE)
+    }
   }
 
   setResponseErrorPage (error) {

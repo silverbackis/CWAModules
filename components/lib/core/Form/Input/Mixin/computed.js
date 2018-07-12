@@ -1,4 +1,5 @@
 import { mapGetters } from 'vuex'
+import { name as FORM_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
   computed: {

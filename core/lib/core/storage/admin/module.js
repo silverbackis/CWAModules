@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { CancelToken } from 'axios'
 import _debounce from 'lodash/debounce'
+import { COMPONENTS_MODULE } from '../'
 
 export const state = () => ({
   endpoints: {},
@@ -123,6 +124,17 @@ export const actions = {
         .put(endpointKey, patchEndpoints[ endpointKey ], { cancelToken: cancel.token })
         .then(({ data }) => {
           commit('updateComponent', data)
+          commit('deleteSubmitting', endpointKey)
+          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], COMPONENTS_MODULE)
+          if (component) {
+            this.$bwstarter.$storage.commit('setComponent', [{id: endpointKey, data}], COMPONENTS_MODULE)
+          }
+          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey])
+          if (content) {
+            this.$bwstarter.$storage.commit('setContentById', [{id: endpointKey, data}])
+          }
+        })
+        .catch(() => {
           commit('deleteSubmitting', endpointKey)
         })
     })

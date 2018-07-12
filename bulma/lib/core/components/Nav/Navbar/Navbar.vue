@@ -15,7 +15,6 @@
         <span></span>
       </div>
     </div>
-
     <div class="navbar-menu" :class="{ 'is-active': isActive }">
       <div class="navbar-start" v-if="childComponents.length">
         <bulma-navbar-item v-for="(component, index) in childComponents[0]"

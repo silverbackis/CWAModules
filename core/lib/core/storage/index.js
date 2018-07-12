@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import jwtDecode from 'jwt-decode'
 import _ from 'lodash'
-import { actions as formActions, getters as formGetters, mutations as formMutations } from './form'
-import { state as adminState, actions as adminActions, getters as adminGetters, mutations as adminMutations } from './admin'
+import ADMIN_STORE from './admin'
+import FORM_STORE from './form'
+import COMPONENT_STORE from './components'
+import LAYOUT_STORE from './layouts'
 const { join } = require('path')
 
-export const LAYOUTS_MODULE = ['layouts']
-export const COMPONENTS_MODULE = ['components']
-export const FORMS_MODULE = ['forms']
-export const ADMIN_MODULE = ['admin']
+// DEPRECATED CONSTANTS - NEED TO REFACTOR VARS IN ALL MODULES
+export const LAYOUTS_MODULE = LAYOUT_STORE.name
+export const COMPONENTS_MODULE = COMPONENT_STORE.name
+export const FORMS_MODULE = FORM_STORE.name
+export const ADMIN_MODULE = ADMIN_STORE.name
 
 export class Storage {
   constructor (ctx, options) {
@@ -81,99 +84,29 @@ export class Storage {
         },
         clearNotifications (state) {
           state.notifications = {}
+        },
+        setContentById (state, { id, data }) {
+          for(const [ key, content ] of Object.entries(state.content)) {
+            if(content['@id'] === id) {
+              Vue.set(state['content'], key, data)
+              return
+            }
+          }
         }
       }
     }
     this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
       preserveState: this.preserveModuleState()
     })
-    this.__initComponentsModule()
-    this.__initLayoutsModule()
-    this.__initFormsModule()
-    this.__initAdminModule()
+
+    const modules = [ COMPONENT_STORE, LAYOUT_STORE, FORM_STORE, ADMIN_STORE ]
+    modules.forEach((store) => {
+      this.ctx.store.registerModule([this.options.vuex.namespace, store.name], Object.assign({ namespaced: true }, store.store), {
+        preserveState: this.preserveModuleState(store.name)
+      })
+    })
+
     this.state = this.ctx.store.state[this.options.vuex.namespace]
-  }
-
-  __initComponentsModule () {
-    const componentsModule = {
-      namespaced: true,
-      state: () => ({}),
-      getters: {
-        getComponent: state => (id) => {
-          return state[id] || null
-        }
-      },
-      mutations: {
-        SET (state, { key, value }) {
-          Vue.set(state, key, value)
-        }
-      }
-    }
-    this.ctx.store.registerModule([this.options.vuex.namespace, ...COMPONENTS_MODULE], componentsModule, {
-      preserveState: this.preserveModuleState(COMPONENTS_MODULE)
-    })
-  }
-
-  __initLayoutsModule () {
-    const layoutsModule = {
-      namespaced: true,
-      state: () => {
-        return {
-          current: null,
-          data: {}
-        }
-      },
-      getters: {
-        getLayout (state) {
-          return state.current ? state.data[state.current] : null
-        }
-      },
-      mutations: {
-        SET (state, { key, value }) {
-          let isData = state[key] === undefined
-          if (isData) {
-            Vue.set(state.data, key, value)
-            Vue.set(state, 'current', key)
-          } else {
-            Vue.set(state, key, value)
-          }
-        }
-      }
-    }
-    this.ctx.store.registerModule([this.options.vuex.namespace, ...LAYOUTS_MODULE], layoutsModule, {
-      preserveState: this.preserveModuleState(LAYOUTS_MODULE)
-    })
-  }
-
-  __initFormsModule () {
-    const storeModule = {
-      namespaced: true,
-      state: () => ({}),
-      getters: formGetters,
-      mutations: formMutations,
-      actions: formActions
-    }
-    this.ctx.store.registerModule([this.options.vuex.namespace, ...FORMS_MODULE], storeModule, {
-      preserveState: this.preserveModuleState(FORMS_MODULE)
-    })
-  }
-
-  __initAdminModule () {
-    const storeModule = {
-      namespaced: true,
-      state: adminState,
-      getters: adminGetters,
-      mutations: adminMutations,
-      actions: adminActions
-    }
-    this.ctx.store.registerModule([this.options.vuex.namespace, ...ADMIN_MODULE], storeModule, {
-      preserveState: this.preserveModuleState(ADMIN_MODULE)
-    })
-  }
-
-  commit (mutation, args = [], modules = []) {
-    let path = [ this.options.vuex.namespace, ...modules, mutation ]
-    this.ctx.store.commit(join(...path), ...args)
   }
 
   setState (key, value, modules = []) {
@@ -186,6 +119,11 @@ export class Storage {
 
   getState (key) {
     return this.state[key]
+  }
+
+  commit (mutation, args = [], modules = []) {
+    let path = [ this.options.vuex.namespace, ...modules, mutation ]
+    this.ctx.store.commit(join(...path), ...args)
   }
 
   get (method, args = [], modules = []) {

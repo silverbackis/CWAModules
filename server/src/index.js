@@ -91,6 +91,7 @@ export default class BWServer {
           headers: this.utilities.cookiesToHeaders(req.cookies),
           refreshTokenRequest: true
         })
+      this.logging && console.error('jwtRefresh response', response)
       const data = response.data
       session.authToken = data.token
       session.refreshToken = data.refresh_token

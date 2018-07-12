@@ -1,4 +1,4 @@
-import { Utilities } from '../server'
+import { Utilities } from '../../server/index'
 import axios from 'axios'
 import _ from 'lodash'
 import Vue from 'vue'
@@ -6,8 +6,8 @@ import Vue from 'vue'
 const AxiosCancelToken = axios.CancelToken
 
 export const actions = {
-  init ({ commit, state }, form) {
-    const formData = form.vars
+  init ({ commit, state }, module) {
+    const formData = module.vars
     const formId = Utilities.getFormId(formData)
     if (!state[ formId ]) {
       commit('setForm', {
