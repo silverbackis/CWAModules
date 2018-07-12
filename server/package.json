@@ -1,7 +1,7 @@
 {
     "name": "@bwstarter/server",
     "licence": "MIT",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "description": "Express server routes and common utilities for server and BW Starter front-end application",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
     "main": "dist/index.js",

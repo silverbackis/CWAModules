@@ -1,6 +1,6 @@
 {
     "name": "@bwstarter/components",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,8 +9,8 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/core": "^0.3.5",
-        "@bwstarter/server": "^0.3.5"
+        "@bwstarter/core": "^0.3.6",
+        "@bwstarter/server": "^0.3.6"
     },
     "scripts": {
         "lint": "eslint lib ",
