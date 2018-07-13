@@ -1,8 +1,9 @@
 <template>
   <div class="bulma-components" v-if="_components">
     <component v-for="component in _components"
+               v-if="getComponent(component['@id'])"
                :is="name(component)"
-               :key="component.id"
+               :key="component['@id']"
                :component="getComponent(component['@id'])"
                :nested="nested"
                :depth="depth"

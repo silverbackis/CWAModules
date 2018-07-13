@@ -6,7 +6,7 @@
 5 silly isInitialized true
 6 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/VERSION
 7 silly initialize attempt
-8 info current version 0.3.4
+8 info current version 0.3.6
 9 silly isDetachedHead
 10 silly getCurrentBranch
 11 verbose getCurrentBranch master
@@ -18,156 +18,131 @@
 17 silly hasTags
 18 verbose hasTags true
 19 silly getLastTag
-20 verbose getLastTag v0.3.4
-21 info Comparing with v0.3.4.
-22 silly diffSinceIn v0.3.4 core
+20 verbose getLastTag v0.3.6
+21 info Comparing with v0.3.6.
+22 silly diffSinceIn v0.3.6 core
 23 silly diff core/lib/core/bw_starter.js
-23 silly diff core/lib/core/storage/admin/index.js
-23 silly diff core/lib/core/storage/admin/module.js
 23 silly diff core/lib/core/storage/components/index.js
-23 silly diff core/lib/core/storage/form/index.js
-23 silly diff core/lib/core/storage/form/module.js
 23 silly diff core/lib/core/storage/index.js
-23 silly diff core/lib/core/storage/layouts/index.js
-24 silly diffSinceIn v0.3.4 components
-25 silly diff components/lib/core/Form/Input/Mixin/computed.js
-25 silly diff components/lib/core/Utils/ImageLoader.vue
+24 silly diffSinceIn v0.3.6 components
 25 silly diff components/lib/core/componentMixin.js
-26 silly diffSinceIn v0.3.4 bulma
+25 silly diff components/lib/core/pageMixin.js
+26 silly diffSinceIn v0.3.6 bulma
 27 silly diff bulma/lib/core/components/Collection/Collection.vue
 27 silly diff bulma/lib/core/components/Collection/ColumnCollection.vue
-27 silly diff bulma/lib/core/components/Gallery/Gallery.vue
-27 silly diff bulma/lib/core/components/Gallery/GalleryItem.vue
 27 silly diff bulma/lib/core/components/Hero/Hero.vue
-27 silly diff bulma/lib/core/components/Image/SimpleImage.vue
-27 silly diff bulma/lib/core/components/Nav/Navbar/Navbar.vue
-28 silly diffSinceIn v0.3.4 server
-29 silly diff server/src/index.js
+28 silly diffSinceIn v0.3.6 server
+29 silly diff
 30 verbose updated @bwstarter/core
 31 verbose updated @bwstarter/components
 32 verbose updated @bwstarter/bulma
-33 verbose updated @bwstarter/server
-34 info Checking for prereleased packages...
-35 silly collectDependents
-36 silly isPackageDependentOf @bwstarter/core @bwstarter/core
-37 silly isPackageDependentOf @bwstarter/server @bwstarter/core
-38 silly isPackageDependentOf @bwstarter/core @bwstarter/components
-39 silly isPackageDependentOf @bwstarter/server @bwstarter/components
-40 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
-41 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
-42 silly isPackageDependentOf @bwstarter/core @bwstarter/server
-43 verbose dependent @bwstarter/core depends on @bwstarter/server
-44 silly isPackageDependentOf @bwstarter/components @bwstarter/core
-45 verbose dependent @bwstarter/components depends on @bwstarter/core
-46 silly isPackageDependentOf @bwstarter/components @bwstarter/components
-47 silly isPackageDependentOf @bwstarter/core @bwstarter/components
-48 silly isPackageDependentOf @bwstarter/server @bwstarter/components
-49 silly isPackageDependentOf @bwstarter/components @bwstarter/bulma
-50 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
-51 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
-52 silly isPackageDependentOf @bwstarter/components @bwstarter/server
-53 verbose dependent @bwstarter/components depends on @bwstarter/server
-54 silly isPackageDependentOf @bwstarter/bulma @bwstarter/core
-55 verbose dependent @bwstarter/bulma depends on @bwstarter/core
-56 silly isPackageDependentOf @bwstarter/bulma @bwstarter/components
-57 verbose dependent @bwstarter/bulma depends on @bwstarter/components
-58 silly isPackageDependentOf @bwstarter/bulma @bwstarter/bulma
-59 silly isPackageDependentOf @bwstarter/components @bwstarter/bulma
-60 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
-61 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
-62 silly isPackageDependentOf @bwstarter/bulma @bwstarter/server
-63 verbose dependent @bwstarter/bulma depends on @bwstarter/server
-64 silly isPackageDependentOf @bwstarter/server @bwstarter/core
-65 silly isPackageDependentOf @bwstarter/server @bwstarter/components
-66 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
-67 silly isPackageDependentOf @bwstarter/server @bwstarter/server
-68 silly collectUpdates
-69 verbose has filtered update @bwstarter/core
-70 verbose has filtered update @bwstarter/components
-71 verbose has filtered update @bwstarter/bulma
-72 verbose has filtered update @bwstarter/server
-73 silly initialize success
-74 silly execute attempt
-75 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/lerna.json
-76 silly runScriptSync preversion undefined
-77 silly runScriptSync preversion @bwstarter/core
-78 silly runScriptSync version @bwstarter/core
-79 silly runScriptSync preversion @bwstarter/components
-80 silly runScriptSync version @bwstarter/components
-81 silly runScriptSync preversion @bwstarter/bulma
-82 silly runScriptSync version @bwstarter/bulma
-83 silly runScriptSync preversion @bwstarter/server
-84 silly runScriptSync version @bwstarter/server
-85 silly runScriptSync version undefined
-86 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/package.json
-87 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/package.json
-88 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/package.json
-89 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server/package.json
-90 silly commit v0.3.5
-91 verbose commit [ 'commit', '--no-verify', '-m', 'v0.3.5' ]
-92 silly addTag v0.3.5
-93 silly runScriptSync postversion @bwstarter/core
-94 silly runScriptSync postversion @bwstarter/components
-95 silly runScriptSync postversion @bwstarter/bulma
-96 silly runScriptSync postversion @bwstarter/server
-97 silly runScriptSync postversion undefined
-98 info publish Publishing packages to npm...
-99 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/scripts/prepublish.js
-100 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/scripts/prepublish.js
-101 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/scripts/prepublish.js
-102 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/scripts/prepublish.js
-103 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/scripts/prepublish.js
-104 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/scripts/prepublish.js
-105 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server/scripts/prepublish.js
-106 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server/scripts/prepublish.js
-107 verbose publishing @bwstarter/server
-108 silly publishTaggedInDir latest server
-109 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server' }
-110 error publish Retrying failed publish: @bwstarter/server
+33 info Checking for prereleased packages...
+34 silly collectDependents
+35 silly isPackageDependentOf @bwstarter/core @bwstarter/core
+36 silly isPackageDependentOf @bwstarter/server @bwstarter/core
+37 silly isPackageDependentOf @bwstarter/core @bwstarter/components
+38 silly isPackageDependentOf @bwstarter/server @bwstarter/components
+39 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
+40 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
+41 silly isPackageDependentOf @bwstarter/components @bwstarter/core
+42 verbose dependent @bwstarter/components depends on @bwstarter/core
+43 silly isPackageDependentOf @bwstarter/components @bwstarter/components
+44 silly isPackageDependentOf @bwstarter/core @bwstarter/components
+45 silly isPackageDependentOf @bwstarter/server @bwstarter/components
+46 silly isPackageDependentOf @bwstarter/components @bwstarter/bulma
+47 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
+48 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
+49 silly isPackageDependentOf @bwstarter/bulma @bwstarter/core
+50 verbose dependent @bwstarter/bulma depends on @bwstarter/core
+51 silly isPackageDependentOf @bwstarter/bulma @bwstarter/components
+52 verbose dependent @bwstarter/bulma depends on @bwstarter/components
+53 silly isPackageDependentOf @bwstarter/bulma @bwstarter/bulma
+54 silly isPackageDependentOf @bwstarter/components @bwstarter/bulma
+55 silly isPackageDependentOf @bwstarter/core @bwstarter/bulma
+56 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
+57 silly isPackageDependentOf @bwstarter/server @bwstarter/core
+58 silly isPackageDependentOf @bwstarter/server @bwstarter/components
+59 silly isPackageDependentOf @bwstarter/server @bwstarter/bulma
+60 silly collectUpdates
+61 verbose has filtered update @bwstarter/core
+62 verbose has filtered update @bwstarter/components
+63 verbose has filtered update @bwstarter/bulma
+64 silly initialize success
+65 silly execute attempt
+66 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/lerna.json
+67 silly runScriptSync preversion undefined
+68 silly runScriptSync preversion @bwstarter/core
+69 silly runScriptSync version @bwstarter/core
+70 silly runScriptSync preversion @bwstarter/components
+71 silly runScriptSync version @bwstarter/components
+72 silly runScriptSync preversion @bwstarter/bulma
+73 silly runScriptSync version @bwstarter/bulma
+74 silly runScriptSync version undefined
+75 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/package.json
+76 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/package.json
+77 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/package.json
+78 silly commit v0.3.7
+79 verbose commit [ 'commit', '--no-verify', '-m', 'v0.3.7' ]
+80 silly addTag v0.3.7
+81 silly runScriptSync postversion @bwstarter/core
+82 silly runScriptSync postversion @bwstarter/components
+83 silly runScriptSync postversion @bwstarter/bulma
+84 silly runScriptSync postversion undefined
+85 info publish Publishing packages to npm...
+86 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/scripts/prepublish.js
+87 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/scripts/prepublish.js
+88 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/scripts/prepublish.js
+89 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/scripts/prepublish.js
+90 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/scripts/prepublish.js
+91 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/scripts/prepublish.js
+92 verbose publishing @bwstarter/core
+93 silly publishTaggedInDir latest core
+94 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
+95 error publish Retrying failed publish: @bwstarter/core
+96 verbose publish error undefined
+97 verbose publishing @bwstarter/core
+98 silly publishTaggedInDir latest core
+99 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
+100 error publish Retrying failed publish: @bwstarter/core
+101 verbose publish error undefined
+102 verbose publishing @bwstarter/core
+103 silly publishTaggedInDir latest core
+104 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
+105 error publish Retrying failed publish: @bwstarter/core
+106 verbose publish error undefined
+107 verbose publishing @bwstarter/core
+108 silly publishTaggedInDir latest core
+109 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
+110 error publish Retrying failed publish: @bwstarter/core
 111 verbose publish error undefined
-112 verbose publishing @bwstarter/server
-113 silly publishTaggedInDir latest server
-114 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server' }
-115 error publish Retrying failed publish: @bwstarter/server
-116 verbose publish error undefined
-117 verbose publishing @bwstarter/server
-118 silly publishTaggedInDir latest server
-119 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server' }
-120 error publish Retrying failed publish: @bwstarter/server
-121 verbose publish error undefined
-122 verbose publishing @bwstarter/server
-123 silly publishTaggedInDir latest server
-124 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server' }
-125 error publish Retrying failed publish: @bwstarter/server
-126 verbose publish error undefined
-127 verbose publishing @bwstarter/server
-128 silly publishTaggedInDir latest server
-129 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/server' }
-130 error publish Ran out of retries while publishing @bwstarter/server Error: Command failed: yarn publish --tag latest --new-version 0.3.5
-130 error publish warning package.json: No license field
-130 error publish warning package.json: No license field
-130 error publish error Couldn't publish package.
-130 error publish yarn publish v1.6.0
-130 error publish [1/4] Bumping version...
-130 error publish info Current version: 0.3.5
-130 error publish [2/4] Logging in...
-130 error publish [3/4] Publishing...
-130 error publish info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
-130 error publish
-130 error publish     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
-130 error publish     at <anonymous>
-130 error publish     at process._tickCallback (internal/process/next_tick.js:188:7)
-131 error execute callback with error
-132 error Error: Command failed: yarn publish --tag latest --new-version 0.3.5
-132 error warning package.json: No license field
-132 error warning package.json: No license field
-132 error error Couldn't publish package.
-132 error yarn publish v1.6.0
-132 error [1/4] Bumping version...
-132 error info Current version: 0.3.5
-132 error [2/4] Logging in...
-132 error [3/4] Publishing...
-132 error info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
-132 error
-132 error     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
-132 error     at <anonymous>
+112 verbose publishing @bwstarter/core
+113 silly publishTaggedInDir latest core
+114 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
+115 error publish Ran out of retries while publishing @bwstarter/core Error: Command failed: yarn publish --tag latest --new-version 0.3.7
+115 error publish warning package.json: No license field
+115 error publish warning package.json: No license field
+115 error publish error Couldn't publish package.
+115 error publish yarn publish v1.6.0
+115 error publish [1/4] Bumping version...
+115 error publish info Current version: 0.3.7
+115 error publish [2/4] Logging in...
+115 error publish [3/4] Publishing...
+115 error publish info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
+115 error publish
+115 error publish     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
+115 error publish     at <anonymous>
+115 error publish     at process._tickCallback (internal/process/next_tick.js:118:7)
+116 error execute callback with error
+117 error Error: Command failed: yarn publish --tag latest --new-version 0.3.7
+117 error warning package.json: No license field
+117 error warning package.json: No license field
+117 error error Couldn't publish package.
+117 error yarn publish v1.6.0
+117 error [1/4] Bumping version...
+117 error info Current version: 0.3.7
+117 error [2/4] Logging in...
+117 error [3/4] Publishing...
+117 error info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
+117 error
+117 error     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
+117 error     at <anonymous>
