@@ -6,7 +6,7 @@ const store = {
   state: () => ({}),
   getters: {
     getComponent: state => (id) => {
-      return state[id] || null
+      return state[id] || false
     }
   },
   mutations: {

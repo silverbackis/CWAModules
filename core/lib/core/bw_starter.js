@@ -212,17 +212,18 @@ export default class BWStarter {
   }
 
   setComponents (components) {
-    for(const [componentId, component] of Object.entries(components)) {
+    for(let [componentId, component] of Object.entries(components)) {
       if(component.collection) {
-        const stringCollection = component.collection.map(item => item['@id'])
         const collectionObj = component.collection.reduce((obj, item) => {
           obj[item['@id']] = item
           return obj
         }, {})
         this.setComponents(collectionObj)
-        component.collection = stringCollection
+        component = Object.assign({}, component, {
+          collection: Array.from(component.collection, item => item['@id'] || item)
+        })
       }
-      this.$storage.setState(componentId, component, COMPONENTS_MODULE)
+      this.$storage.commit('setComponent', [{id: componentId, data: component}], COMPONENTS_MODULE)
     }
   }
 

@@ -10,21 +10,21 @@
             <div class="column">
               <h1 class="title">
                 <admin-text-input v-if="$bwstarter.isAdmin"
-                                :model="injectDynamicData(component.title)"
+                                :model="realComponentData.title"
                                 :componentId="endpoint"
                                 componentField="title"
                                 placeholder="Enter page title here"
                 />
-                <span v-else>{{ injectDynamicData(component.title) }}</span>
+                <span v-else>{{ realComponentData.title }}</span>
               </h1>
               <h2 class="subtitle">
                 <admin-text-input v-if="$bwstarter.isAdmin"
-                                :model="injectDynamicData(component.subtitle)"
+                                :model="realComponentData.subtitle"
                                 :componentId="endpoint"
                                 componentField="subtitle"
                                 placeholder="Enter optional subtitle here"
                 />
-                <span v-else>{{ injectDynamicData(component.subtitle) }}</span>
+                <span v-else>{{ realComponentData.subtitle }}</span>
               </h2>
             </div>
             <div v-if="hasImage"

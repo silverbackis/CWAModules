@@ -1,8 +1,6 @@
 export default {
   middleware: ['routeLoader'],
-  data: () => ({
-    pageData: null
-  }),
+  data: () => ({}),
   head () {
     if (!this.pageData) {
       return {}
@@ -25,6 +23,9 @@ export default {
     }
   },
   computed: {
+    pageData () {
+      return this.$bwstarter.$storage.get('getContent', [this.depth])
+    },
     title () {
       return this.pageData.title
     },
@@ -53,8 +54,5 @@ export default {
       name: 'page',
       mode: 'out-in'
     }
-  },
-  created() {
-    this.pageData = this.$bwstarter.$storage.get('getContent', [this.depth])
   }
 }

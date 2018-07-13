@@ -6,6 +6,7 @@
          :class="containerClass"
          v-for="item in component.collection">
       <component :is="itemComponent"
+                 v-if="getStoreComponent(item)"
                  :component="getStoreComponent(item)"
                  :key="item['@id']"
                  type="column"

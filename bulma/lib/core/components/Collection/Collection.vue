@@ -8,6 +8,7 @@
         </div>
         <component :is="itemComponent"
                    v-for="item in component.collection"
+                   v-if="getStoreComponent(item)"
                    :component="getStoreComponent(item)"
                    :key="item['@id']"
         />
