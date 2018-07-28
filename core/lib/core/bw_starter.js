@@ -220,7 +220,7 @@ export default class BWStarter {
     ];
     contentData.forEach((content) => {
       if (content.componentLocations && content.componentLocations.length) {
-        promises.push(this.getContent(content))
+        promises.push(this.fetchContent(content))
       }
     });
     return Promise.all(promises)
@@ -233,12 +233,12 @@ export default class BWStarter {
   initLayoutFromContent (content, current = false) {
     this.$storage.commit('setLayout', [{id: content.layout['@id'], data: content.layout}], contentModuleName);
     if (current) {
-      this.$storage.commit('setCurrentLayout', [content.layout['@id']], contentModuleName)
+      this.$storage.commit('setCurrentLayout', [content.layout['@id']], contentModuleName);
     }
-    return this.getLayout(content.layout['@id'])
+    return this.fetchLayout(content.layout['@id'])
   }
 
-  async getLayout (url = DEFAULT_LAYOUT) {
+  async fetchLayout (url = DEFAULT_LAYOUT) {
     let response = await this.request({ url });
     const data = response.data;
     this.$storage.commit('setEntity', [{id: data['@id'], data}], entitiesModuleName);
@@ -250,7 +250,7 @@ export default class BWStarter {
     return response
   }
 
-  async getContent (content) {
+  async fetchContent (content) {
     let { data: { componentLocations } } = await this.request({ url: content['@id'] })
     let entities = getEntitiesFromLocations(componentLocations)
     this.setEntities(entities)

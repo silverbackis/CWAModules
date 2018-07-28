@@ -29,7 +29,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     routeData = response.data
   } catch (err) {
     try {
-      response = await $bwstarter.getLayout()
+      response = await $bwstarter.fetchLayout()
     } catch (err) {
       $bwstarter.setResponseErrorPage(err);
       return

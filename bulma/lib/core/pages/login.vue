@@ -51,6 +51,7 @@
   import FormInput from '~/.nuxt/bwstarter/components/Form/FormInput'
   import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
   import { Utilities } from '~/.nuxt/bwstarter/core/server'
+  import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
 
   export default {
     mixins: [FormMixin],
@@ -92,10 +93,14 @@
       }
     },
     async asyncData ({ store: { dispatch, getters }, app: { $axios, $bwstarter }, res }) {
-      let response = await $bwstarter.getLayout()
+      let response = await $bwstarter.fetchLayout();
+      $bwstarter.$storage.commit('setLayout', [{id: response.data['@id'], data: response.data}], contentModuleName);
+      $bwstarter.$storage.commit('setCurrentLayout', [response.data['@id']], contentModuleName);
+
       if (process.server) {
         Utilities.setResponseCookies(res, response)
       }
+
       try {
         let { data: { form } } = await $axios.get('login_form')
         form.vars.action = '/login'

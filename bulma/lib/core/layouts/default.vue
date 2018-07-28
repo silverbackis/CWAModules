@@ -2,7 +2,7 @@
   <div class="layout">
     <div class="site-content">
       <header>
-        <bulma-navbar v-if="structure.navBar"
+        <bulma-navbar v-if="structure && structure.navBar"
                       :component="getEntity(structure.navBar['@id'])"
                       :class="navbarClass"
         />
@@ -39,7 +39,7 @@
     },
     computed: {
       structure () {
-        return this.$bwstarter.$storage.get('getLayout', [], contentModuleName).structure
+        return this.$bwstarter.$storage.get('fetchLayout', [], contentModuleName).structure
       },
       getApiUrl () {
         return this.$bwstarter.$storage.get('getApiUrl')
