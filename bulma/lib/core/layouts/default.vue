@@ -1,9 +1,9 @@
 <template>
   <div class="layout">
     <div class="site-content">
-      <header v-if="layout">
-        <bulma-navbar v-if="layout.navBar"
-                      :component="layout.navBar"
+      <header>
+        <bulma-navbar v-if="structure.navBar"
+                      :component="getEntity(structure.navBar['@id'])"
                       :class="navbarClass"
         />
       </header>
@@ -25,32 +25,36 @@
 </template>
 
 <script>
-  import { mapGetters, mapMutations, mapState } from 'vuex'
-  import BulmaNavbar from '../components/Nav/Navbar/Navbar.vue'
+  import { mapMutations } from 'vuex'
+  import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
   import Notifications from '../components/Notifications/Notifications'
 
   export default {
     components: {
-      BulmaNavbar,
+      BulmaNavbar: () => import('../components/Nav/Navbar/Navbar.vue'),
+      AdminBar: () => import('../components/Admin/AdminBar'),
       AppLink,
-      Notifications,
-      AdminBar: () => import('../components/Admin/AdminBar')
+      Notifications
     },
     computed: {
-      ...mapGetters({
-        layout: 'bwstarter/layouts/getLayout',
-        getApiUrl: 'bwstarter/getApiUrl'
-      }),
-      ...mapState({ token: state => state.bwstarter.token }),
+      structure () {
+        return this.$bwstarter.$storage.get('getLayout', [], contentModuleName).structure
+      },
+      getApiUrl () {
+        return this.$bwstarter.$storage.get('getApiUrl')
+      },
       navbarClass () {
         return this.token ? 'is-dark' : ''
+      },
+      token () {
+        return this.$bwstarter.$storage.getState('token')
       }
     },
     methods: {
       ...mapMutations({
         setAuthToken: 'setAuthToken',
-        addNotification: 'notifications/addNotification'
+        addNotification: 'bwstarter/notifications/addNotification'
       })
     },
     head () {

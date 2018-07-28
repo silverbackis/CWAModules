@@ -8,7 +8,7 @@
 </template>
 
 <script>
-  import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
+  import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
   export default {
     props: {
       input: {

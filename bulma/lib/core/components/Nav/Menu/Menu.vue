@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import NuxtChildMixin from '~/.nuxt/bwstarter/components/nuxtChildMixin'
+  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
   import BulmaMenuItemGroup from './MenuItemGroup'
 
   export default {
@@ -39,7 +39,7 @@
         let currentGroup = []
         let previousItem
         this.navItems.forEach((navItem) => {
-          navItem = this.getComponent(navItem['@id'])
+          navItem = this.getEntity(navItem['@id'])
           if (previousItem && (previousItem.menuLabel || navItem.menuLabel)) {
             groups.push(currentGroup)
             currentGroup = []

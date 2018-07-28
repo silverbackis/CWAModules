@@ -6,7 +6,7 @@
 5 silly isInitialized true
 6 silly existsSync /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/VERSION
 7 silly initialize attempt
-8 info current version 0.3.6
+8 info current version 0.3.7
 9 silly isDetachedHead
 10 silly getCurrentBranch
 11 verbose getCurrentBranch master
@@ -18,20 +18,47 @@
 17 silly hasTags
 18 verbose hasTags true
 19 silly getLastTag
-20 verbose getLastTag v0.3.6
-21 info Comparing with v0.3.6.
-22 silly diffSinceIn v0.3.6 core
+20 verbose getLastTag v0.3.7
+21 info Comparing with v0.3.7.
+22 silly diffSinceIn v0.3.7 core
 23 silly diff core/lib/core/bw_starter.js
+23 silly diff core/lib/core/middleware/index.js
+23 silly diff core/lib/core/storage/admin/index.js
+23 silly diff core/lib/core/storage/admin/module.js
 23 silly diff core/lib/core/storage/components/index.js
+23 silly diff core/lib/core/storage/content/index.js
+23 silly diff core/lib/core/storage/entities/index.js
+23 silly diff core/lib/core/storage/form/index.js
 23 silly diff core/lib/core/storage/index.js
-24 silly diffSinceIn v0.3.6 components
+23 silly diff core/lib/core/storage/layouts/index.js
+23 silly diff core/lib/module/plugin.template.js
+23 silly diff core/lib/plugins/mixin.js
+24 silly diffSinceIn v0.3.7 components
+25 silly diff components/lib/core/Form/Form.vue
+25 silly diff components/lib/core/Form/FormInput.vue
+25 silly diff components/lib/core/Form/Input/Mixin/computed.js
+25 silly diff components/lib/core/Form/Input/Mixin/methods.js
+25 silly diff components/lib/core/Form/Input/_CommonMixin.js
+25 silly diff components/lib/core/Form/_Mixin.js
 25 silly diff components/lib/core/componentMixin.js
+25 silly diff components/lib/core/nuxtChildMixin.js
 25 silly diff components/lib/core/pageMixin.js
-26 silly diffSinceIn v0.3.6 bulma
+26 silly diffSinceIn v0.3.7 bulma
+27 silly diff bulma/lib/core/components/Admin/AdminBar.vue
 27 silly diff bulma/lib/core/components/Collection/Collection.vue
 27 silly diff bulma/lib/core/components/Collection/ColumnCollection.vue
+27 silly diff bulma/lib/core/components/Components.vue
+27 silly diff bulma/lib/core/components/Gallery/Gallery.vue
 27 silly diff bulma/lib/core/components/Hero/Hero.vue
-28 silly diffSinceIn v0.3.6 server
+27 silly diff bulma/lib/core/components/Layouts/SideColumn.vue
+27 silly diff bulma/lib/core/components/Nav/Menu/Menu.vue
+27 silly diff bulma/lib/core/components/Nav/Tabs/TabPageWrapper.vue
+27 silly diff bulma/lib/core/components/Nav/Tabs/Tabs.vue
+27 silly diff bulma/lib/core/components/componentMixin.js
+27 silly diff bulma/lib/core/components/nuxtChildMixin.js
+27 silly diff bulma/lib/core/layouts/default.vue
+27 silly diff bulma/lib/module/components.template.js
+28 silly diffSinceIn v0.3.7 server
 29 silly diff
 30 verbose updated @bwstarter/core
 31 verbose updated @bwstarter/components
@@ -81,9 +108,9 @@
 75 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core/package.json
 76 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/components/package.json
 77 silly addFile /Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/bulma/package.json
-78 silly commit v0.3.7
-79 verbose commit [ 'commit', '--no-verify', '-m', 'v0.3.7' ]
-80 silly addTag v0.3.7
+78 silly commit v0.4.0
+79 verbose commit [ 'commit', '--no-verify', '-m', 'v0.4.0' ]
+80 silly addTag v0.4.0
 81 silly runScriptSync postversion @bwstarter/core
 82 silly runScriptSync postversion @bwstarter/components
 83 silly runScriptSync postversion @bwstarter/bulma
@@ -118,13 +145,13 @@
 112 verbose publishing @bwstarter/core
 113 silly publishTaggedInDir latest core
 114 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_BWStarter/node_modules/@bwstarter/core' }
-115 error publish Ran out of retries while publishing @bwstarter/core Error: Command failed: yarn publish --tag latest --new-version 0.3.7
+115 error publish Ran out of retries while publishing @bwstarter/core Error: Command failed: yarn publish --tag latest --new-version 0.4.0
 115 error publish warning package.json: No license field
 115 error publish warning package.json: No license field
 115 error publish error Couldn't publish package.
 115 error publish yarn publish v1.6.0
 115 error publish [1/4] Bumping version...
-115 error publish info Current version: 0.3.7
+115 error publish info Current version: 0.4.0
 115 error publish [2/4] Logging in...
 115 error publish [3/4] Publishing...
 115 error publish info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
@@ -133,13 +160,13 @@
 115 error publish     at <anonymous>
 115 error publish     at process._tickCallback (internal/process/next_tick.js:118:7)
 116 error execute callback with error
-117 error Error: Command failed: yarn publish --tag latest --new-version 0.3.7
+117 error Error: Command failed: yarn publish --tag latest --new-version 0.4.0
 117 error warning package.json: No license field
 117 error warning package.json: No license field
 117 error error Couldn't publish package.
 117 error yarn publish v1.6.0
 117 error [1/4] Bumping version...
-117 error info Current version: 0.3.7
+117 error info Current version: 0.4.0
 117 error [2/4] Logging in...
 117 error [3/4] Publishing...
 117 error info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.

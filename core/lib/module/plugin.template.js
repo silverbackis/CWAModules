@@ -1,9 +1,9 @@
 import BWStarter from './bw_starter'
 import './middleware'
 
-export default function (ctx, inject) {
-  const options = <%= JSON.stringify(options) %>
+export const options = <%= JSON.stringify(options) %>
 
+export default function (ctx, inject) {
   // Create a new instance
   const $bwstarter = new BWStarter(ctx, options)
 

@@ -4,8 +4,8 @@ import { name as FORM_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 export default {
   computed: {
     ...mapGetters({
-      getForm: 'bwstarter/forms/getForm',
-      getInputSubmitData: 'bwstarter/forms/getInputSubmitData'
+      getForm: 'bwstarter/_forms/getForm',
+      getInputSubmitData: 'bwstarter/_forms/getInputSubmitData'
     }),
     inputSubmitData () {
       return this.getInputSubmitData(this.extendInputId())

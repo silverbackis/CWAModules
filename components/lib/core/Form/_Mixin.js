@@ -1,5 +1,5 @@
 import { Utilities } from '~/.nuxt/bwstarter/core/server'
-import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
+import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 import { mapMutations } from 'vuex'
 
 export default {

@@ -1,23 +1,20 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-const name = ['locations']
+export const name = ['_entities'];
 
-const store = {
+export const store = {
   state: () => ({}),
   getters: {
-    getLocation: state => (id) => {
+    getEntity: state => (id) => {
       return state[id] || false
     }
   },
   mutations: {
-    SET (state, { key, value }) {
-      Vue.set(state, key, value)
-    },
-    setLocation (state, { id, data }) {
+    setEntity (state, { id, data }) {
       Vue.set(state, id, data)
     }
   }
-}
+};
 
 export default {
   name,

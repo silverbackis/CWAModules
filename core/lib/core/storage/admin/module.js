@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { CancelToken } from 'axios'
 import _debounce from 'lodash/debounce'
-import { COMPONENTS_MODULE } from '../'
+import { name as ENTITIES_MODULE } from '../entities'
 
 export const state = () => ({
   endpoints: {},
@@ -125,11 +125,11 @@ export const actions = {
         .then(({ data }) => {
           commit('updateComponent', data)
           commit('deleteSubmitting', endpointKey)
-          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], COMPONENTS_MODULE)
+          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], ENTITIES_MODULE);
           if (component) {
-            this.$bwstarter.$storage.commit('setComponent', [{id: endpointKey, data}], COMPONENTS_MODULE)
+            this.$bwstarter.$storage.commit('setComponent', [{id: endpointKey, data}], ENTITIES_MODULE)
           }
-          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey])
+          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey]);
           if (content) {
             this.$bwstarter.$storage.commit('setContentById', [{id: endpointKey, data}])
           }
@@ -140,7 +140,7 @@ export const actions = {
     })
   },
   async debouncedSave({ dispatch, commit }) {
-    let patchEndpoints = await dispatch('modifiedEndpoints')
+    let patchEndpoints = await dispatch('modifiedEndpoints');
     const saveDebounce = _debounce(async () => {
       dispatch('save', patchEndpoints)
       Object.keys(patchEndpoints).forEach((endpointKey) => {

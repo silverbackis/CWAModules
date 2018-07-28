@@ -1,5 +1,5 @@
 import { mapMutations } from 'vuex'
-import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
+import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
   props: {
@@ -18,7 +18,7 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setInputDisplayErrors: 'bwstarter/forms/setInputDisplayErrors'
+      setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors'
     }),
     extendInputId (data) {
       if (!data) {

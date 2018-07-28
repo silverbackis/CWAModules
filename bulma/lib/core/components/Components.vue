@@ -1,10 +1,10 @@
 <template>
   <div class="bulma-components" v-if="_components">
     <component v-for="component in _components"
-               v-if="getComponent(component['@id'])"
+               v-if="getEntity(component['@id'])"
                :is="name(component)"
                :key="component['@id']"
-               :component="getComponent(component['@id'])"
+               :component="getEntity(component['@id'])"
                :nested="nested"
                :depth="depth"
                :dynamicData="dynamicDataObj"
@@ -13,12 +13,11 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
   import _ from 'lodash'
-  import ComponentsMixin from '../components'
+  import components from '../components'
 
   export default {
-    mixins: [ComponentsMixin],
+    mixins: [components],
     props: {
       pageData: {
         type: Object,
@@ -43,9 +42,6 @@
       }
     },
     computed: {
-      ...mapGetters({
-        getComponent: 'bwstarter/components/getComponent'
-      }),
       _components () {
         return this.pageData.componentLocations.map(loc => loc.component)
       },

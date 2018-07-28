@@ -62,7 +62,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
-  import NuxtChildMixin from '~/.nuxt/bwstarter/components/nuxtChildMixin'
+  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
   export default {
     mixins: [

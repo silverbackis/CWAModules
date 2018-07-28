@@ -15,7 +15,7 @@
   import { mapActions, mapMutations, mapGetters } from 'vuex'
   import FormMixin from './_Mixin'
   import axios from 'axios'
-  import { FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage'
+  import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
   const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
   const DESTROY_CANCEL_MESSAGE = 'destroyed'
@@ -38,7 +38,7 @@
     },
     computed: {
       ...mapGetters({
-        getFormSubmitData: 'bwstarter/forms/getFormSubmitData'
+        getFormSubmitData: 'bwstarter/_forms/getFormSubmitData'
       }),
       submitData () {
         return this.getFormSubmitData(this.formId)
@@ -54,16 +54,16 @@
     },
     methods: {
       ...mapActions({
-        init: 'bwstarter/forms/init',
-        submitForm: 'bwstarter/forms/submit',
-        refreshCancelToken: 'bwstarter/forms/refreshCancelToken'
+        init: 'bwstarter/_forms/init',
+        submitForm: 'bwstarter/_forms/submit',
+        refreshCancelToken: 'bwstarter/_forms/refreshCancelToken'
       }),
       ...mapMutations({
-        setFormSubmitting: 'bwstarter/forms/setFormSubmitting',
-        setFormValidationResult: 'bwstarter/forms/setFormValidationResult',
-        setInputValidationResult: 'bwstarter/forms/setInputValidationResult',
-        setInputDisplayErrors: 'bwstarter/forms/setInputDisplayErrors',
-        setFormCancelToken: 'bwstarter/forms/setFormCancelToken'
+        setFormSubmitting: 'bwstarter/_forms/setFormSubmitting',
+        setFormValidationResult: 'bwstarter/_forms/setFormValidationResult',
+        setInputValidationResult: 'bwstarter/_forms/setInputValidationResult',
+        setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors',
+        setFormCancelToken: 'bwstarter/_forms/setFormCancelToken'
       }),
       async submit () {
         this.setFormSubmitting({

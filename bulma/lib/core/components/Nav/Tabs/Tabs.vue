@@ -8,7 +8,7 @@
       <ul>
         <bulma-tab-item v-for="(component, index) in _items"
                         :key="index"
-                        :component="getComponent(component['@id'])"
+                        :component="getEntity(component['@id'])"
         />
       </ul>
     </nav>
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-  import NuxtChildMixin from '~/.nuxt/bwstarter/components/nuxtChildMixin'
+  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
   import BulmaTabItem from './TabsItem'
   import TabPageWrapper from './TabPageWrapper'
 

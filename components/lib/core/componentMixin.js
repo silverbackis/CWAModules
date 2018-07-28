@@ -1,5 +1,3 @@
-import { mapGetters } from 'vuex'
-
 export default {
   props: {
     component: {
@@ -17,9 +15,6 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      getComponent: 'bwstarter/components/getComponent'
-    }),
     containerClass () {
       return !this.nested ? ['container'] : []
     },

@@ -1,5 +1,6 @@
+import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
 export default {
-  middleware: ['routeLoader'],
+  middleware: 'routeLoader',
   data: () => ({}),
   head () {
     if (!this.pageData) {
@@ -24,7 +25,8 @@ export default {
   },
   computed: {
     pageData () {
-      return this.$bwstarter.$storage.get('getContent', [this.depth])
+      // this is computed while middleware
+      return this.$bwstarter.$storage.get('getContentAtDepth', [this.depth], contentModuleName)
     },
     title () {
       return this.pageData.title

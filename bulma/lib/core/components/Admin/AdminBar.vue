@@ -31,7 +31,7 @@
 
 <script>
   import debounce from 'lodash/debounce'
-  import { ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage";
+  import { name as ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage/admin";
 
   export default {
     props: {

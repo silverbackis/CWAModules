@@ -1,6 +1,4 @@
-import ComponentMixin from './componentMixin'
 export default {
-  mixins: [ComponentMixin],
   props: {
     depth: {
       type: Number,

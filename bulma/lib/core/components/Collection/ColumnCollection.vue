@@ -6,8 +6,8 @@
          :class="containerClass"
          v-for="item in component.collection">
       <component :is="itemComponent"
-                 v-if="getStoreComponent(item)"
-                 :component="getStoreComponent(item)"
+                 v-if="getEntity(item)"
+                 :component="getEntity(item)"
                  :key="item['@id']"
                  type="column"
       />
@@ -28,7 +28,6 @@
     },
     computed: {
       ...mapGetters({
-        getStoreComponent: 'bwstarter/components/getComponent',
         getContentById: 'bwstarter/getContentById'
       })
     },

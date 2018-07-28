@@ -1,23 +1,21 @@
 import Vue from 'vue'
 import jwtDecode from 'jwt-decode'
-import _ from 'lodash'
+import _trimStart from 'lodash/trimStart'
 import ADMIN_STORE from './admin'
 import FORM_STORE from './form'
-import COMPONENT_STORE from './components'
-import LAYOUT_STORE from './layouts'
-const { join } = require('path')
 
-// DEPRECATED CONSTANTS - NEED TO REFACTOR VARS IN ALL MODULES
-export const LAYOUTS_MODULE = LAYOUT_STORE.name
-export const COMPONENTS_MODULE = COMPONENT_STORE.name
-export const FORMS_MODULE = FORM_STORE.name
-export const ADMIN_MODULE = ADMIN_STORE.name
+import CONTENT_STORE from './content'
+import ENTITIES_STORE from './entities'
+
+import { join } from 'path'
+
+const MODULES = [ CONTENT_STORE, ENTITIES_STORE, FORM_STORE, ADMIN_STORE ];
 
 export class Storage {
   constructor (ctx, options) {
-    this.ctx = ctx
-    this.options = options
-    this.__initModules()
+    this.ctx = ctx;
+    this.options = options;
+    this.__initModules();
   }
 
   preserveModuleState (modules = []) {
@@ -43,21 +41,7 @@ export class Storage {
       getters: {
         user: state => state.token ? jwtDecode(state.token) : null,
         getApiUrl: (state) => (path) => {
-          return state.apiUrl + _.trimStart(path, '/')
-        },
-        getContent: state => (depth) => {
-          return state.content ? (state.content[depth] || false) : false
-        },
-        getContentById: state => (id) => {
-          if (!state.content) {
-            return null
-          }
-          for(let content of state.content) {
-            if (content['@id'] === id) {
-              return content
-            }
-          }
-          return null
+          return state.apiUrl + _trimStart(path, '/')
         },
         userRoles: (state, getters) => {
           const user = getters.user
@@ -84,29 +68,21 @@ export class Storage {
         },
         clearNotifications (state) {
           state.notifications = {}
-        },
-        setContentById (state, { id, data }) {
-          for(const [ key, content ] of Object.entries(state.content)) {
-            if(content['@id'] === id) {
-              Vue.set(state['content'], key, data)
-              return
-            }
-          }
         }
       }
-    }
+    };
+
     this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
       preserveState: this.preserveModuleState(),
       strict: false
-    })
+    });
 
-    const modules = [ COMPONENT_STORE, LAYOUT_STORE, FORM_STORE, ADMIN_STORE ]
-    modules.forEach((store) => {
+    MODULES.forEach((store) => {
       this.ctx.store.registerModule([this.options.vuex.namespace, store.name], Object.assign({ namespaced: true }, store.store), {
         preserveState: this.preserveModuleState(store.name),
         strict: false
       })
-    })
+    });
 
     this.state = this.ctx.store.state[this.options.vuex.namespace]
   }
@@ -115,7 +91,7 @@ export class Storage {
     this.commit('SET', [{
       key,
       value
-    }], modules)
+    }], modules);
     return value
   }
 

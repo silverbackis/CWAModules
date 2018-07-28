@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import NuxtChildMixin from '~/.nuxt/bwstarter/components/nuxtChildMixin'
+  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
   import BulmaComponents from '../Components'
 
   export default {

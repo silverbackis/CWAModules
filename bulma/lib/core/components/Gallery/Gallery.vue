@@ -1,10 +1,10 @@
 <template>
-  <component-wrapper :nested="nested" :class="injectDynamicData(component.className)">
+  <component-wrapper :nested="nested" :class="realComponentData.className">
     <div v-for="(locations, index) in this.childLocationsGrouped"
          :key="index"
          :class="containerClass">
       <component v-bind="containerProps"
-                 :list="itemList"
+                 v-model="childLocationsGrouped[index]"
                  class="columns is-multiline"
       >
         <gallery-item v-for="(location, index) in locations"
@@ -42,7 +42,7 @@
     computed: {
       itemList: {
         get() {
-          return this.$bwstarter.isAdmin ? this.locations : null
+          return this.$bwstarter.isAdmin ? this.childLocationsGrouped : null
         },
         set(locations) {
           if (this.$bwstarter.isAdmin) {}

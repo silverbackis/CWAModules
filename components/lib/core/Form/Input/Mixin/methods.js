@@ -7,16 +7,16 @@ const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
 export default {
   methods: {
     ...mapMutations({
-      setInputValue: 'bwstarter/forms/setInputValue',
-      setInputValidating: 'bwstarter/forms/setInputValidating',
-      setInputValidationResult: 'bwstarter/forms/setInputValidationResult',
-      setInputDebounceValidate: 'bwstarter/forms/setInputDebounceValidate',
-      setInputCancelToken: 'bwstarter/forms/setInputCancelToken',
-      setInputLastValidationValue: 'bwstarter/forms/setInputLastValidationValue'
+      setInputValue: 'bwstarter/_forms/setInputValue',
+      setInputValidating: 'bwstarter/_forms/setInputValidating',
+      setInputValidationResult: 'bwstarter/_forms/setInputValidationResult',
+      setInputDebounceValidate: 'bwstarter/_forms/setInputDebounceValidate',
+      setInputCancelToken: 'bwstarter/_forms/setInputCancelToken',
+      setInputLastValidationValue: 'bwstarter/_forms/setInputLastValidationValue'
     }),
     ...mapActions({
-      submit: 'bwstarter/forms/submit',
-      refreshCancelToken: 'bwstarter/forms/refreshCancelToken'
+      submit: 'bwstarter/_forms/submit',
+      refreshCancelToken: 'bwstarter/_forms/refreshCancelToken'
     }),
     async inputBlur () {
       this.displayErrors = true
