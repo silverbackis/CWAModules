@@ -9,8 +9,8 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/core": "^0.4.1",
-        "@bwstarter/server": "^0.3.6"
+        "@cwamodules/core": "^0.4.1",
+        "@cwamodules/server": "^0.3.6"
     },
     "scripts": {
         "lint": "eslint lib ",
