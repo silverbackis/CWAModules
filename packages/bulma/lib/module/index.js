@@ -1,7 +1,7 @@
 const merge = require('lodash/merge')
 const defaults = require('./defaults')
 const { resolve, join } = require('path')
-const rreaddir = require('@bwstarter/core/lib/module/rreaddir')
+const rreaddir = require('@cwamodules/core/lib/module/rreaddir')
 
 const libRoot = resolve(__dirname, '..')
 
