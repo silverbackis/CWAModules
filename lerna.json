@@ -1,12 +1,8 @@
 {
   "lerna": "2.11.0",
   "npmClient": "yarn",
-  "useWorkspaces": true,
   "packages": [
-    "core",
-    "components",
-    "bulma",
-    "server"
+    "packages/*"
   ],
-  "version": "0.4.1"
+  "version": "0.1.0"
 }

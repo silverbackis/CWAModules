@@ -1,6 +1,6 @@
 {
-    "name": "@bwstarter/bulma",
-    "version": "0.4.1",
+    "name": "@cwamodules/components",
+    "version": "0.1.0",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,17 +9,11 @@
         "access": "public"
     },
     "dependencies": {
-        "@bwstarter/components": "^0.4.1",
         "@bwstarter/core": "^0.4.1",
-        "@bwstarter/server": "^0.3.6",
-        "bulma": "^0.7.1",
-        "vuedraggable": "^2"
+        "@bwstarter/server": "^0.3.6"
     },
     "scripts": {
         "lint": "eslint lib ",
         "lint-fix": "eslint --fix lib"
-    },
-    "eslintIgnore": [
-        "lib/module/plugin.template.js"
-    ]
+    }
 }
