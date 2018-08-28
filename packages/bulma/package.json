@@ -9,9 +9,9 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/components": "^0.1.3",
-        "@cwamodules/core": "^0.1.3",
-        "@cwamodules/server": "^0.3.6",
+        "@cwamodules/components": "^0",
+        "@cwamodules/core": "^0",
+        "@cwamodules/server": "^0",
         "bulma": "^0.7.1",
         "vuedraggable": "^2"
     },

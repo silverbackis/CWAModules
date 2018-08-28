@@ -9,7 +9,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/core": "^0.1.3",
+        "@cwamodules/core": "^0",
         "@cwamodules/server": "^0"
     },
     "scripts": {
