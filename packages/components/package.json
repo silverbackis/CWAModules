@@ -9,8 +9,8 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/core": "^0.4.1",
-        "@cwamodules/server": "^0.3.6"
+        "@cwamodules/core": "^0",
+        "@cwamodules/server": "^0"
     },
     "scripts": {
         "lint": "eslint lib ",
