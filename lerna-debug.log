@@ -1,0 +1,186 @@
+0 silly input [ 'publish' ]
+1 silly flags { _: [ 'publish' ], 'reject-cycles': false, rejectCycles: false }
+2 verbose rootPath /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules
+3 info version 2.11.0
+4 silly isInitialized
+5 silly isInitialized true
+6 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/VERSION
+7 silly initialize attempt
+8 info current version 0.1.0
+9 silly isDetachedHead
+10 silly getCurrentBranch
+11 verbose getCurrentBranch master
+12 verbose isDetachedHead false
+13 silly getCurrentBranch
+14 verbose getCurrentBranch master
+15 silly getUpdates
+16 info Checking for updated packages...
+17 silly hasTags
+18 verbose hasTags true
+19 silly getLastTag
+20 verbose getLastTag v0.4.1
+21 info Comparing with v0.4.1.
+22 silly diffSinceIn v0.4.1 packages/bulma
+23 silly diff packages/bulma/lib/core/assets/css/bulma_checkbox_radio.sass
+23 silly diff packages/bulma/lib/core/components/Admin/AdminBar.vue
+23 silly diff packages/bulma/lib/core/components/Collection/Collection.vue
+23 silly diff packages/bulma/lib/core/components/Collection/ColumnCollection.vue
+23 silly diff packages/bulma/lib/core/components/Collection/Item/ArticlePage.vue
+23 silly diff packages/bulma/lib/core/components/ComponentWrapper.vue
+23 silly diff packages/bulma/lib/core/components/Components.vue
+23 silly diff packages/bulma/lib/core/components/Content/Content.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Columns/FeatureColumnItem.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Columns/FeatureColumns.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Stacked/FeatureStacked.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Stacked/FeatureStackedItem.vue
+23 silly diff packages/bulma/lib/core/components/Feature/TextList/FeatureTextList.vue
+23 silly diff packages/bulma/lib/core/components/Form/Form.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Button.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Checkbox.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Choice.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Simple.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Textarea.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/_Mixin.js
+23 silly diff packages/bulma/lib/core/components/Form/Input/_Wrapper.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/Gallery.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/GalleryItem.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/PhotoSwipe.vue
+23 silly diff packages/bulma/lib/core/components/Hero/Hero.vue
+23 silly diff packages/bulma/lib/core/components/Image/SimpleImage.vue
+23 silly diff packages/bulma/lib/core/components/Layouts/SideColumn.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/Menu.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/MenuItem.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/MenuItemGroup.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Navbar/Navbar.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Navbar/NavbarItem.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/TabPageWrapper.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/Tabs.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/TabsItem.vue
+23 silly diff packages/bulma/lib/core/components/Nav/navItemMixin.js
+23 silly diff packages/bulma/lib/core/components/Notifications/Notification.vue
+23 silly diff packages/bulma/lib/core/components/Notifications/Notifications.vue
+23 silly diff packages/bulma/lib/core/components/componentMixin.js
+23 silly diff packages/bulma/lib/core/components/nuxtChildMixin.js
+23 silly diff packages/bulma/lib/core/error.vue
+23 silly diff packages/bulma/lib/core/layouts/default.vue
+23 silly diff packages/bulma/lib/core/pages/_base.vue
+23 silly diff packages/bulma/lib/core/pages/login.vue
+23 silly diff packages/bulma/lib/module/components.template.js
+23 silly diff packages/bulma/lib/module/defaults.js
+23 silly diff packages/bulma/lib/module/index.js
+23 silly diff packages/bulma/package.json
+24 silly diffSinceIn v0.4.1 packages/components
+25 silly diff packages/components/lib/core/Admin/Quill.vue
+25 silly diff packages/components/lib/core/Admin/Text.vue
+25 silly diff packages/components/lib/core/Admin/_Input.js
+25 silly diff packages/components/lib/core/Admin/css/quill.min.sass
+25 silly diff packages/components/lib/core/Form/Form.vue
+25 silly diff packages/components/lib/core/Form/FormInput.vue
+25 silly diff packages/components/lib/core/Form/Input/Button.vue
+25 silly diff packages/components/lib/core/Form/Input/Checkbox.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/ChoiceExpanded.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/ChoiceSelect.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/Option/ChoiceExpandedOption.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/Option/ChoiceSelectOption.vue
+25 silly diff packages/components/lib/core/Form/Input/Mixin/computed.js
+25 silly diff packages/components/lib/core/Form/Input/Mixin/index.js
+25 silly diff packages/components/lib/core/Form/Input/Mixin/lifecycle.js
+25 silly diff packages/components/lib/core/Form/Input/Mixin/methods.js
+25 silly diff packages/components/lib/core/Form/Input/Simple.vue
+25 silly diff packages/components/lib/core/Form/Input/Textarea.vue
+25 silly diff packages/components/lib/core/Form/Input/_CommonMixin.js
+25 silly diff packages/components/lib/core/Form/_Mixin.js
+25 silly diff packages/components/lib/core/Utils/AppLink.vue
+25 silly diff packages/components/lib/core/Utils/ImageLoader.vue
+25 silly diff packages/components/lib/core/Utils/canvasCover.js
+25 silly diff packages/components/lib/core/Utils/stackBlur.js
+25 silly diff packages/components/lib/core/componentMixin.js
+25 silly diff packages/components/lib/core/nuxtChildMixin.js
+25 silly diff packages/components/lib/core/pageMixin.js
+25 silly diff packages/components/lib/module/defaults.js
+25 silly diff packages/components/lib/module/index.js
+25 silly diff packages/components/package.json
+26 silly diffSinceIn v0.4.1 packages/core
+27 silly diff packages/core/lib/core/bw_starter.js
+27 silly diff packages/core/lib/core/middleware/index.js
+27 silly diff packages/core/lib/core/server/index.js
+27 silly diff packages/core/lib/core/storage/admin/index.js
+27 silly diff packages/core/lib/core/storage/admin/module.js
+27 silly diff packages/core/lib/core/storage/content/index.js
+27 silly diff packages/core/lib/core/storage/entities/index.js
+27 silly diff packages/core/lib/core/storage/form/index.js
+27 silly diff packages/core/lib/core/storage/form/module.js
+27 silly diff packages/core/lib/core/storage/index.js
+27 silly diff packages/core/lib/module/defaults.js
+27 silly diff packages/core/lib/module/index.js
+27 silly diff packages/core/lib/module/plugin.template.js
+27 silly diff packages/core/lib/module/rreaddir.js
+27 silly diff packages/core/lib/plugins/mixin.js
+27 silly diff packages/core/lib/plugins/quill.js
+27 silly diff packages/core/lib/plugins/vue-cookie.js
+27 silly diff packages/core/package.json
+28 silly diffSinceIn v0.4.1 packages/server
+29 silly diff packages/server/dist/index.js
+29 silly diff packages/server/package.json
+29 silly diff packages/server/src/index.js
+29 silly diff packages/server/src/utilities.js
+29 silly diff packages/server/webpack.config.js
+30 verbose updated @cwamodules/bulma
+31 verbose updated @cwamodules/components
+32 verbose updated @cwamodules/core
+33 verbose updated @cwamodules/server
+34 info Checking for prereleased packages...
+35 silly collectDependents
+36 silly isPackageDependentOf @cwamodules/bulma @cwamodules/bulma
+37 silly isPackageDependentOf @cwamodules/bulma @cwamodules/components
+38 silly isPackageDependentOf @cwamodules/bulma @cwamodules/core
+39 silly isPackageDependentOf @cwamodules/bulma @cwamodules/server
+40 silly isPackageDependentOf @cwamodules/components @cwamodules/bulma
+41 silly isPackageDependentOf @cwamodules/components @cwamodules/components
+42 silly isPackageDependentOf @cwamodules/components @cwamodules/core
+43 silly isPackageDependentOf @cwamodules/components @cwamodules/server
+44 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
+45 silly isPackageDependentOf @cwamodules/core @cwamodules/components
+46 silly isPackageDependentOf @cwamodules/core @cwamodules/core
+47 silly isPackageDependentOf @cwamodules/core @cwamodules/server
+48 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
+49 silly isPackageDependentOf @cwamodules/server @cwamodules/components
+50 silly isPackageDependentOf @cwamodules/server @cwamodules/core
+51 silly isPackageDependentOf @cwamodules/server @cwamodules/server
+52 silly collectUpdates
+53 verbose has filtered update @cwamodules/bulma
+54 verbose has filtered update @cwamodules/components
+55 verbose has filtered update @cwamodules/core
+56 verbose has filtered update @cwamodules/server
+57 silly initialize success
+58 silly execute attempt
+59 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/lerna.json
+60 silly runScriptSync preversion undefined
+61 silly runScriptSync preversion @cwamodules/bulma
+62 silly runScriptSync version @cwamodules/bulma
+63 silly runScriptSync preversion @cwamodules/components
+64 silly runScriptSync version @cwamodules/components
+65 silly runScriptSync preversion @cwamodules/core
+66 silly runScriptSync version @cwamodules/core
+67 silly runScriptSync preversion @cwamodules/server
+68 silly runScriptSync version @cwamodules/server
+69 silly runScriptSync version undefined
+70 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/package.json
+71 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/package.json
+72 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/package.json
+73 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/package.json
+74 silly commit v0.1.0
+75 verbose commit [ 'commit', '--no-verify', '-m', 'v0.1.0' ]
+76 error execute caught error
+77 error Error: On branch master
+77 error Your branch is up to date with 'origin/master'.
+77 error
+77 error nothing to commit, working tree clean
+77 error
+77 error     at Function.module.exports.sync (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:303:26)
+77 error     at Function.execSync (/usr/local/lib/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
+77 error     at Function.commit (/usr/local/lib/node_modules/lerna/lib/GitUtilities.js:94:39)
+77 error     at PublishCommand.gitCommitAndTagVersion (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:778:30)
+77 error     at PublishCommand.commitAndTagUpdates (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:740:27)
+77 error     at PublishCommand.execute (/usr/local/lib/node_modules/lerna/lib/commands/PublishCommand.js:329:14)
