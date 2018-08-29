@@ -33,7 +33,7 @@ export default {
     },
     realComponentData () {
       let tempComponent = Object.assign({}, this.component)
-      for(let [key, value] of Object.entries(this.component)) {
+      for (let [key, value] of Object.entries(this.component)) {
         if (this.isString(value)) {
           const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
           const matches = expr.exec(value)
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     isString (value) {
-      return typeof value === 'string' || value instanceof String;
+      return typeof value === 'string' || value instanceof String
     },
     injectDynamicData (string) {
       if (!string || !this.isString(string)) {

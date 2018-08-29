@@ -19,17 +19,32 @@ export default {
     componentField: {
       type: String,
       required: true
+    },
+    isNumber: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
     dataModel: {
       get () {
-        return this.model
+        return this.$bwstarter.getAdminInputModel(this.adminInputData())
       },
       set (model) {
         this.$bwstarter.setAdminInputModel(this.adminInputData({
           model
         }))
+        this.$nextTick(() => {
+          if (this.$el !== document.activeElement) {
+            this.$el.focus()
+          }
+        })
+      }
+    },
+    inputProps () {
+      return {
+        placeholder: this.placeholder,
+        class: 'cms-text-input'
       }
     }
   },

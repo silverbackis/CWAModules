@@ -9,7 +9,7 @@ module.exports = function (moduleOptions) {
   const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
   copyPlugins.call(this, options)
   copyCore.call(this)
-};
+}
 
 function copyCore () {
   const coreRoot = resolve(libRoot, 'core')

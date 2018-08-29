@@ -33,11 +33,11 @@ function copyCore () {
   }
 }
 
-function initPages(options) {
+function initPages (options) {
   this.extendRoutes((routes, resolve) => {
     let loginExists = routes.some((route) => {
       return route.name === 'login'
-    });
+    })
     if (!loginExists) {
       routes.push({
         name: 'login',
@@ -50,10 +50,10 @@ function initPages(options) {
     let lastPage
     [...Array(options.pagesDepth)].forEach((_, i) => {
       let page = {
-        path: ":page" + i + "?",
+        path: ':page' + i + '?',
         component: resolve('~/.nuxt/bwstarter/bulma/pages/_base'),
-        name: "page" + i
-      };
+        name: 'page' + i
+      }
       if (lastPage) {
         page.name = lastPage.name + '-' + page.name
         lastPage.children = [page]
@@ -62,7 +62,7 @@ function initPages(options) {
         pages = page
       }
       lastPage = page
-    });
+    })
     pages && routes.push(pages)
   })
 }

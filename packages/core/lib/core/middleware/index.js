@@ -10,10 +10,10 @@ Middleware.initErrorHandler = function ({ store: { state }, error }) {
   if (state.error) {
     error(state.error)
   }
-};
+}
 
 Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, route, redirect, error, res, $bwstarter }) {
-  const currentPath = $bwstarter.$storage.get('getCurrentRoute', [], contentModuleName);
+  const currentPath = $bwstarter.$storage.get('getCurrentRoute', [], contentModuleName)
 
   // Middleware defined on pages - prevent route loading for each page depth
   const path = compile(route.path)(route.params) || '/'
@@ -21,50 +21,50 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     logging && console.log('Page not loading, already at path ' + path)
     return
   }
-  $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName);
+  $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName)
 
-  let routeData, response;
+  let routeData, response
   try {
-    response = await $bwstarter.getRoute(path);
+    response = await $bwstarter.getRoute(path)
     routeData = response.data
   } catch (err) {
     try {
       response = await $bwstarter.fetchLayout()
     } catch (err) {
-      $bwstarter.setResponseErrorPage(err);
+      $bwstarter.setResponseErrorPage(err)
       return
     }
-    process.server && Utilities.setResponseCookies(res, response);
-    $bwstarter.setResponseErrorPage(err);
+    process.server && Utilities.setResponseCookies(res, response)
+    $bwstarter.setResponseErrorPage(err)
     return
   }
-  process.server && Utilities.setResponseCookies(res, response);
+  process.server && Utilities.setResponseCookies(res, response)
 
   if (!routeData) {
     console.warn(routeData)
-    error({statusCode: 500, message: 'Error fetching from API - No Route Data'});
+    error({statusCode: 500, message: 'Error fetching from API - No Route Data'})
     return
   }
   if (typeof routeData !== 'object') {
-    console.warn(routeData);
-    error({statusCode: 500, message: 'API returned invalid JSON'});
+    console.warn(routeData)
+    error({statusCode: 500, message: 'API returned invalid JSON'})
     return
   }
 
   if (MAX_REDIRECTS) {
-    let redirects = 0;
+    let redirects = 0
     while (
       routeData.redirect &&
       redirects <= MAX_REDIRECTS
     ) {
-      routeData = routeData.redirect;
+      routeData = routeData.redirect
       redirects++
     }
     if (redirects) {
-      redirect(routeData.route);
+      redirect(routeData.route)
       return
     }
   }
 
   await $bwstarter.initRoute(routeData)
-};
+}

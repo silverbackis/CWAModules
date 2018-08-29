@@ -20,6 +20,9 @@
         "lint-fix": "eslint --fix lib"
     },
     "eslintIgnore": [
-        "lib/module/plugin.template.js"
-    ]
+        "lib/module/components.template.js"
+    ],
+    "devDependencies": {
+        "eslint-plugin-lodash-template": "^0.11.0"
+    }
 }

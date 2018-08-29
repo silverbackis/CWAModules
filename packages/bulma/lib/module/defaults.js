@@ -15,4 +15,4 @@ module.exports = {
     SideColumn: '~/.nuxt/bwstarter/bulma/components/Layouts/SideColumn.vue',
     SimpleImage: '~/.nuxt/bwstarter/bulma/components/Image/SimpleImage.vue'
   }
-};
+}

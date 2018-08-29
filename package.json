@@ -7,6 +7,7 @@
         "compile": "lerna run compile",
         "clean": "lerna run clean",
         "lint": "lerna run lint",
+        "lint-fix": "lerna run lint-fix",
         "test": "lerna run test",
         "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
         "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",

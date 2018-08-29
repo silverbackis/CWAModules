@@ -1,6 +1,5 @@
 import { Utilities } from '~/.nuxt/bwstarter/core/server'
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
-import { mapMutations } from 'vuex'
 
 export default {
   computed: {
@@ -15,7 +14,7 @@ export default {
     }
   },
   methods: {
-    destroyForm() {
+    destroyForm () {
       this.$bwstarter.$storage.commit('destroy', [this.formId], FORMS_MODULE)
     }
   }

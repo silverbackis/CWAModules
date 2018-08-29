@@ -10,23 +10,25 @@ export const state = () => ({
 })
 
 export const mutations = {
-  initAdminInput(state, { componentId, componentField, model, postSaveFn }) {
+  initAdminInput (state, { componentId, componentField, model, postSaveFn }, force = false) {
     if (!state.endpoints[ componentId ]) {
       Vue.set(state.endpoints, componentId, {
         inputs: {}
       })
     }
-    Vue.set(state.endpoints[ componentId ].inputs, componentField, {
-      savedModel: model,
-      model,
-      postSaveFn
-    })
+    if (force || !state.endpoints[ componentId ].inputs[componentField]) {
+      Vue.set(state.endpoints[ componentId ].inputs, componentField, {
+        savedModel: model,
+        model,
+        postSaveFn
+      })
+    }
   },
-  setModel(state, { componentId, componentField, model }) {
+  setModel (state, { componentId, componentField, model }) {
     let field = state.endpoints[ componentId ].inputs[ componentField ]
     field.model = model
   },
-  updateComponent(state, data) {
+  updateComponent (state, data) {
     const id = data[ '@id' ]
     let endpoint = state.endpoints[ id ]
     if (endpoint) {
@@ -38,7 +40,7 @@ export const mutations = {
       })
     }
   },
-  destroyAdminInput(state, { componentId, componentField }) {
+  destroyAdminInput (state, { componentId, componentField }) {
     if (state.endpoints[ componentId ]) {
       Vue.delete(state.endpoints[ componentId ].inputs, componentField)
       if (!Object.keys(state.endpoints[ componentId ].inputs).length) {
@@ -46,16 +48,16 @@ export const mutations = {
       }
     }
   },
-  setSubmitting(state, { endpointKey, value }) {
+  setSubmitting (state, { endpointKey, value }) {
     Vue.set(state.submitting, endpointKey, value)
   },
-  deleteSubmitting(state, endpointKey) {
+  deleteSubmitting (state, endpointKey) {
     Vue.delete(state.submitting, endpointKey)
   },
-  setWaitingToSubmit(state, { endpointKey, value = true }) {
+  setWaitingToSubmit (state, { endpointKey, value = true }) {
     Vue.set(state.waitingToSubmit, endpointKey, value)
   },
-  deleteWaitingToSubmit(state, endpointKey) {
+  deleteWaitingToSubmit (state, endpointKey) {
     Vue.delete(state.waitingToSubmit, endpointKey)
   }
 }
@@ -81,11 +83,18 @@ export const getters = {
       return Object.keys(state.submitting).length > 0 || Object.keys(state.waitingToSubmit).length > 0
     }
     return Boolean(state.submitting[ endpointKey ]) || Boolean(state.waitingToSubmit[ endpointKey ])
+  },
+  getInputModel: (state) => ({componentId, componentField}) => {
+    const endpoint = state.endpoints[ componentId ]
+    if (!endpoint || !endpoint.inputs[ componentField ]) {
+      return null
+    }
+    return endpoint.inputs[componentField].model
   }
 }
 
 export const actions = {
-  modifiedEndpoints({ state }) {
+  modifiedEndpoints ({ state }) {
     let endpoints = {}
     Object.keys(state.endpoints).some((endpointKey) => {
       const stateInputs = state.endpoints[ endpointKey ].inputs
@@ -103,7 +112,7 @@ export const actions = {
     })
     return endpoints
   },
-  async save({ state, dispatch, commit }, patchEndpoints) {
+  async save ({ state, dispatch, commit }, patchEndpoints) {
     if (!patchEndpoints) {
       patchEndpoints = await dispatch('modifiedEndpoints')
     }
@@ -125,11 +134,11 @@ export const actions = {
         .then(({ data }) => {
           commit('updateComponent', data)
           commit('deleteSubmitting', endpointKey)
-          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], ENTITIES_MODULE);
+          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], ENTITIES_MODULE)
           if (component) {
             this.$bwstarter.$storage.commit('setComponent', [{id: endpointKey, data}], ENTITIES_MODULE)
           }
-          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey]);
+          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey])
           if (content) {
             this.$bwstarter.$storage.commit('setContentById', [{id: endpointKey, data}])
           }
@@ -139,8 +148,8 @@ export const actions = {
         })
     })
   },
-  async debouncedSave({ dispatch, commit }) {
-    let patchEndpoints = await dispatch('modifiedEndpoints');
+  async debouncedSave ({ dispatch, commit }) {
+    let patchEndpoints = await dispatch('modifiedEndpoints')
     const saveDebounce = _debounce(async () => {
       dispatch('save', patchEndpoints)
       Object.keys(patchEndpoints).forEach((endpointKey) => {
@@ -150,6 +159,6 @@ export const actions = {
     Object.keys(patchEndpoints).forEach((endpointKey) => {
       commit('setWaitingToSubmit', { endpointKey, value: saveDebounce })
     })
-    saveDebounce();
+    saveDebounce()
   }
 }

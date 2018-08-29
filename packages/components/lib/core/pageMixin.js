@@ -26,7 +26,7 @@ export default {
   computed: {
     pageData () {
       // this is computed while middleware
-      return this.$bwstarter.$storage.get('getContentAtDepth', [this.depth], contentModuleName)
+      return this.$bwstarter.$storage.get('getContentAtDepth', [this.depth, this.loadedRoute], contentModuleName)
     },
     title () {
       return this.pageData.title
@@ -38,7 +38,7 @@ export default {
       return this.$vnode.data.nuxtChildDepth
     },
     childKey () {
-      return this.$route.params['page' + (this.depth+1)]
+      return this.$route.params['page' + (this.depth + 1)]
     },
     realPageData () {
       if (
@@ -55,6 +55,11 @@ export default {
     return {
       name: 'page',
       mode: 'out-in'
+    }
+  },
+  asyncData ({ route }) {
+    return {
+      loadedRoute: route.path
     }
   }
 }

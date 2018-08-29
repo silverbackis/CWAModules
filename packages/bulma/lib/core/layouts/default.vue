@@ -39,7 +39,7 @@
     },
     computed: {
       structure () {
-        return this.$bwstarter.$storage.get('fetchLayout', [], contentModuleName).structure
+        return this.$bwstarter.$storage.get('getLayout', [], contentModuleName).structure
       },
       getApiUrl () {
         return this.$bwstarter.$storage.get('getApiUrl')

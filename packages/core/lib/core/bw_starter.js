@@ -1,9 +1,8 @@
 import { Storage } from './storage'
 import { name as ADMIN_MODULE } from './storage/admin'
-import { BWServer, Utilities }  from './server'
+import { BWServer, Utilities } from './server'
 import { name as contentModuleName } from './storage/content'
 import { name as entitiesModuleName } from './storage/entities'
-import _omit from 'lodash/omit'
 
 const logging = process.env.NODE_ENV === 'development'
 const TOKEN_EXPIRE_BUFFER_SECS = 10
@@ -12,15 +11,15 @@ const DEFAULT_LAYOUT = '/layouts/default'
 
 export default class BWStarter {
   constructor (ctx, options) {
-    this.error = ctx.error;
-    this.$axios = ctx.$axios;
+    this.error = ctx.error
+    this.$axios = ctx.$axios
     options.initialState = {
       error: null,
       apiUrl: process.env.API_URL_BROWSER + '/',
       notifications: []
-    };
-    options.initialState[TOKEN_KEY] = null;
-    this.$storage = new Storage(ctx, options);
+    }
+    options.initialState[ TOKEN_KEY ] = null
+    this.$storage = new Storage(ctx, options)
     if (process.server) {
       this.__initSession(ctx)
     }
@@ -29,7 +28,7 @@ export default class BWStarter {
 
   __initSession ({ req: { session }, res }) {
     if (session && session.authToken) {
-      Utilities.setJwtCookie(res, session.authToken);
+      Utilities.setJwtCookie(res, session.authToken)
       this.$storage.setState(TOKEN_KEY, session.authToken)
     }
   }
@@ -40,11 +39,11 @@ export default class BWStarter {
     // --------
     const handleRefreshError = async (refreshError) => {
       await this.logout()
-      logging && console.warn('refreshError', refreshError);
+      logging && console.warn('refreshError', refreshError)
       if (refreshError.statusCode >= 500 && refreshError.statusCode < 600) {
         return Promise.reject(refreshError)
       }
-    };
+    }
 
     const serverRefresh = async (config) => {
       try {
@@ -53,7 +52,7 @@ export default class BWStarter {
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
-    };
+    }
 
     const clientRefresh = async (config) => {
       try {
@@ -66,7 +65,7 @@ export default class BWStarter {
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
-    };
+    }
 
     // --------
     // Adjust requests to include auth + xsrf headers
@@ -81,16 +80,16 @@ export default class BWStarter {
         config.headers = Object.assign(config.headers, headers)
       }
       return config
-    };
+    }
 
     // --------
     // Intercept requests with expired token
     // --------
     this.$axios.interceptors.request.use(async (config) => {
-      const noBaseUrl = (config.baseURL === null || config.baseURL === '');
+      const noBaseUrl = (config.baseURL === null || config.baseURL === '')
       let isApiRequest = false
       if (!noBaseUrl) {
-        const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl');
+        const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl')
         isApiRequest = API_URL.startsWith(config.baseURL)
       }
       if (!isApiRequest) {
@@ -98,7 +97,7 @@ export default class BWStarter {
       }
 
       // Add API request headers
-      const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null;
+      const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null
       if (
         this.user &&
         authDiff < TOKEN_EXPIRE_BUFFER_SECS &&
@@ -144,9 +143,9 @@ export default class BWStarter {
 
   setResponseErrorPage (error) {
     if (error.response && error.response.status) {
-      this.error({statusCode: error.response.status, message: error.response.statusText, url: error.response.config.url})
+      this.error({ statusCode: error.response.status, message: error.response.statusText, url: error.response.config.url })
     } else {
-      this.error({statusCode: error.statusCode || 500, message: 'Unexpected server erroror', url: error.message})
+      this.error({ statusCode: error.statusCode || 500, message: 'Unexpected server erroror', url: error.message })
       console.error(error)
     }
   }
@@ -169,27 +168,31 @@ export default class BWStarter {
   }
 
   get isAdmin () {
-    return this.$storage.get('hasRole', ['ROLE_ADMIN'])
+    return this.$storage.get('hasRole', [ 'ROLE_ADMIN' ])
   }
 
   addNotification (message) {
-    this.$storage.commit('addNotification', [message])
+    this.$storage.commit('addNotification', [ message ])
   }
 
   removeNotification (index) {
-    this.$storage.commit('removeNotification', [index])
+    this.$storage.commit('removeNotification', [ index ])
   }
 
   initAdminInput (data) {
-    this.$storage.commit('initAdminInput', [data], ADMIN_MODULE)
+    this.$storage.commit('initAdminInput', [ data ], ADMIN_MODULE)
   }
 
   destroyAdminInput (data) {
-    this.$storage.commit('destroyAdminInput', [data], ADMIN_MODULE)
+    this.$storage.commit('destroyAdminInput', [ data ], ADMIN_MODULE)
   }
 
   setAdminInputModel (data) {
-    this.$storage.commit('setModel', [data], ADMIN_MODULE)
+    this.$storage.commit('setModel', [ data ], ADMIN_MODULE)
+  }
+
+  getAdminInputModel ({ componentId, componentField }) {
+    return this.$storage.get('getInputModel', [ { componentId, componentField } ], ADMIN_MODULE)
   }
 
   save (debounce = false) {
@@ -199,76 +202,82 @@ export default class BWStarter {
   initRoute ({ route, content }) {
     // NEW
     const stripContent = (obj) => {
-      obj = Object.assign({}, obj);
-      delete obj.parent;
-      delete obj.layout;
+      obj = Object.assign({}, obj)
+      delete obj.parent
+      delete obj.layout
       return obj
-    };
-    let contentData = [stripContent(content)];
-    let fetchLayoutPromise = this.initLayoutFromContent(content, true);
+    }
+    let contentData = [ stripContent(content) ]
+    let fetchLayoutPromise = this.storeAndFetchLayout(content.layout, true)
     while (content.parent) {
-      contentData.unshift(stripContent(content));
-      this.initLayoutFromContent(content, false);
+      contentData.unshift(stripContent(content))
+      this.storeAndFetchLayout(content.layout, false)
       content = content.parent
     }
-    this.$storage.commit('setRoute', [{route, data: contentData}], contentModuleName);
+    this.$storage.commit('setRoute', [ { route, data: contentData } ], contentModuleName)
     // --------
     // Request all components / layouts and add to a promises array
     // --------
     let promises = [
       fetchLayoutPromise
-    ];
+    ]
     contentData.forEach((content) => {
       if (content.componentLocations && content.componentLocations.length) {
         promises.push(this.fetchContent(content))
       }
-    });
+    })
     return Promise.all(promises)
-      .then(() => {
-        this.$storage.commit('setLoadedRoute', [route], contentModuleName);
-      })
-    ;
   }
 
-  initLayoutFromContent (content, current = false) {
-    this.$storage.commit('setLayout', [{id: content.layout['@id'], data: content.layout}], contentModuleName);
+  storeAndFetchLayout (layout, current = false) {
+    this.storeLayoutContent(layout, current)
+    return this.fetchLayout(layout[ '@id' ])
+  }
+
+  async fetchAndStoreLayout (layout = DEFAULT_LAYOUT, current = false) {
+    let response = await this.fetchLayout(layout)
+    this.storeLayoutContent(response.data, current)
+    return response
+  }
+
+  storeLayoutContent (layout, current = false) {
+    this.$storage.commit('setLayout', [ { id: layout[ '@id' ], data: layout } ], contentModuleName)
     if (current) {
-      this.$storage.commit('setCurrentLayout', [content.layout['@id']], contentModuleName);
+      this.$storage.commit('setCurrentLayout', [ layout[ '@id' ] ], contentModuleName)
     }
-    return this.fetchLayout(content.layout['@id'])
   }
 
-  async fetchLayout (url = DEFAULT_LAYOUT) {
-    let response = await this.request({ url });
-    const data = response.data;
-    this.$storage.commit('setEntity', [{id: data['@id'], data}], entitiesModuleName);
-    if (data.navBar) {
-      const locations = [{ component: data.navBar }];
-      const entities = getEntitiesFromLocations(locations);
+  async fetchLayout (url) {
+    let response = await this.request({ url })
+    const layout = response.data
+    this.$storage.commit('setEntity', [ { id: layout[ '@id' ], data: layout } ], entitiesModuleName)
+    if (layout.navBar) {
+      const locations = [ { component: layout.navBar } ]
+      const entities = getEntitiesFromLocations(locations)
       this.setEntities(entities)
     }
     return response
   }
 
   async fetchContent (content) {
-    let { data: { componentLocations } } = await this.request({ url: content['@id'] })
+    let { data: { componentLocations } } = await this.request({ url: content[ '@id' ] })
     let entities = getEntitiesFromLocations(componentLocations)
     this.setEntities(entities)
   }
 
   setEntities (components) {
-    for(let [componentId, component] of Object.entries(components)) {
-      if(component.collection) {
+    for (let [ componentId, component ] of Object.entries(components)) {
+      if (component.collection) {
         const collectionObj = component.collection.reduce((obj, item) => {
-          obj[item['@id']] = item
+          obj[ item[ '@id' ] ] = item
           return obj
         }, {})
         this.setEntities(collectionObj)
         component = Object.assign({}, component, {
-          collection: Array.from(component.collection, item => item['@id'] || item)
+          collection: Array.from(component.collection, item => item[ '@id' ] || item)
         })
       }
-      this.$storage.commit('setEntity', [{id: componentId, data: component}], entitiesModuleName)
+      this.$storage.commit('setEntity', [ { id: componentId, data: component } ], entitiesModuleName)
     }
   }
 }
@@ -276,23 +285,23 @@ export default class BWStarter {
 const getEntitiesFromLocations = function (locations) {
   let entities = {}
   locations.forEach((location) => {
-    const component = location.component;
-    if (location['@id']) {
-      entities[location['@id']] = _omit(location, ['component']);
+    const component = location.component
+    if (location[ '@id' ]) {
+      entities[ location[ '@id' ] ] = Object.assign({}, location, { component: component[ '@id' ] })
     }
-    entities[component['@id']] = component;
+    entities[ component[ '@id' ] ] = component
 
     if (component.componentGroups) {
       component.componentGroups.forEach(({ componentLocations }) => {
         if (componentLocations) {
           entities = Object.assign(entities, getEntitiesFromLocations(componentLocations))
         }
-      });
+      })
     }
 
     if (component.childComponentGroup && component.childComponentGroup.componentLocations.length) {
       entities = Object.assign(entities, getEntitiesFromLocations(component.childComponentGroup.componentLocations))
     }
-  });
-  return entities;
-};
+  })
+  return entities
+}

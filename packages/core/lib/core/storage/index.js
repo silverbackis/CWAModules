@@ -9,13 +9,13 @@ import ENTITIES_STORE from './entities'
 
 import { join } from 'path'
 
-const MODULES = [ CONTENT_STORE, ENTITIES_STORE, FORM_STORE, ADMIN_STORE ];
+const MODULES = [ CONTENT_STORE, ENTITIES_STORE, FORM_STORE, ADMIN_STORE ]
 
 export class Storage {
   constructor (ctx, options) {
-    this.ctx = ctx;
-    this.options = options;
-    this.__initModules();
+    this.ctx = ctx
+    this.options = options
+    this.__initModules()
   }
 
   preserveModuleState (modules = []) {
@@ -70,19 +70,19 @@ export class Storage {
           state.notifications = {}
         }
       }
-    };
+    }
 
     this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
       preserveState: this.preserveModuleState(),
       strict: false
-    });
+    })
 
     MODULES.forEach((store) => {
       this.ctx.store.registerModule([this.options.vuex.namespace, store.name], Object.assign({ namespaced: true }, store.store), {
         preserveState: this.preserveModuleState(store.name),
         strict: false
       })
-    });
+    })
 
     this.state = this.ctx.store.state[this.options.vuex.namespace]
   }
@@ -91,7 +91,7 @@ export class Storage {
     this.commit('SET', [{
       key,
       value
-    }], modules);
+    }], modules)
     return value
   }
 

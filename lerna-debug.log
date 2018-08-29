@@ -1,0 +1,34 @@
+0 silly input [ 'lint-fix' ]
+1 silly flags { _: [ 'run' ],
+1 silly flags   'reject-cycles': false,
+1 silly flags   rejectCycles: false,
+1 silly flags   script: 'lint-fix',
+1 silly flags   args: [] }
+2 verbose rootPath /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules
+3 info version 2.11.0
+4 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/VERSION
+5 silly initialize attempt
+6 silly initialize success
+7 silly execute attempt
+8 silly runScriptInDir lint-fix [] core
+9 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core' }
+10 silly runScriptInDir lint-fix [] components
+11 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components' }
+12 silly runScriptInDir lint-fix [] bulma
+13 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma' }
+14 error lint-fix Errored while running script in '@cwamodules/bulma'
+15 error execute callback with error
+16 error Error: Command failed: yarn run lint-fix
+16 error warning package.json: No license field
+16 error error Command failed with exit code 1.
+16 error $ eslint --fix lib
+16 error
+16 error /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/lib/module/components.template.js
+16 error   2:2  error  Parsing error: Unexpected token %
+16 error
+16 error ✖ 1 problem (1 error, 0 warnings)
+16 error
+16 error info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+16 error
+16 error     at Promise.all.then.arr (/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/node_modules/execa/index.js:236:11)
+16 error     at <anonymous>

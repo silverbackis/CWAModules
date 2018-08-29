@@ -6,7 +6,8 @@ import { mapGetters } from 'vuex'
 Vue.mixin({
   computed: {
     ...mapGetters({
-      getEntity: options.vuex.namespace + '/' + entityModuleName + '/getEntity'
+      getEntity: options.vuex.namespace + '/' + entityModuleName + '/getEntity',
+      getEntities: options.vuex.namespace + '/' + entityModuleName + '/getEntities'
     })
   }
 })

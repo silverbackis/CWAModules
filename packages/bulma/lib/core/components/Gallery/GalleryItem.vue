@@ -42,7 +42,14 @@
                           componentField="sort"
                           placeholder="Sort order value"
                           class="input"
+                          :isNumber="true"
         />
+      </div>
+    </div>
+    <div v-if="$bwstarter.isAdmin"
+         class="field"
+    >
+      <div class="control">
         <admin-text-input :model="injectDynamicData(component.caption)"
                           :componentId="endpoint"
                           componentField="caption"
@@ -66,10 +73,6 @@
         type: Array,
         required: true
       },
-      index: {
-        type: Number,
-        required: true
-      },
       $photoswipe: {
         type: Object
       },
@@ -84,11 +87,6 @@
     },
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' })
-    },
-    watch: {
-      index (newVal, oldVal) {
-        console.log('index changed...', index)
-      }
     }
   }
 </script>

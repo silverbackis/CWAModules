@@ -1,7 +1,13 @@
 <template>
-  <input v-model="dataModel"
-         :placeholder="placeholder"
-         class="cms-text-input"
+  <input v-if="isNumber"
+         v-model.number="dataModel"
+         type="number"
+         v-bind="inputProps"
+  />
+  <input v-else
+         v-model="dataModel"
+         type="text"
+         v-bind="inputProps"
   />
 </template>
 
