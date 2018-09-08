@@ -26,7 +26,7 @@ export default {
   computed: {
     pageData () {
       // this is computed while middleware
-      return this.$bwstarter.$storage.get('getContentAtDepth', [this.depth, this.loadedRoute], contentModuleName)
+      return this.$bwstarter.$storage.get('getContentAtDepth', [ this.depth, this.loadedRoute ], contentModuleName)
     },
     title () {
       return this.pageData.title

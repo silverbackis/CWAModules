@@ -10,6 +10,8 @@
                   :component="getEntity(location.component)"
                   :location="location"
                   :$photoswipe="$photoswipe"
+                  @moveup="moveLocationUp(location)"
+                  @movedown="moveLocationDown(location)"
     />
   </component>
 </template>
@@ -17,6 +19,7 @@
 <script>
   import GalleryItem from './GalleryItem'
   import _sortBy from 'lodash/sortBy'
+  import _findIndex from 'lodash/findIndex'
 
   export default {
     props: {
@@ -45,20 +48,8 @@
           for (const [index,location] of locations.entries()) {
             // update the entities
             this.$bwstarter.setAdminInputModel(this.adminInputData(location, {
-              model: index
+              model: index+1
             }))
-
-            // this.$bwstarter.$storage.commit(
-            //   'setEntity', [
-            //     {
-            //       id: location[ '@id' ],
-            //       data: Object.assign(
-            //         {},
-            //         location,
-            //         {sort: index}
-            //       )
-            //     }
-            //   ], entitiesModuleName)
           }
         }
       },
@@ -82,12 +73,15 @@
         return this.sortedLocations.map(({ component }) => {
           const entityComponent = this.getEntity(component)
           const image = entityComponent[ 'file:image' ]
+          if (!image) {
+            return null
+          }
           return {
             src: image.publicPath,
             w: image.width,
             h: image.height
           }
-        })
+        }).filter((data) => data !== null)
       },
       containerProps() {
         if (this.$bwstarter && this.$bwstarter.isAdmin) {
@@ -133,6 +127,21 @@
           },
           data
         )
+      },
+      moveLocationUp(location) {
+        const index = this.findLocationIndex(location)
+        this.sortableLocations = this.move(this.sortableLocations, index, index-1);
+      },
+      moveLocationDown(location) {
+        const index = this.findLocationIndex(location)
+        this.sortableLocations = this.move(this.sortableLocations, index, index+1);
+      },
+      findLocationIndex(location) {
+        return _findIndex(this.sortableLocations, (loc) => loc['@id']=== location['@id'])
+      },
+      move(arr, pos1, pos2) {
+        arr.splice(pos2, 0, arr.splice(pos1, 1)[0])
+        return arr
       }
     },
     created() {

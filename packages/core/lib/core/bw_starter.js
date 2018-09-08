@@ -200,7 +200,6 @@ export default class BWStarter {
   }
 
   initRoute ({ route, content }) {
-    // NEW
     const stripContent = (obj) => {
       obj = Object.assign({}, obj)
       delete obj.parent
@@ -208,19 +207,16 @@ export default class BWStarter {
       return obj
     }
     let contentData = [ stripContent(content) ]
-    let fetchLayoutPromise = this.storeAndFetchLayout(content.layout, true)
+    let promises = [ this.storeAndFetchLayout(content.layout, true) ]
     while (content.parent) {
-      contentData.unshift(stripContent(content))
-      this.storeAndFetchLayout(content.layout, false)
+      contentData.unshift(stripContent(content.parent))
+      promises.push(this.storeAndFetchLayout(content.parent.layout, false))
       content = content.parent
     }
     this.$storage.commit('setRoute', [ { route, data: contentData } ], contentModuleName)
     // --------
     // Request all components / layouts and add to a promises array
     // --------
-    let promises = [
-      fetchLayoutPromise
-    ]
     contentData.forEach((content) => {
       if (content.componentLocations && content.componentLocations.length) {
         promises.push(this.fetchContent(content))

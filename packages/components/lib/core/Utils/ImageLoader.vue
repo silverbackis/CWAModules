@@ -87,10 +87,22 @@ Author modified: Daniel <daniel@silverback.is>
         ]
       },
       imagePath () {
-        return this.image ? this.getApiUrl(this.image.publicPath) : null
+        if (!this.image) {
+          return null
+        }
+        if (this.image.publicPath.substring(0, 5) === 'data:') {
+          return this.image.publicPath
+        }
+        return this.getApiUrl(this.image.publicPath)
       },
       placeholderPath () {
-        return this.placeholder ? this.getApiUrl(this.placeholder.publicPath) : null
+        if (!this.placeholder) {
+          return null
+        }
+        if (this.placeholder.publicPath.substring(0, 5) === 'data:') {
+          return this.placeholder.publicPath
+        }
+        return this.getApiUrl(this.placeholder.publicPath)
       }
     },
     methods: {

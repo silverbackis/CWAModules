@@ -21,6 +21,8 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     logging && console.log('Page not loading, already at path ' + path)
     return
   }
+  logging && console.log('Page loading ' + path)
+
   $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName)
 
   let routeData, response
