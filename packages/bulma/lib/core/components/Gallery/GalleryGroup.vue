@@ -10,6 +10,7 @@
                   :component="getEntity(location.component)"
                   :location="location"
                   :$photoswipe="$photoswipe"
+                  :index="index"
                   @moveup="moveLocationUp(location)"
                   @movedown="moveLocationDown(location)"
     />
@@ -17,6 +18,7 @@
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import GalleryItem from './GalleryItem'
   import _sortBy from 'lodash/sortBy'
   import _findIndex from 'lodash/findIndex'
@@ -37,6 +39,7 @@
       GalleryItem
     },
     computed: {
+      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       sortableLocations: {
         get() {
           if (!this.$bwstarter.isAdmin) {
@@ -77,7 +80,7 @@
             return null
           }
           return {
-            src: image.publicPath,
+            src: this.getApiUrl(image.publicPath),
             w: image.width,
             h: image.height
           }
