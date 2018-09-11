@@ -1,6 +1,6 @@
 {
     "name": "@cwamodules/components",
-    "version": "0.1.4",
+    "version": "0.2.0",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,8 +9,8 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/core": "^0",
-        "@cwamodules/server": "^0"
+        "@cwamodules/core": "^0.2.0",
+        "@cwamodules/server": "^0.2.0"
     },
     "scripts": {
         "lint": "eslint lib ",
