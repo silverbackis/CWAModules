@@ -8,11 +8,11 @@ export default class BWServer {
     this.logging = env.NODE_ENV === 'development'
   }
 
-  login(req, res = null) {
+  login (req, res = null) {
     // Only allow post requests to API
     let session = req.session
-    let _action  = req.body._action
-    _action.substr(0,1) !== '/' && (_action = '/' + _action)
+    let _action = req.body._action
+    _action.substr(0, 1) !== '/' && (_action = '/' + _action)
     const postPath = this.env.API_URL + _action
     this.logging && console.log('login posting to: ' + postPath)
     // Post login credentials with Session ID and XSRF Header
@@ -55,14 +55,14 @@ export default class BWServer {
             res.status(401).json(err.response.data)
           } else {
             res.status(err.response.status).json({
-              message: !err.response.data ? err.message : ((err.response.data.error && err.response.data.error.exception) ? err.response.data.error.exception[0].message : err.response.data.message)
+              message: !err.response.data ? err.message : ((err.response.data.error && err.response.data.error.exception) ? err.response.data.error.exception[ 0 ].message : err.response.data.message)
             })
           }
         }
       })
   }
 
-  logout(req, res) {
+  logout (req, res) {
     req.session.authToken = null
     req.session.destroy()
     this.utilities.clearJwtCookie(res)
@@ -118,7 +118,7 @@ export default class BWServer {
       }
 
       let isException = (err.response.data.error && err.response.data.error.exception)
-      let error = isException ? err.response.data.error.exception[0].message : (err.response.data.message || 'unknown error')
+      let error = isException ? err.response.data.error.exception[ 0 ].message : (err.response.data.message || 'unknown error')
       return res.json({
         message: 'Refresh token rejected',
         error

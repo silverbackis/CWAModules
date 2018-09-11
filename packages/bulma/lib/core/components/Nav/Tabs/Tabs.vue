@@ -1,8 +1,8 @@
 <template>
   <tab-page-wrapper :nested="nested"
-                :includeNuxtChild="includeNuxtChild"
-                :depth="depth"
-                :component="component"
+                    :includeNuxtChild="includeNuxtChild"
+                    :depth="depth"
+                    :component="component"
   >
     <nav class="tabs" :class="this.classModifiers">
       <ul>
@@ -21,7 +21,7 @@
   import TabPageWrapper from './TabPageWrapper'
 
   export default {
-    mixins: [NuxtChildMixin],
+    mixins: [ NuxtChildMixin ],
     components: {
       BulmaTabItem,
       TabPageWrapper
@@ -35,21 +35,21 @@
         type: String,
         default: null,
         validator: function (value) {
-          return ['centered', 'right'].indexOf(value) !== false
+          return [ 'centered', 'right' ].indexOf(value) !== false
         }
       },
       size: {
         type: String,
         default: null,
         validator: function (value) {
-          return ['small', 'medium', 'large'].indexOf(value) !== false
+          return [ 'small', 'medium', 'large' ].indexOf(value) !== false
         }
       },
       _style: {
         type: String,
         default: null,
         validator: function (value) {
-          return ['boxed', 'toggle', 'toggle-rounded'].indexOf(value) !== false
+          return [ 'boxed', 'toggle', 'toggle-rounded' ].indexOf(value) !== false
         }
       },
       fullwidth: {
@@ -67,7 +67,7 @@
         ]
       },
       _items () {
-        return this.component.componentGroups.length ? this.component.componentGroups[0].componentLocations.map(location => location.component) : []
+        return this.component.componentGroups.length ? this.component.componentGroups[ 0 ].componentLocations.map(location => location.component) : []
       }
     },
     methods: {
@@ -76,7 +76,7 @@
           return false
         }
         if (typeof values === 'string') {
-          values = [values]
+          values = [ values ]
         }
         let classes = []
         values.map((value) => {
@@ -87,7 +87,7 @@
         return classes
       },
       styleClassFixer (cls) {
-        return cls === 'toggle-rounded' ? ['toggle', cls] : cls
+        return cls === 'toggle-rounded' ? [ 'toggle', cls ] : cls
       },
       fullwidthClassFixer (cls) {
         return cls ? 'fullwidth' : false

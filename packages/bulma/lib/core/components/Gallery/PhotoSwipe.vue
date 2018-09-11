@@ -69,7 +69,7 @@
         let baseOps = {
           index: index,
           getThumbBoundsFn () {
-            const thumbnail = $el.getElementsByTagName('img')[0]
+            const thumbnail = $el.getElementsByTagName('img')[ 0 ]
             const pageYScroll = window.pageYOffset || document.documentElement.scrollTop
             const rect = thumbnail.getBoundingClientRect()
             return {

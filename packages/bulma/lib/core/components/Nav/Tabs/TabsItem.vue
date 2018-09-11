@@ -12,6 +12,6 @@
   import NavItemMixin from '../navItemMixin'
 
   export default {
-    mixins: [NavItemMixin]
+    mixins: [ NavItemMixin ]
   }
 </script>

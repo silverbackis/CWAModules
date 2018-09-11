@@ -2,7 +2,7 @@ import Wrapper from './_Wrapper'
 import InputCommonMixin from '~/.nuxt/bwstarter/components/Form/Input/_CommonMixin'
 
 export default {
-  mixins: [InputCommonMixin],
+  mixins: [ InputCommonMixin ],
   components: {
     Wrapper
   },

@@ -9,6 +9,6 @@
 
 <script>
   export default {
-    props: ['option']
+    props: [ 'option' ]
   }
 </script>

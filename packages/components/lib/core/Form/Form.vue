@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import { mapActions, mapMutations, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapMutations } from 'vuex'
   import FormMixin from './_Mixin'
   import axios from 'axios'
   import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
@@ -21,7 +21,7 @@
   const DESTROY_CANCEL_MESSAGE = 'destroyed'
 
   export default {
-    mixins: [FormMixin],
+    mixins: [ FormMixin ],
     props: {
       form: {
         type: Object,
@@ -106,7 +106,7 @@
             let x = form.children.length
             let child
             while (x--) {
-              child = form.children[x]
+              child = form.children[ x ]
               // E.g. buttons which are not valid/invalid
               if (child.vars.valid === undefined) {
                 continue
@@ -146,7 +146,7 @@
               valid: false,
               errors: [
                 '<b>' + error.response.status + ' ' + error.response.statusText + ':</b> ' +
-                error.response.data['hydra:description']
+                error.response.data[ 'hydra:description' ]
               ]
             })
           } else {
@@ -158,7 +158,7 @@
     created () {
       this.$bwstarter.$storage.dispatch('init', this.form, FORMS_MODULE)
     },
-    beforeDestroy() {
+    beforeDestroy () {
       if (this.cancelToken) {
         this.cancelToken.cancel(DESTROY_CANCEL_MESSAGE)
       }

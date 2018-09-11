@@ -1,12 +1,12 @@
 import Vue from 'vue'
 
-export const name = ['_entities']
+export const name = [ '_entities' ]
 
 export const store = {
   state: () => ({}),
   getters: {
     getEntity: state => (id) => {
-      return state[id] || false
+      return state[ id ] || false
     },
     getEntities: (state, getters) => (entities) => {
       let arr = []

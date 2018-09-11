@@ -6,7 +6,7 @@
                     @beforeEnter="transBeforeEnter"
                     @afterLeave="transAfterLeave"
   >
-    <notification v-for="(notification, index) in notifications" :key="notification.id" :index="index" :notification="notification" />
+    <notification v-for="(notification, index) in notifications" :key="notification.id" :index="index" :notification="notification"/>
   </transition-group>
 </template>
 

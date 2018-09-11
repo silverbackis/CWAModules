@@ -7,7 +7,7 @@ export default {
   },
   computed: {
     childKey () {
-      return this.$route.params['page' + (this.depth + 1)]
+      return this.$route.params[ 'page' + (this.depth + 1) ]
     }
   }
 }

@@ -9,6 +9,7 @@
 
 <script>
   import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
+
   export default {
     props: {
       input: {
@@ -62,7 +63,7 @@
         }).join('')
       },
       resolveInputComponent () {
-        let inputComponentType = this.availableComponents[0]
+        let inputComponentType = this.availableComponents[ 0 ]
         for (let bp of this.input.vars.block_prefixes) {
           if (this.isInputType(bp)) {
             inputComponentType = bp

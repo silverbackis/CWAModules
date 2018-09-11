@@ -1,6 +1,6 @@
-import { state, actions, getters, mutations } from './module'
+import { actions, getters, mutations, state } from './module'
 
-export const name = ['_admin']
+export const name = [ '_admin' ]
 
 const store = {
   state,

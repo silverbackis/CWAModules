@@ -30,7 +30,6 @@
 </template>
 
 <script>
-  import debounce from 'lodash/debounce'
   import { name as ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage/admin";
 
   export default {
@@ -55,10 +54,10 @@
       }
     },
     computed: {
-      isModified() {
+      isModified () {
         return this.$bwstarter.$storage.get('isModified', [], ADMIN_MODULE)
       },
-      isSubmitting() {
+      isSubmitting () {
         return this.$bwstarter.$storage.get('isSubmitting', [], ADMIN_MODULE)
       },
       barClass () {
@@ -71,7 +70,7 @@
         }
       },
       autoSaveVars () {
-        return [this.isModified, this.isSubmitting, this.autoSaveLocal]
+        return [ this.isModified, this.isSubmitting, this.autoSaveLocal ]
       }
     },
     watch: {

@@ -5,8 +5,8 @@
                    :inputName="inputName"
     />
     <choice-expanded v-else
-                  :formId="formId"
-                  :inputName="inputName"
+                     :formId="formId"
+                     :inputName="inputName"
     />
   </div>
 </template>
@@ -17,7 +17,7 @@
   import ChoiceExpanded from './Choice/ChoiceExpanded'
 
   export default {
-    mixins: [InputCommonMixin],
+    mixins: [ InputCommonMixin ],
     components: {
       ChoiceSelect,
       ChoiceExpanded

@@ -26,20 +26,20 @@
   import BulmaMenuItemGroup from './MenuItemGroup'
 
   export default {
-    mixins: [NuxtChildMixin],
+    mixins: [ NuxtChildMixin ],
     components: {
       BulmaMenuItemGroup
     },
     computed: {
       navItems () {
-        return this.childComponents[0]
+        return this.childComponents[ 0 ]
       },
       navItemsGrouped () {
         let groups = []
         let currentGroup = []
         let previousItem
         this.navItems.forEach((navItem) => {
-          navItem = this.getEntity(navItem['@id'])
+          navItem = this.getEntity(navItem[ '@id' ])
           if (previousItem && (previousItem.menuLabel || navItem.menuLabel)) {
             groups.push(currentGroup)
             currentGroup = []

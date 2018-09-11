@@ -24,13 +24,13 @@
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       ImageLoader,
       AppLink
     },
     methods: {
-      injectImageData(imageObject) {
+      injectImageData (imageObject) {
         imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
         return imageObject
       }
@@ -50,14 +50,14 @@
       },
       image () {
         let image;
-        if (this.component['file:imagine']) {
-          image = this.component['file:imagine'].thumbnail
-        } else if (this.component['file:image']) {
-          image = this.component['file:image']
+        if (this.component[ 'file:imagine' ]) {
+          image = this.component[ 'file:imagine' ].thumbnail
+        } else if (this.component[ 'file:image' ]) {
+          image = this.component[ 'file:image' ]
         } else {
           //svg
           image = {
-            publicPath: this.component['file:publicPath']
+            publicPath: this.component[ 'file:publicPath' ]
           }
         }
         if (image) {
@@ -66,8 +66,8 @@
         return null
       },
       placeholder () {
-        if (this.component['file:imagine'] && this.component['file:imagine'].placeholder) {
-          return this.injectImageData((this.component['file:imagine'].placeholder))
+        if (this.component[ 'file:imagine' ] && this.component[ 'file:imagine' ].placeholder) {
+          return this.injectImageData((this.component[ 'file:imagine' ].placeholder))
         }
         return null
       }

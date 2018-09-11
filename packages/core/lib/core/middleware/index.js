@@ -23,7 +23,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
   }
   logging && console.log('Page loading ' + path)
 
-  $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName)
+  $bwstarter.$storage.commit('setCurrentRoute', [ path ], contentModuleName)
 
   let routeData, response
   try {
@@ -44,21 +44,18 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
 
   if (!routeData) {
     console.warn(routeData)
-    error({statusCode: 500, message: 'Error fetching from API - No Route Data'})
+    error({ statusCode: 500, message: 'Error fetching from API - No Route Data' })
     return
   }
   if (typeof routeData !== 'object') {
     console.warn(routeData)
-    error({statusCode: 500, message: 'API returned invalid JSON'})
+    error({ statusCode: 500, message: 'API returned invalid JSON' })
     return
   }
 
   if (MAX_REDIRECTS) {
     let redirects = 0
-    while (
-      routeData.redirect &&
-      redirects <= MAX_REDIRECTS
-    ) {
+    while (routeData.redirect && redirects <= MAX_REDIRECTS) {
       routeData = routeData.redirect
       redirects++
     }

@@ -9,7 +9,9 @@
     props: {
       className: {
         type: Array,
-        default () { return [] }
+        default () {
+          return []
+        }
       },
       nested: {
         type: Boolean,

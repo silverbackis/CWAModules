@@ -7,15 +7,15 @@ export default {
       return Utilities.getFormId(this.form.vars)
     },
     storeForm () {
-      return this.$bwstarter.$storage.get('getForm', [this.formId], FORMS_MODULE)
+      return this.$bwstarter.$storage.get('getForm', [ this.formId ], FORMS_MODULE)
     },
     isValid () {
-      return this.$bwstarter.$storage.get('isValid', [this.formId], FORMS_MODULE)
+      return this.$bwstarter.$storage.get('isValid', [ this.formId ], FORMS_MODULE)
     }
   },
   methods: {
     destroyForm () {
-      this.$bwstarter.$storage.commit('destroy', [this.formId], FORMS_MODULE)
+      this.$bwstarter.$storage.commit('destroy', [ this.formId ], FORMS_MODULE)
     }
   }
 }

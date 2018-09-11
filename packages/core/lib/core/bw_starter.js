@@ -9,6 +9,15 @@ const TOKEN_EXPIRE_BUFFER_SECS = 10
 const TOKEN_KEY = 'token'
 const DEFAULT_LAYOUT = '/layouts/default'
 
+const stripContent = (obj) => {
+  obj = Object.assign({}, obj, {
+    componentLocations: obj.componentLocations.map((loc) => loc[ '@id' ])
+  })
+  delete obj.parent
+  delete obj.layout
+  return obj
+}
+
 export default class BWStarter {
   constructor (ctx, options) {
     this.error = ctx.error
@@ -160,7 +169,6 @@ export default class BWStarter {
       .then(() => {
         this.$storage.setState(TOKEN_KEY, null)
         this.addNotification('You have successfully logged out')
-        // this.$cookie.delete('PHPSESSID')
       })
       .catch((err) => {
         console.warn(err)
@@ -179,8 +187,8 @@ export default class BWStarter {
     this.$storage.commit('removeNotification', [ index ])
   }
 
-  initAdminInput (data) {
-    this.$storage.commit('initAdminInput', [ data ], ADMIN_MODULE)
+  initAdminInput (data, force = false) {
+    this.$storage.commit('initAdminInput', [ Object.assign({ force }, data) ], ADMIN_MODULE)
   }
 
   destroyAdminInput (data) {
@@ -200,12 +208,6 @@ export default class BWStarter {
   }
 
   initRoute ({ route, content }) {
-    const stripContent = (obj) => {
-      obj = Object.assign({}, obj)
-      delete obj.parent
-      delete obj.layout
-      return obj
-    }
     let contentData = [ stripContent(content) ]
     let promises = [ this.storeAndFetchLayout(content.layout, true) ]
     while (content.parent) {
@@ -219,7 +221,7 @@ export default class BWStarter {
     // --------
     contentData.forEach((content) => {
       if (content.componentLocations && content.componentLocations.length) {
-        promises.push(this.fetchContent(content))
+        promises.push(this.fetchContent(content[ '@id' ]))
       }
     })
     return Promise.all(promises)
@@ -255,11 +257,23 @@ export default class BWStarter {
     return response
   }
 
-  async fetchContent (content) {
-    let { data: { componentLocations } } = await this.request({ url: content[ '@id' ] })
-    let entities = getEntitiesFromLocations(componentLocations)
+  async fetchContent (id) {
+    let { data } = await this.request({ url: id })
+    let entities = getEntitiesFromLocations(data.componentLocations)
+    // When reloading component group, we want the group itself to update as well with new locations
+    if (data[ '@type' ] === 'ComponentGroup') {
+      entities[ data[ '@id' ] ] = stripContent(data)
+    }
     this.setEntities(entities)
+    return data.componentLocations
   }
+
+  // async updateContentComponents (contentId) {
+  //   const componentLocations = await this.fetchContent(contentId)
+  //   const entities = getEntitiesFromLocations(componentLocations)
+  //   this.setEntities(entities)
+  //   return componentLocations
+  // }
 
   setEntities (components) {
     for (let [ componentId, component ] of Object.entries(components)) {
@@ -288,11 +302,15 @@ const getEntitiesFromLocations = function (locations) {
     entities[ component[ '@id' ] ] = component
 
     if (component.componentGroups) {
-      component.componentGroups.forEach(({ componentLocations }) => {
-        if (componentLocations) {
-          entities = Object.assign(entities, getEntitiesFromLocations(componentLocations))
+      component.componentGroups.forEach((componentGroup) => {
+        entities[ componentGroup[ '@id' ] ] = Object.assign({}, componentGroup, {
+          componentLocations: componentGroup.componentLocations.map((loc) => loc[ '@id' ])
+        })
+        if (componentGroup.componentLocations) {
+          entities = Object.assign(entities, getEntitiesFromLocations(componentGroup.componentLocations))
         }
       })
+      component.componentGroups = component.componentGroups.map((group) => group[ '@id' ])
     }
 
     if (component.childComponentGroup && component.childComponentGroup.componentLocations.length) {

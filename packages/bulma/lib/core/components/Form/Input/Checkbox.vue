@@ -16,7 +16,7 @@
   import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Checkbox'
 
   export default {
-    mixins: [InputMixin],
+    mixins: [ InputMixin ],
     components: {
       FormInput
     }

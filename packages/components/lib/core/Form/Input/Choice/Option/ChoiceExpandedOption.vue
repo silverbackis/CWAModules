@@ -27,7 +27,7 @@
   import InputMixin from '../../Mixin/index'
 
   export default {
-    mixins: [InputCommonMixin, InputMixin],
+    mixins: [ InputCommonMixin, InputMixin ],
     props: {
       index: {
         type: Number,
@@ -36,7 +36,7 @@
     },
     computed: {
       child () {
-        return this.input.children[this.index]
+        return this.input.children[ this.index ]
       },
       isCustom () {
         return this.child.vars.attr.class && this.child.vars.attr.class.indexOf('custom') !== -1

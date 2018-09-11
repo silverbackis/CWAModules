@@ -13,7 +13,7 @@
               <ul class="fa-ul">
                 <li v-for="(feature) in features" :class="injectDynamicData(feature.className)">
                   <span class="fa-li">
-                    <font-awesome-icon icon="check-circle" class="has-text-success" size="lg" />
+                    <font-awesome-icon icon="check-circle" class="has-text-success" size="lg"/>
                   </span>
                   <app-link v-if="feature.url" :to="feature.url">
                     <strong>{{ injectDynamicData(feature.title) }}</strong>
@@ -40,7 +40,7 @@
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       AppLink
     },
@@ -54,7 +54,7 @@
         if (!this.childComponents.length) {
           return []
         }
-        return _.chunk(this.childComponents[0], Math.ceil(this.childComponents[0].length / (this.component.columns || 1)))
+        return _.chunk(this.childComponents[ 0 ], Math.ceil(this.childComponents[ 0 ].length / (this.component.columns || 1)))
       }
     }
   }

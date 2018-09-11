@@ -3,14 +3,14 @@
     <div class="container">
       <div class="columns is-tablet">
         <div class="column">
-          <bulma-components :pageData="component.componentGroups[0]"
+          <bulma-components :pageData="componentGroups[0]"
                             :depth="depth"
                             :nested="true"
                             :dynamicData="dynamicData"
           />
         </div>
         <div class="column is-narrow">
-          <bulma-components :pageData="component.componentGroups[1]"
+          <bulma-components :pageData="componentGroups[1]"
                             :depth="depth"
                             :nested="true"
                             :dynamicData="dynamicData"
@@ -26,7 +26,7 @@
   import BulmaComponents from '../Components'
 
   export default {
-    mixins: [NuxtChildMixin],
+    mixins: [ NuxtChildMixin ],
     components: {
       BulmaComponents
     }

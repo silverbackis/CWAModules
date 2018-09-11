@@ -13,7 +13,8 @@
 
 <script>
   import _Input from './_Input'
+
   export default {
-    mixins: [_Input]
+    mixins: [ _Input ]
   }
 </script>

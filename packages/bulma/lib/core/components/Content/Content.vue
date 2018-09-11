@@ -20,18 +20,18 @@
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       editor: () => import('~/.nuxt/bwstarter/components/Admin/Quill')
     },
     methods: {
-      convertAnchor(anchor) {
+      convertAnchor (anchor) {
         // console.log(anchor, anchor.attributes, anchor.innerHTML)
         const newLink = document.createElement('app-link')
         newLink.setAttribute('to', anchor.href)
-        for(let attr of anchor.attributes) {
+        for (let attr of anchor.attributes) {
           if (attr.name !== 'href') {
-            newLink.setAttribute(attr.name, anchor[attr.name])
+            newLink.setAttribute(attr.name, anchor[ attr.name ])
           }
         }
         newLink.innerHTML = anchor.innerHTML
@@ -39,7 +39,7 @@
       }
     },
     computed: {
-      transformed() {
+      transformed () {
         // Inject dynamic data
         let converted = this.injectDynamicData(this.component.content)
         if (process.client) {

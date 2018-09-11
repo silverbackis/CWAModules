@@ -9,7 +9,7 @@
         type: Number,
         required: true
       },
-      max:  {
+      max: {
         type: Number,
         default: 100
       }

@@ -10,19 +10,19 @@
             <div class="column">
               <h1 class="title">
                 <admin-text-input v-if="$bwstarter.isAdmin"
-                                :model="realComponentData.title"
-                                :componentId="endpoint"
-                                componentField="title"
-                                placeholder="Enter page title here"
+                                  :model="realComponentData.title"
+                                  :componentId="endpoint"
+                                  componentField="title"
+                                  placeholder="Enter page title here"
                 />
                 <span v-else>{{ realComponentData.title }}</span>
               </h1>
               <h2 class="subtitle">
                 <admin-text-input v-if="$bwstarter.isAdmin"
-                                :model="realComponentData.subtitle"
-                                :componentId="endpoint"
-                                componentField="subtitle"
-                                placeholder="Enter optional subtitle here"
+                                  :model="realComponentData.subtitle"
+                                  :componentId="endpoint"
+                                  componentField="subtitle"
+                                  placeholder="Enter optional subtitle here"
                 />
                 <span v-else>{{ realComponentData.subtitle }}</span>
               </h2>
@@ -68,18 +68,18 @@
     mixins: [
       NuxtChildMixin
     ],
-    props: ['cid'],
+    props: [ 'cid' ],
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-      hasImage() {
+      hasImage () {
         return (this.component && this.component.publicPath)
       },
       className () {
-        let className = ['hero']
+        let className = [ 'hero' ]
         if (this.component.className) {
           className.push(this.component.className)
         } else {
-          className.push(...['is-primary', 'is-bold'])
+          className.push(...[ 'is-primary', 'is-bold' ])
         }
         if (this.hasImage) {
           className.push('has-image')
@@ -87,13 +87,13 @@
         return className
       },
       tabs () {
-        let groups = this.component.componentGroups || []
-        if (!groups.length || !groups[0].componentLocations.length) {
+        const groups = this.componentGroups || []
+        if (!groups.length || !groups[ 0 ].componentLocations.length) {
           return
         }
-        return groups[0].componentLocations[0].component
+        return groups[ 0 ].componentLocations[ 0 ].component
       },
-      imageData() {
+      imageData () {
         if (!this.component) {
           return {}
         }

@@ -1,12 +1,12 @@
 <template>
   <div v-if="input">
     <choice-expanded-option
-                v-for="(choice, choiceIndex) in input.children"
-                :key="choiceIndex"
-                :index="choiceIndex"
-                :inputName="inputName"
-                :formId="formId"
-                inputClass=""
+      v-for="(choice, choiceIndex) in input.children"
+      :key="choiceIndex"
+      :index="choiceIndex"
+      :inputName="inputName"
+      :formId="formId"
+      inputClass=""
     />
   </div>
 </template>
@@ -16,7 +16,7 @@
   import ChoiceExpandedOption from './Option/ChoiceExpandedOption'
 
   export default {
-    mixins: [InputCommonMixin],
+    mixins: [ InputCommonMixin ],
     data () {
       return {
         is: 'radio'

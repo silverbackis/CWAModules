@@ -17,7 +17,7 @@
   import FeatureStackedItem from './FeatureStackedItem'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       FeatureStackedItem
     },

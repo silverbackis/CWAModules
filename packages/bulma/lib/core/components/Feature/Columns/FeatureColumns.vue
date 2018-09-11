@@ -25,7 +25,7 @@
   import FeatureColumnItem from './FeatureColumnItem'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       FeatureColumnItem
     },

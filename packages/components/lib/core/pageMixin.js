@@ -1,4 +1,5 @@
 import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
+
 export default {
   middleware: 'routeLoader',
   data: () => ({}),
@@ -38,7 +39,7 @@ export default {
       return this.$vnode.data.nuxtChildDepth
     },
     childKey () {
-      return this.$route.params['page' + (this.depth + 1)]
+      return this.$route.params[ 'page' + (this.depth + 1) ]
     },
     realPageData () {
       if (

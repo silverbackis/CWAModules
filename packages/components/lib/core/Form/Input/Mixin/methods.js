@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { mapMutations, mapActions } from 'vuex'
+import { mapActions, mapMutations } from 'vuex'
 import axios from 'axios'
 
 const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
@@ -87,7 +87,7 @@ export default {
             valid: false,
             errors: [
               '<b>' + error.response.status + ' ' + error.response.statusText + ':</b> ' +
-              error.response.data['hydra:description']
+              error.response.data[ 'hydra:description' ]
             ]
           }))
         } else {

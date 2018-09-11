@@ -14,7 +14,7 @@ const mulTable = [
   451, 446, 442, 437, 433, 428, 424, 420, 416, 412, 408, 404, 400, 396, 392, 388,
   385, 381, 377, 374, 370, 367, 363, 360, 357, 354, 350, 347, 344, 341, 338, 335,
   332, 329, 326, 323, 320, 318, 315, 312, 310, 307, 304, 302, 299, 297, 294, 292,
-  289, 287, 285, 282, 280, 278, 275, 273, 271, 269, 267, 265, 263, 261, 259]
+  289, 287, 285, 282, 280, 278, 275, 273, 271, 269, 267, 265, 263, 261, 259 ]
 
 const shgTable = [
   9, 11, 12, 13, 13, 14, 14, 15, 15, 15, 15, 16, 16, 16, 16, 17,
@@ -70,14 +70,14 @@ export default function (context, topX, topY, width, height, radius) {
   let stackIn = null
   let stackOut = null
   yw = yi = 0
-  let mulSum = mulTable[radius]
-  let shgSum = shgTable[radius]
+  let mulSum = mulTable[ radius ]
+  let shgSum = shgTable[ radius ]
   for (y = 0; y < height; y++) {
     rInSum = gInSum = bInSum = aInSum = rSum = gSum = bSum = aSum = 0
-    rOutSum = radiusPlus1 * (pr = pixels[yi])
-    gOutSum = radiusPlus1 * (pg = pixels[yi + 1])
-    bOutSum = radiusPlus1 * (pb = pixels[yi + 2])
-    aOutSum = radiusPlus1 * (pa = pixels[yi + 3])
+    rOutSum = radiusPlus1 * (pr = pixels[ yi ])
+    gOutSum = radiusPlus1 * (pg = pixels[ yi + 1 ])
+    bOutSum = radiusPlus1 * (pb = pixels[ yi + 2 ])
+    aOutSum = radiusPlus1 * (pa = pixels[ yi + 3 ])
     rSum += sumFactor * pr
     gSum += sumFactor * pg
     bSum += sumFactor * pb
@@ -93,10 +93,10 @@ export default function (context, topX, topY, width, height, radius) {
 
     for (i = 1; i < radiusPlus1; i++) {
       p = yi + ((widthMinus1 < i ? widthMinus1 : i) << 2)
-      rSum += (stack.r = (pr = pixels[p])) * (rbs = radiusPlus1 - i)
-      gSum += (stack.g = (pg = pixels[p + 1])) * rbs
-      bSum += (stack.b = (pb = pixels[p + 2])) * rbs
-      aSum += (stack.a = (pa = pixels[p + 3])) * rbs
+      rSum += (stack.r = (pr = pixels[ p ])) * (rbs = radiusPlus1 - i)
+      gSum += (stack.g = (pg = pixels[ p + 1 ])) * rbs
+      bSum += (stack.b = (pb = pixels[ p + 2 ])) * rbs
+      aSum += (stack.a = (pa = pixels[ p + 3 ])) * rbs
       rInSum += pr
       gInSum += pg
       bInSum += pb
@@ -107,14 +107,14 @@ export default function (context, topX, topY, width, height, radius) {
     stackIn = stackStart
     stackOut = stackEnd
     for (x = 0; x < width; x++) {
-      pixels[yi + 3] = pa = (aSum * mulSum) >> shgSum
+      pixels[ yi + 3 ] = pa = (aSum * mulSum) >> shgSum
       if (pa !== 0) {
         pa = 255 / pa
-        pixels[yi] = ((rSum * mulSum) >> shgSum) * pa
-        pixels[yi + 1] = ((gSum * mulSum) >> shgSum) * pa
-        pixels[yi + 2] = ((bSum * mulSum) >> shgSum) * pa
+        pixels[ yi ] = ((rSum * mulSum) >> shgSum) * pa
+        pixels[ yi + 1 ] = ((gSum * mulSum) >> shgSum) * pa
+        pixels[ yi + 2 ] = ((bSum * mulSum) >> shgSum) * pa
       } else {
-        pixels[yi] = pixels[yi + 1] = pixels[yi + 2] = 0
+        pixels[ yi ] = pixels[ yi + 1 ] = pixels[ yi + 2 ] = 0
       }
 
       rSum -= rOutSum
@@ -126,10 +126,10 @@ export default function (context, topX, topY, width, height, radius) {
       bOutSum -= stackIn.b
       aOutSum -= stackIn.a
       p = (yw + ((p = x + radius + 1) < widthMinus1 ? p : widthMinus1)) << 2
-      rInSum += (stackIn.r = pixels[p])
-      gInSum += (stackIn.g = pixels[p + 1])
-      bInSum += (stackIn.b = pixels[p + 2])
-      aInSum += (stackIn.a = pixels[p + 3])
+      rInSum += (stackIn.r = pixels[ p ])
+      gInSum += (stackIn.g = pixels[ p + 1 ])
+      bInSum += (stackIn.b = pixels[ p + 2 ])
+      aInSum += (stackIn.a = pixels[ p + 3 ])
       rSum += rInSum
       gSum += gInSum
       bSum += bInSum
@@ -152,10 +152,10 @@ export default function (context, topX, topY, width, height, radius) {
   for (x = 0; x < width; x++) {
     gInSum = bInSum = aInSum = rInSum = gSum = bSum = aSum = rSum = 0
     yi = x << 2
-    rOutSum = radiusPlus1 * (pr = pixels[yi])
-    gOutSum = radiusPlus1 * (pg = pixels[yi + 1])
-    bOutSum = radiusPlus1 * (pb = pixels[yi + 2])
-    aOutSum = radiusPlus1 * (pa = pixels[yi + 3])
+    rOutSum = radiusPlus1 * (pr = pixels[ yi ])
+    gOutSum = radiusPlus1 * (pg = pixels[ yi + 1 ])
+    bOutSum = radiusPlus1 * (pb = pixels[ yi + 2 ])
+    aOutSum = radiusPlus1 * (pa = pixels[ yi + 3 ])
     rSum += sumFactor * pr
     gSum += sumFactor * pg
     bSum += sumFactor * pb
@@ -172,10 +172,10 @@ export default function (context, topX, topY, width, height, radius) {
     yp = width
     for (i = 1; i <= radius; i++) {
       yi = (yp + x) << 2
-      rSum += (stack.r = (pr = pixels[yi])) * (rbs = radiusPlus1 - i)
-      gSum += (stack.g = (pg = pixels[yi + 1])) * rbs
-      bSum += (stack.b = (pb = pixels[yi + 2])) * rbs
-      aSum += (stack.a = (pa = pixels[yi + 3])) * rbs
+      rSum += (stack.r = (pr = pixels[ yi ])) * (rbs = radiusPlus1 - i)
+      gSum += (stack.g = (pg = pixels[ yi + 1 ])) * rbs
+      bSum += (stack.b = (pb = pixels[ yi + 2 ])) * rbs
+      aSum += (stack.a = (pa = pixels[ yi + 3 ])) * rbs
       rInSum += pr
       gInSum += pg
       bInSum += pb
@@ -191,14 +191,14 @@ export default function (context, topX, topY, width, height, radius) {
     stackOut = stackEnd
     for (y = 0; y < height; y++) {
       p = yi << 2
-      pixels[p + 3] = pa = (aSum * mulSum) >> shgSum
+      pixels[ p + 3 ] = pa = (aSum * mulSum) >> shgSum
       if (pa > 0) {
         pa = 255 / pa
-        pixels[p] = ((rSum * mulSum) >> shgSum) * pa
-        pixels[p + 1] = ((gSum * mulSum) >> shgSum) * pa
-        pixels[p + 2] = ((bSum * mulSum) >> shgSum) * pa
+        pixels[ p ] = ((rSum * mulSum) >> shgSum) * pa
+        pixels[ p + 1 ] = ((gSum * mulSum) >> shgSum) * pa
+        pixels[ p + 2 ] = ((bSum * mulSum) >> shgSum) * pa
       } else {
-        pixels[p] = pixels[p + 1] = pixels[p + 2] = 0
+        pixels[ p ] = pixels[ p + 1 ] = pixels[ p + 2 ] = 0
       }
 
       rSum -= rOutSum
@@ -210,10 +210,10 @@ export default function (context, topX, topY, width, height, radius) {
       bOutSum -= stackIn.b
       aOutSum -= stackIn.a
       p = (x + (((p = y + radiusPlus1) < heightMinus1 ? p : heightMinus1) * width)) << 2
-      rSum += (rInSum += (stackIn.r = pixels[p]))
-      gSum += (gInSum += (stackIn.g = pixels[p + 1]))
-      bSum += (bInSum += (stackIn.b = pixels[p + 2]))
-      aSum += (aInSum += (stackIn.a = pixels[p + 3]))
+      rSum += (rInSum += (stackIn.r = pixels[ p ]))
+      gSum += (gInSum += (stackIn.g = pixels[ p + 1 ]))
+      bSum += (bInSum += (stackIn.b = pixels[ p + 2 ]))
+      aSum += (aInSum += (stackIn.a = pixels[ p + 3 ]))
       stackIn = stackIn.next
       rOutSum += (pr = stackOut.r)
       gOutSum += (pg = stackOut.g)

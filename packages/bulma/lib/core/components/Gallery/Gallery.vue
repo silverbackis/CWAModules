@@ -1,9 +1,9 @@
 <template>
   <component-wrapper :nested="nested" :class="realComponentData.className">
-    <div v-for="(locations, index) in childLocationsGrouped"
+    <div v-for="(group, index) in componentGroups"
          :key="index"
          :class="containerClass">
-      <gallery-group :locations="locations" :$photoswipe="$photoswipe"></gallery-group>
+      <gallery-group :componentGroup="group" :$photoswipe="$photoswipe"></gallery-group>
     </div>
   </component-wrapper>
 </template>
@@ -15,7 +15,7 @@
   import GalleryGroup from './GalleryGroup'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     components: {
       GalleryGroup
     },
@@ -25,10 +25,10 @@
       }
     },
     methods: {
-      initPhotoswipe() {
+      initPhotoswipe () {
         if (process.browser) {
           const PhotoSwipe = Vue.extend(PhotoSwipeComponent)
-          this.$photoswipe = new PhotoSwipe({el: document.createElement('div')})
+          this.$photoswipe = new PhotoSwipe({ el: document.createElement('div') })
           document.body.appendChild(this.$photoswipe.$el)
         } else {
           // Create dummy functions for SSR to avoid errors

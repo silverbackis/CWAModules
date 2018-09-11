@@ -10,13 +10,13 @@ export const state = () => ({
 })
 
 export const mutations = {
-  initAdminInput (state, { componentId, componentField, model, postSaveFn }, force = false) {
+  initAdminInput (state, { componentId, componentField, model, postSaveFn, force = false }) {
     if (!state.endpoints[ componentId ]) {
       Vue.set(state.endpoints, componentId, {
         inputs: {}
       })
     }
-    if (force || !state.endpoints[ componentId ].inputs[componentField]) {
+    if (force || !state.endpoints[ componentId ].inputs[ componentField ]) {
       Vue.set(state.endpoints[ componentId ].inputs, componentField, {
         savedModel: model,
         model,
@@ -84,12 +84,12 @@ export const getters = {
     }
     return Boolean(state.submitting[ endpointKey ]) || Boolean(state.waitingToSubmit[ endpointKey ])
   },
-  getInputModel: (state) => ({componentId, componentField}) => {
+  getInputModel: (state) => ({ componentId, componentField }) => {
     const endpoint = state.endpoints[ componentId ]
     if (!endpoint || !endpoint.inputs[ componentField ]) {
       return null
     }
-    return endpoint.inputs[componentField].model
+    return endpoint.inputs[ componentField ].model
   }
 }
 
@@ -134,13 +134,13 @@ export const actions = {
         .then(({ data }) => {
           commit('updateComponent', data)
           commit('deleteSubmitting', endpointKey)
-          const component = this.$bwstarter.$storage.get('getComponent', [endpointKey], ENTITIES_MODULE)
+          const component = this.$bwstarter.$storage.get('getComponent', [ endpointKey ], ENTITIES_MODULE)
           if (component) {
-            this.$bwstarter.$storage.commit('setComponent', [{id: endpointKey, data}], ENTITIES_MODULE)
+            this.$bwstarter.$storage.commit('setComponent', [ { id: endpointKey, data } ], ENTITIES_MODULE)
           }
-          const content = this.$bwstarter.$storage.get('getContentById', [endpointKey])
+          const content = this.$bwstarter.$storage.get('getContentById', [ endpointKey ])
           if (content) {
-            this.$bwstarter.$storage.commit('setContentById', [{id: endpointKey, data}])
+            this.$bwstarter.$storage.commit('setContentById', [ { id: endpointKey, data } ])
           }
         })
         .catch(() => {

@@ -6,7 +6,7 @@
   >
     <select-option v-for="(choice, choiceIndex) in input.vars.choices"
                    :key="choiceIndex"
-                   :option="choice" />
+                   :option="choice"/>
   </select>
 </template>
 
@@ -16,7 +16,7 @@
   import SelectOption from './Option/ChoiceSelectOption'
 
   export default {
-    mixins: [InputCommonMixin, InputMixin],
+    mixins: [ InputCommonMixin, InputMixin ],
     components: {
       SelectOption
     }

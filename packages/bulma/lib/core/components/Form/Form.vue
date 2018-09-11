@@ -46,7 +46,7 @@
   import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 
   export default {
-    mixins: [ComponentMixin, FormMixin],
+    mixins: [ ComponentMixin, FormMixin ],
     computed: {
       form () {
         return this.component.form
@@ -70,6 +70,7 @@
   .section ~ .form-section {
     padding-top: 1.5rem;
   }
+
   .form-container {
     max-width: 800px;
   }

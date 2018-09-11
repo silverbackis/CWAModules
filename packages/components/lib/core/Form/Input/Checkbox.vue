@@ -14,7 +14,7 @@
   import InputMixin from './Mixin'
 
   export default {
-    mixins: [InputCommonMixin, InputMixin],
+    mixins: [ InputCommonMixin, InputMixin ],
     data () {
       return {
         checked: []

@@ -5,7 +5,7 @@
                       :depth="depth"
                       :nested="nested"
     />
-    <nuxt-child v-else-if="childKey" :key="childKey" />
+    <nuxt-child v-else-if="childKey" :key="childKey"/>
     <h1 v-else>No components or children configured for this page</h1>
   </div>
 </template>
@@ -15,16 +15,16 @@
   import pageMixin from '../../components/pageMixin'
 
   export default {
-    mixins: [pageMixin],
+    mixins: [ pageMixin ],
     computed: {
-      pageClass() {
+      pageClass () {
         // const names = [...Array(this.depth+1)].map((_, i) => {
         //   console.log('mapping', _, i)
         //   return this.$route.params['page' + i] || this.$route.name
         // })
         // console.log('names', names)
         // return names.join(' ')
-        return this.$route.params[`page${this.depth}`] || this.$route.name
+        return this.$route.params[ `page${this.depth}` ] || this.$route.name
       }
     },
     components: {

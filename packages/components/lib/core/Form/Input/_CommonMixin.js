@@ -35,7 +35,7 @@ export default {
   },
   computed: {
     input () {
-      return this.$bwstarter.$storage.get('getInput', [this.formId, this.inputName], FORMS_MODULE)
+      return this.$bwstarter.$storage.get('getInput', [ this.formId, this.inputName ], FORMS_MODULE)
     },
     inputId () {
       return this.input.vars.id

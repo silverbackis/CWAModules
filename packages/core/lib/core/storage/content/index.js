@@ -1,5 +1,6 @@
 import Vue from 'vue'
-export const name = ['_content']
+
+export const name = [ '_content' ]
 
 export const store = {
   state: () => ({
@@ -13,17 +14,17 @@ export const store = {
       return state.currentRoute
     },
     getContentAtDepth: state => (depth, loadedRoute) => {
-      return state.routes[loadedRoute].structure[depth] || null
+      return state.routes[ loadedRoute ].structure[ depth ] || null
     },
     getLayout: state => (id) => {
-      return (id ? state.layouts[id] : state.layouts[state.currentLayout]) || { timestamp: null, structure: null }
+      return (id ? state.layouts[ id ] : state.layouts[ state.currentLayout ]) || { timestamp: null, structure: null }
     }
   },
   mutations: {
-    setRoute (state, {route, data}) {
+    setRoute (state, { route, data }) {
       Vue.set(state.routes, route, { timestamp: new Date(), structure: data })
     },
-    setLayout (state, {id, data}) {
+    setLayout (state, { id, data }) {
       Vue.set(state.layouts, id, { timestamp: new Date(), structure: data })
     },
     setCurrentRoute (state, route) {

@@ -6,11 +6,11 @@
         <slot></slot>
       </div>
       <span v-if="useIcons && !this.validating && iconClass" :class="iconWrapperClass">
-        <font-awesome-icon :icon="iconClass" />
+        <font-awesome-icon :icon="iconClass"/>
       </span>
     </div>
     <div v-if="displayErrors && errors.length"
-       class="help is-danger">
+         class="help is-danger">
       <ul>
         <li v-for="(error, errorIndex) in errors" :key="errorIndex" v-html="error"></li>
       </ul>
@@ -52,10 +52,10 @@
         required: true
       },
       select: {
-        type: [Boolean, String],
+        type: [ Boolean, String ],
         default: false,
         validator (value) {
-          return value === false || ['single', 'multiple'].indexOf(value) !== -1
+          return value === false || [ 'single', 'multiple' ].indexOf(value) !== -1
         }
       }
     },
@@ -79,10 +79,10 @@
       },
       iconClass () {
         if (this.hasErrors) {
-          return ['fas', 'exclamation-triangle']
+          return [ 'fas', 'exclamation-triangle' ]
         }
         if (this.valid) {
-          return ['fas', 'check']
+          return [ 'fas', 'check' ]
         }
         return null
       },

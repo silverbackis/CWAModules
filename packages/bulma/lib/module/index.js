@@ -48,7 +48,7 @@ function initPages (options) {
 
     let pages
     let lastPage
-    [...Array(options.pagesDepth)].forEach((_, i) => {
+    [ ...Array(options.pagesDepth) ].forEach((_, i) => {
       let page = {
         path: ':page' + i + '?',
         component: resolve('~/.nuxt/bwstarter/bulma/pages/_base'),
@@ -56,7 +56,7 @@ function initPages (options) {
       }
       if (lastPage) {
         page.name = lastPage.name + '-' + page.name
-        lastPage.children = [page]
+        lastPage.children = [ page ]
       } else {
         page.path = '/' + page.path
         pages = page
@@ -71,6 +71,12 @@ function copyPlugin (options) {
   this.addPlugin({
     src: resolve(__dirname, 'components.template.js'),
     fileName: join('bwstarter/bulma', 'components.js'),
+    options
+  })
+  this.addPlugin({
+    src: resolve(join(__dirname, '/../core/plugins/dialog', 'index.js')),
+    fileName: join('bwstarter/bulma/plugins/dialog', 'index.js'),
+    ssr: false,
     options
   })
 }

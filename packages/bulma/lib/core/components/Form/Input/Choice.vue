@@ -14,7 +14,7 @@
   import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Choice'
 
   export default {
-    mixins: [InputMixin],
+    mixins: [ InputMixin ],
     components: {
       FormInput
     }

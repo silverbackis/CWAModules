@@ -2,18 +2,18 @@
   <li itemscope
       itemtype="https://schema.org/ImageGallery"
       class="gallery-item"
+      v-if="component['file:image'] || $bwstarter.isAdmin"
   >
     <div class="gallery-thumb">
       <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
-        <a :class="{'gallery-link': true, 'is-preview': !!preview}"
-           :href="(preview || !component['file:image']) ? '#' : getApiUrl(imageFile.publicPath)"
+        <a :class="{'gallery-link': true, 'is-preview': !!preview, 'no-image': noImage}"
+           :href="noImage ? '#' : getApiUrl(component['file:publicPath'])"
            itemprop="contentUrl"
-           @click.prevent="$photoswipe.open(index, items, $el)"
+           @click.prevent="component['file:image'] ? $photoswipe.open(index, items, $el) : null"
         >
-          <image-loader v-if="preview || component['file:imagine']"
-                        class="image gallery-image"
-                        :image="preview ? preview : component['file:imagine'].thumbnail"
-                        :placeholder="component['file:imagine'] ? component['file:imagine'].placeholderSquare : null"
+          <image-loader class="image gallery-image"
+                        :image="image"
+                        :placeholder="placeholder"
                         :cover="true"
                         :alt="component.title"
           />
@@ -43,6 +43,14 @@
                 class="button move-button is-dark is-small">
           <span class="sr-only">Re-order</span>
           <font-awesome-icon :icon="['fas', 'arrows-alt']"/>
+        </button>
+
+        <button v-if="$bwstarter.isAdmin"
+                class="button delete-button is-danger is-small"
+                @click="deleteItem"
+        >
+          <span class="sr-only">Delete</span>
+          <font-awesome-icon :icon="['fas', 'trash-alt']"/>
         </button>
 
         <figcaption v-if="component.caption"
@@ -96,13 +104,14 @@
 
   export default {
     mixins: [ ComponentMixin ],
-    data() {
+    data () {
       return {
         file: null,
         preview: null,
         uploadPercentage: 0,
         uploading: false,
-        uploadError: null
+        uploadError: null,
+        transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
       }
     },
     props: {
@@ -129,16 +138,45 @@
     },
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-      imageFile() {
-        return this.component['file:image'] || this.preview
+      imageFile () {
+        return this.component[ 'file:image' ] || this.preview
+      },
+      image () {
+        if (this.preview) {
+          return this.preview
+        }
+        if (this.component[ 'file:imagine' ]) {
+          return this.component[ 'file:imagine' ].thumbnail
+        }
+        return {
+          publicPath: this.transparentImage,
+          width: 1,
+          height: 1
+        }
+      },
+      placeholder () {
+        if (this.preview) {
+          return this.preview
+        }
+        if (this.component[ 'file:imagine' ]) {
+          return this.component[ 'file:imagine' ].placeholderSquare
+        }
+        return {
+          publicPath: this.transparentImage,
+          width: 1,
+          height: 1
+        }
+      },
+      noImage () {
+        return !this.preview && !this.component['file:image']
       }
     },
     methods: {
-      handleFileUpload() {
-        this.file = this.$refs.file.files[ 0 ];
+      handleFileUpload () {
+        this.file = this.$refs.file.files[ 0 ]
         if (this.file && /\.(jpe?g|png|gif)$/i.test(this.file.name)) {
           let reader = new FileReader()
-          reader.addEventListener("load", function (file) {
+          reader.addEventListener('load', function (file) {
             const image = new Image()
             image.src = file.target.result
             image.onload = () => {
@@ -155,16 +193,16 @@
         }
         this.submitUpload()
       },
-      cancelUpload() {
+      cancelUpload () {
         this.preview = null
       },
-      submitUpload() {
+      submitUpload () {
         this.uploadError = null
         this.uploading = true
         this.uploadPercentage = 0
         const formData = new FormData()
         formData.append('file', this.file)
-        this.$axios.post('/files/filePath/' + this.component['@id'],
+        this.$axios.post('/files/filePath/' + this.component[ '@id' ],
           formData,
           {
             headers: {
@@ -175,16 +213,36 @@
             }.bind(this)
           }
         )
-        .then(({ data }) => {
-          this.uploading = false
-          this.preview = null
-          this.$bwstarter.$storage.commit('setEntity', [ { id: data['@id'], data } ], entitiesModuleName)
+          .then(({ data }) => {
+            this.uploading = false
+            this.preview = null
+            this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
+          })
+          .catch((error) => {
+            console.warn(error)
+            this.uploading = false
+            this.uploadError = 'Server responded with status code ' + error.statusCode
+          })
+      },
+      deleteItem () {
+        const doDelete = () => {
+          return this.$axios.delete(this.component['@id'])
+            .then(() => {
+              this.$emit('deleted')
+            })
+            .catch((error) => {
+              console.error('error deleting gallery item', error)
+            })
+        }
+        this.$dialog.confirm({
+          title: 'Are you sure?',
+          body: 'This will permanently delete this image from your gallery.'
         })
-        .catch((error) => {
-          console.warn(error)
-          this.uploading = false
-          this.uploadError = 'Server responded with status code ' + error.statusCode
-        })
+          .then(async (dialog) => {
+            await doDelete()
+            dialog.close()
+          })
+          .catch(() => { console.log('Cancelled delete.') })
       }
     }
   }
@@ -204,9 +262,22 @@
       overflow: hidden
       width: 100%
       &.is-preview
+        cursor: default
         .gallery-image
           opacity: .5
-    /*.gallery-image*/
+      &.no-image
+        cursor: default
+        background: $green
+        &:after
+          content: 'No Image'
+          position: absolute
+          width: 100%
+          text-align: center
+          top: 50%
+          line-height: 2rem
+          margin-top: -1rem
+          font-size: 1.5rem
+          color: $white
       /*position: absolute*/
       /*top: 0*/
       /*left: 0*/
@@ -221,6 +292,18 @@
       top: 5px
       left: 5px
       cursor: move
+    .delete-button
+      position: absolute
+      top: 5px
+      right: 5px
+    .image-spacer
+      line-height: 0
+      font-size: 0
+      border: 2px dashed $grey-light
+      img
+        width: 100%
+        display: block
+        position: relative
 
   .gallery-sort-input
     min-width: 50px
@@ -240,4 +323,5 @@
       .help
         background-color: $red
         padding: .2rem
+
 </style>

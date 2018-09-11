@@ -16,30 +16,35 @@ export default {
   },
   computed: {
     containerClass () {
-      return !this.nested ? ['container'] : []
+      return !this.nested ? [ 'container' ] : []
+    },
+    componentGroups () {
+      return this.component.componentGroups.map((groupId) => {
+        return this.getEntity(groupId)
+      })
     },
     childLocationsGrouped () {
-      return this.component.componentGroups.map(({ componentLocations }) => {
+      return this.componentGroups.map(({ componentLocations }) => {
         return componentLocations
       })
     },
     childComponents () {
       return this.childLocationsGrouped.map((locations) => {
-        return locations.map(loc => loc.component)
+        return locations.map(loc => this.getEntity(this.getEntity(loc).component))
       })
     },
     endpoint () {
-      return (this.dynamicData && this.dynamicData.dynamic) ? this.dynamicData['@id'] : this.component['@id']
+      return (this.dynamicData && this.dynamicData.dynamic) ? this.dynamicData[ '@id' ] : this.component[ '@id' ]
     },
     realComponentData () {
       let tempComponent = Object.assign({}, this.component)
-      for (let [key, value] of Object.entries(this.component)) {
+      for (let [ key, value ] of Object.entries(this.component)) {
         if (this.isString(value)) {
           const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
           const matches = expr.exec(value)
-          const injectVar = matches && matches.length >= 3 ? matches[2] : null
-          if (injectVar && this.dynamicData[injectVar]) {
-            tempComponent[key] = this.dynamicData[injectVar]
+          const injectVar = matches && matches.length >= 3 ? matches[ 2 ] : null
+          if (injectVar && this.dynamicData[ injectVar ]) {
+            tempComponent[ key ] = this.dynamicData[ injectVar ]
           }
         }
       }
@@ -55,7 +60,7 @@ export default {
         return string
       }
       return string.replace(/{{(\s+)?(\S{1,})(\s+)?}}/g, (str, space, dynamicVar) => {
-        return this.dynamicData[dynamicVar] || str
+        return this.dynamicData[ dynamicVar ] || str
       })
     }
   }

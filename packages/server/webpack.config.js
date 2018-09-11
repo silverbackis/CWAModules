@@ -18,10 +18,10 @@ module.exports = [
           test: /\.js$/,
           loader: 'babel-loader',
           options: {
-            presets: ['env']
+            presets: [ 'env' ]
           },
           include: __dirname,
-          exclude: [/node_modules/]
+          exclude: [ /node_modules/ ]
         }
       ]
     },
@@ -30,7 +30,7 @@ module.exports = [
       "set-cookie-parser": 'set-cookie-parser'
     },
     resolve: {
-      mainFields: ["module", "main"]
+      mainFields: [ "module", "main" ]
     }
   }
 ];

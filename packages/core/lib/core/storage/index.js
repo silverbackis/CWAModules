@@ -20,13 +20,13 @@ export class Storage {
 
   preserveModuleState (modules = []) {
     const BreakException = {}
-    let state = this.ctx.store.state[this.options.vuex.namespace]
+    let state = this.ctx.store.state[ this.options.vuex.namespace ]
     try {
       modules.forEach((m) => {
-        if (!state[m]) {
+        if (!state[ m ]) {
           throw BreakException
         }
-        state = state[m]
+        state = state[ m ]
       })
     } catch (BreakException) {
       return false
@@ -78,25 +78,25 @@ export class Storage {
     })
 
     MODULES.forEach((store) => {
-      this.ctx.store.registerModule([this.options.vuex.namespace, store.name], Object.assign({ namespaced: true }, store.store), {
+      this.ctx.store.registerModule([ this.options.vuex.namespace, store.name ], Object.assign({ namespaced: true }, store.store), {
         preserveState: this.preserveModuleState(store.name),
         strict: false
       })
     })
 
-    this.state = this.ctx.store.state[this.options.vuex.namespace]
+    this.state = this.ctx.store.state[ this.options.vuex.namespace ]
   }
 
   setState (key, value, modules = []) {
-    this.commit('SET', [{
+    this.commit('SET', [ {
       key,
       value
-    }], modules)
+    } ], modules)
     return value
   }
 
   getState (key) {
-    return this.state[key]
+    return this.state[ key ]
   }
 
   commit (mutation, args = [], modules = []) {
@@ -106,7 +106,7 @@ export class Storage {
 
   get (method, args = [], modules = []) {
     let path = [ this.options.vuex.namespace, ...modules, method ]
-    let value = this.ctx.store.getters[join(...path)]
+    let value = this.ctx.store.getters[ join(...path) ]
     if (!(value instanceof Function)) {
       return value
     }

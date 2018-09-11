@@ -53,7 +53,7 @@
   import { Utilities } from '~/.nuxt/bwstarter/core/server'
 
   export default {
-    mixins: [FormMixin],
+    mixins: [ FormMixin ],
     components: {
       FormTag,
       FormInput
@@ -107,7 +107,7 @@
         console.error('Could not load form', err)
       }
     },
-    beforeDestroy() {
+    beforeDestroy () {
       this.destroyForm(this.formId)
     }
   }

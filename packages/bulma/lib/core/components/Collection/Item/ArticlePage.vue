@@ -9,7 +9,7 @@
           :alt="component.title"
           :cover="true"
         />
-        <img src="/img/1x1.png" class="square-space" />
+        <img src="/img/1x1.png" class="square-space"/>
       </component>
       <div class="card-content">
         <h4 class="title is-4">{{ component.title }}</h4>
@@ -17,7 +17,8 @@
         <app-link v-if="component.routes.length"
                   :to="toRoute"
                   class="button is-primary"
-        >View</app-link>
+        >View
+        </app-link>
       </div>
     </div>
   </div>
@@ -45,10 +46,10 @@
         return (this.component.routes.length) ? 'app-link' : 'div'
       },
       toRoute () {
-        if (this.component.routes.length) return this.component.routes[0].route
+        if (this.component.routes.length) return this.component.routes[ 0 ].route
         return null
       },
-      cardClass() {
+      cardClass () {
         return {
           'article-card column': true,
           'is-10-mobile is-6-tablet is-4-desktop is-3-fullhd': this.type !== 'column',

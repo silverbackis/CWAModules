@@ -1,8 +1,7 @@
 import setCookie from 'set-cookie-parser'
 
 export default class Utilities {
-  constructor (env)
-  {
+  constructor (env) {
     this.env = {
       JWT_COOKIE: env.JWT_COOKIE || 'TKN',
       XSRF_COOKIE: env.XSRF_HEADER || 'XSRF-TOKEN',
@@ -29,8 +28,8 @@ export default class Utilities {
 
   cookiesToHeaders (cookies) {
     return {
-      'X-XSRF-TOKEN': cookies[this.env.XSRF_COOKIE] || '',
-      'Cookie': 'PHPSESSID=' + cookies['PHPSESSID'] || ''
+      'X-XSRF-TOKEN': cookies[ this.env.XSRF_COOKIE ] || '',
+      'Cookie': 'PHPSESSID=' + cookies[ 'PHPSESSID' ] || ''
     }
   }
 

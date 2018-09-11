@@ -7,8 +7,8 @@ Author modified: Daniel <daniel@silverback.is>
 -->
 <template>
   <div :class="loaderClass">
-    <canvas class="is-hidden" ref="canvasPlaceholder" />
-    <img v-if="placeholderDataUrl" class="image-placeholder" :src="placeholderDataUrl" />
+    <canvas class="is-hidden" ref="canvasPlaceholder"/>
+    <img v-if="placeholderDataUrl" class="image-placeholder" :src="placeholderDataUrl"/>
 
     <transition-group
       name="fade"
@@ -29,7 +29,7 @@ Author modified: Daniel <daniel@silverback.is>
              :key="'image'"
              :src="imagePath"
              :alt="alt"
-             class="image" />
+             class="image"/>
       </transition-group>
       <canvas v-show="loadedRes === 'low'"
               :key="'canvas'"
@@ -86,11 +86,14 @@ Author modified: Daniel <daniel@silverback.is>
           this.portrait ? 'portrait' : 'landscape'
         ]
       },
+      isDataString () {
+        return this.image.publicPath.substring(0, 5) === 'data:'
+      },
       imagePath () {
         if (!this.image) {
           return null
         }
-        if (this.image.publicPath.substring(0, 5) === 'data:') {
+        if (this.isDataString) {
           return this.image.publicPath
         }
         return this.getApiUrl(this.image.publicPath)
@@ -106,7 +109,7 @@ Author modified: Daniel <daniel@silverback.is>
       }
     },
     methods: {
-      setupPlaceholder() {
+      setupPlaceholder () {
         if (this.placeholderPath) {
           let loResImg = new Image()
           // HTML5 - send Origin header - no credentials though
@@ -141,25 +144,36 @@ Author modified: Daniel <daniel@silverback.is>
         } else {
           this.placeholderDataUrl = this.imagePath
         }
+      },
+      initImage () {
+        this.portrait = this.image.width < this.image.height
+        this.createCanvasPlaceholderDataUrl();
+
+        let hiResImg = new Image();
+        let loResImg = this.setupPlaceholder();
+
+        hiResImg.onload = () => {
+          if (loResImg) {
+            loResImg.onload = null
+          }
+          this.portrait = hiResImg.width < hiResImg.height
+          this.currentSrc = this.imagePath
+          this.loadedRes = 'high'
+        }
+
+        hiResImg.src = this.imagePath
+      }
+    },
+    watch: {
+      image () {
+        this.initImage()
+      },
+      placeholder () {
+        this.initImage()
       }
     },
     mounted () {
-      this.portrait = this.image.width < this.image.height
-      this.createCanvasPlaceholderDataUrl();
-
-      let hiResImg = new Image();
-      let loResImg = this.setupPlaceholder();
-
-      hiResImg.onload = () => {
-        if (loResImg) {
-          loResImg.onload = null
-        }
-        this.portrait = hiResImg.width < hiResImg.height
-        this.currentSrc = this.imagePath
-        this.loadedRes = 'high'
-      }
-
-      hiResImg.src = this.imagePath
+      this.initImage()
     }
   }
 </script>

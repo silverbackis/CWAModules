@@ -4,7 +4,7 @@
       <div class="collection-columns columns is-mobile is-multiline">
         <div class="column is-12" v-if="component.title">
           <h4 class="is-size-4">{{ component.title }}</h4>
-          <hr />
+          <hr/>
         </div>
         <component :is="itemComponent"
                    v-for="item in component.collection"
@@ -22,7 +22,7 @@
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
   export default {
-    mixins: [ComponentMixin],
+    mixins: [ ComponentMixin ],
     data () {
       return {
         itemComponent: null
@@ -37,7 +37,7 @@
       resolveItemComponent () {
         let resourceParts = this.component.resource.split('\\')
         this.itemComponent = () => ({
-          component: import('./Item/' + resourceParts[resourceParts.length - 1])
+          component: import('./Item/' + resourceParts[ resourceParts.length - 1 ])
         })
       }
     },

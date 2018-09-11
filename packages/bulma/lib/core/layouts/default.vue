@@ -7,7 +7,7 @@
                       :class="navbarClass"
         />
       </header>
-      <nuxt />
+      <nuxt/>
     </div>
     <footer :class="{'footer': true, 'authorized': !!token, 'admin': $bwstarter.isAdmin}">
       <div class="container has-text-centered has-text-weight-bold">
@@ -19,8 +19,8 @@
         </div>
       </div>
     </footer>
-    <notifications />
-    <admin-bar v-if="$bwstarter.isAdmin" />
+    <notifications/>
+    <admin-bar v-if="$bwstarter.isAdmin"/>
   </div>
 </template>
 
@@ -77,8 +77,10 @@
 
   .appear-active
     transition: opacity .4s ease
+
   .page-enter-active, .page-leave-active
     transition: all .2s ease
+
   .appear, .page-enter, .page-leave-active
     opacity: 0
 

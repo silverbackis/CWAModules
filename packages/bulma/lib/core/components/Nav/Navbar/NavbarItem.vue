@@ -32,6 +32,6 @@
 
   export default {
     name: 'BulmaNavbarItem',
-    mixins: [NavItemMixin]
+    mixins: [ NavItemMixin ]
   }
 </script>

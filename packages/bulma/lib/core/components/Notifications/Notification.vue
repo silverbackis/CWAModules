@@ -7,8 +7,9 @@
 
 <script>
   import { mapMutations } from 'vuex'
-  export default{
-    props: ['notification', 'index'],
+
+  export default {
+    props: [ 'notification', 'index' ],
     data () {
       return {
         removing: false

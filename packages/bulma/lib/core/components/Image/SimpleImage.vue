@@ -53,7 +53,6 @@
   @import ~bulma/sass/utilities/mixins
   @import "~assets/css/vars"
 
-
   .image-component
     figcaption
       font-style: italic
