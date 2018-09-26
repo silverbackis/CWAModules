@@ -12,7 +12,7 @@
         </div>
         <div class="column">
           <nuxt-child :key="childKey"
-                      :componentGroup="component.childComponentGroup"
+                      :componentGroup="getEntity(component.childComponentGroup['@id'])"
                       :nested="true"
           />
         </div>

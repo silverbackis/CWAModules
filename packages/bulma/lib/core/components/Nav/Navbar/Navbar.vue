@@ -7,7 +7,7 @@
   >
     <div class="navbar-brand">
       <nuxt-link class="navbar-item" to="/" exact>
-        <img src="~/assets/images/bw-logo.svg" alt="British Websites logo" class="logo"/>
+        <img src="~/assets/images/logo.svg" alt="Silverback CWA Logo" class="logo"/>
       </nuxt-link>
       <div class="navbar-burger burger" @click="isActive=!isActive" :class="{ 'is-active': isActive }">
         <span></span>
@@ -37,7 +37,7 @@
               </a>
             </p>
             <p class="control">
-              <a class="button is-outlined" href="https://github.com/silverbackis/BwStarterWebsite" rel="noopener" target="_blank">
+              <a class="button is-outlined" href="https://github.com/silverbackis/ComponentsWebApp" rel="noopener" target="_blank">
                 <span class="icon">
                   <font-awesome-icon :icon="['fab', 'github']" size="lg"/>
                 </span>

@@ -8,7 +8,7 @@
       <ul>
         <bulma-tab-item v-for="(component, index) in _items"
                         :key="index"
-                        :component="getEntity(component['@id'])"
+                        :component="getEntity(component)"
         />
       </ul>
     </nav>
@@ -67,7 +67,11 @@
         ]
       },
       _items () {
-        return this.component.componentGroups.length ? this.component.componentGroups[ 0 ].componentLocations.map(location => location.component) : []
+        if (!this.component.componentGroups.length) {
+          return []
+        }
+        const locations = this.getEntity(this.component.componentGroups[ 0 ]).componentLocations
+        return this.getEntities(locations).map(location => location.component)
       }
     },
     methods: {

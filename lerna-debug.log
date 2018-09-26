@@ -1,34 +1,242 @@
-0 silly input [ 'lint-fix' ]
-1 silly flags { _: [ 'run' ],
-1 silly flags   'reject-cycles': false,
-1 silly flags   rejectCycles: false,
-1 silly flags   script: 'lint-fix',
-1 silly flags   args: [] }
+0 silly input [ 'publish' ]
+1 silly flags { _: [ 'publish' ], 'reject-cycles': false, rejectCycles: false }
 2 verbose rootPath /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules
 3 info version 2.11.0
-4 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/VERSION
-5 silly initialize attempt
-6 silly initialize success
-7 silly execute attempt
-8 silly runScriptInDir lint-fix [] core
-9 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core' }
-10 silly runScriptInDir lint-fix [] components
-11 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components' }
-12 silly runScriptInDir lint-fix [] bulma
-13 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma' }
-14 error lint-fix Errored while running script in '@cwamodules/bulma'
-15 error execute callback with error
-16 error Error: Command failed: yarn run lint-fix
-16 error warning package.json: No license field
-16 error error Command failed with exit code 1.
-16 error $ eslint --fix lib
-16 error
-16 error /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/lib/module/components.template.js
-16 error   2:2  error  Parsing error: Unexpected token %
-16 error
-16 error ✖ 1 problem (1 error, 0 warnings)
-16 error
-16 error info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-16 error
-16 error     at Promise.all.then.arr (/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/node_modules/execa/index.js:236:11)
-16 error     at <anonymous>
+4 silly isInitialized
+5 silly isInitialized true
+6 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/VERSION
+7 silly initialize attempt
+8 info current version 0.1.4
+9 silly isDetachedHead
+10 silly getCurrentBranch
+11 verbose getCurrentBranch master
+12 verbose isDetachedHead false
+13 silly getCurrentBranch
+14 verbose getCurrentBranch master
+15 silly getUpdates
+16 info Checking for updated packages...
+17 silly hasTags
+18 verbose hasTags true
+19 silly getLastTag
+20 verbose getLastTag v0.1.4
+21 info Comparing with v0.1.4.
+22 silly diffSinceIn v0.1.4 packages/bulma
+23 silly diff packages/bulma/lib/core/BulmaProgress.vue
+23 silly diff packages/bulma/lib/core/components/Admin/AdminBar.vue
+23 silly diff packages/bulma/lib/core/components/Collection/Collection.vue
+23 silly diff packages/bulma/lib/core/components/Collection/ColumnCollection.vue
+23 silly diff packages/bulma/lib/core/components/Collection/Item/ArticlePage.vue
+23 silly diff packages/bulma/lib/core/components/ComponentWrapper.vue
+23 silly diff packages/bulma/lib/core/components/Components.vue
+23 silly diff packages/bulma/lib/core/components/Content/Content.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Columns/FeatureColumnItem.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Columns/FeatureColumns.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Stacked/FeatureStacked.vue
+23 silly diff packages/bulma/lib/core/components/Feature/Stacked/FeatureStackedItem.vue
+23 silly diff packages/bulma/lib/core/components/Feature/TextList/FeatureTextList.vue
+23 silly diff packages/bulma/lib/core/components/Form/Form.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Button.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Checkbox.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Choice.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Simple.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/Textarea.vue
+23 silly diff packages/bulma/lib/core/components/Form/Input/_Mixin.js
+23 silly diff packages/bulma/lib/core/components/Form/Input/_Wrapper.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/Gallery.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/GalleryGroup.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/GalleryItem.vue
+23 silly diff packages/bulma/lib/core/components/Gallery/PhotoSwipe.vue
+23 silly diff packages/bulma/lib/core/components/Hero/Hero.vue
+23 silly diff packages/bulma/lib/core/components/Image/SimpleImage.vue
+23 silly diff packages/bulma/lib/core/components/Layouts/SideColumn.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/Menu.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/MenuItem.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Menu/MenuItemGroup.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Navbar/NavbarItem.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/TabPageWrapper.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/Tabs.vue
+23 silly diff packages/bulma/lib/core/components/Nav/Tabs/TabsItem.vue
+23 silly diff packages/bulma/lib/core/components/Notifications/Notification.vue
+23 silly diff packages/bulma/lib/core/components/Notifications/Notifications.vue
+23 silly diff packages/bulma/lib/core/components/componentMixin.js
+23 silly diff packages/bulma/lib/core/components/nuxtChildMixin.js
+23 silly diff packages/bulma/lib/core/error.vue
+23 silly diff packages/bulma/lib/core/layouts/default.vue
+23 silly diff packages/bulma/lib/core/pages/_base.vue
+23 silly diff packages/bulma/lib/core/pages/login.vue
+23 silly diff packages/bulma/lib/core/plugins/dialog/Dialog.vue
+23 silly diff packages/bulma/lib/core/plugins/dialog/index.js
+23 silly diff packages/bulma/lib/module/components.template.js
+23 silly diff packages/bulma/lib/module/defaults.js
+23 silly diff packages/bulma/lib/module/index.js
+23 silly diff packages/bulma/package.json
+24 silly diffSinceIn v0.1.4 packages/components
+25 silly diff packages/components/lib/core/Admin/Quill.vue
+25 silly diff packages/components/lib/core/Admin/Text.vue
+25 silly diff packages/components/lib/core/Admin/_Input.js
+25 silly diff packages/components/lib/core/Form/Form.vue
+25 silly diff packages/components/lib/core/Form/FormInput.vue
+25 silly diff packages/components/lib/core/Form/Input/Button.vue
+25 silly diff packages/components/lib/core/Form/Input/Checkbox.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/ChoiceExpanded.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/ChoiceSelect.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/Option/ChoiceExpandedOption.vue
+25 silly diff packages/components/lib/core/Form/Input/Choice/Option/ChoiceSelectOption.vue
+25 silly diff packages/components/lib/core/Form/Input/Mixin/computed.js
+25 silly diff packages/components/lib/core/Form/Input/Mixin/methods.js
+25 silly diff packages/components/lib/core/Form/Input/Simple.vue
+25 silly diff packages/components/lib/core/Form/Input/Textarea.vue
+25 silly diff packages/components/lib/core/Form/Input/_CommonMixin.js
+25 silly diff packages/components/lib/core/Form/_Mixin.js
+25 silly diff packages/components/lib/core/Utils/ImageLoader.vue
+25 silly diff packages/components/lib/core/Utils/stackBlur.js
+25 silly diff packages/components/lib/core/componentMixin.js
+25 silly diff packages/components/lib/core/nuxtChildMixin.js
+25 silly diff packages/components/lib/core/pageMixin.js
+26 silly diffSinceIn v0.1.4 packages/core
+27 silly diff packages/core/lib/core/bw_starter.js
+27 silly diff packages/core/lib/core/middleware/index.js
+27 silly diff packages/core/lib/core/server/index.js
+27 silly diff packages/core/lib/core/storage/admin/index.js
+27 silly diff packages/core/lib/core/storage/admin/module.js
+27 silly diff packages/core/lib/core/storage/content/index.js
+27 silly diff packages/core/lib/core/storage/entities/index.js
+27 silly diff packages/core/lib/core/storage/form/index.js
+27 silly diff packages/core/lib/core/storage/index.js
+27 silly diff packages/core/lib/module/index.js
+27 silly diff packages/core/lib/module/plugin.template.js
+27 silly diff packages/core/lib/plugins/mixin.js
+27 silly diff packages/core/lib/plugins/vue-cookie.js
+28 silly diffSinceIn v0.1.4 packages/server
+29 silly diff packages/server/src/index.js
+29 silly diff packages/server/src/utilities.js
+29 silly diff packages/server/webpack.config.js
+30 verbose updated @cwamodules/bulma
+31 verbose updated @cwamodules/components
+32 verbose updated @cwamodules/core
+33 verbose updated @cwamodules/server
+34 info Checking for prereleased packages...
+35 silly collectDependents
+36 silly isPackageDependentOf @cwamodules/bulma @cwamodules/bulma
+37 silly isPackageDependentOf @cwamodules/components @cwamodules/bulma
+38 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
+39 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
+40 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
+41 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
+42 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
+43 silly isPackageDependentOf @cwamodules/bulma @cwamodules/components
+44 verbose dependent @cwamodules/bulma depends on @cwamodules/components
+45 silly isPackageDependentOf @cwamodules/bulma @cwamodules/core
+46 verbose dependent @cwamodules/bulma depends on @cwamodules/core
+47 silly isPackageDependentOf @cwamodules/bulma @cwamodules/server
+48 verbose dependent @cwamodules/bulma depends on @cwamodules/server
+49 silly isPackageDependentOf @cwamodules/components @cwamodules/bulma
+50 silly isPackageDependentOf @cwamodules/components @cwamodules/components
+51 silly isPackageDependentOf @cwamodules/core @cwamodules/components
+52 silly isPackageDependentOf @cwamodules/server @cwamodules/components
+53 silly isPackageDependentOf @cwamodules/server @cwamodules/components
+54 silly isPackageDependentOf @cwamodules/components @cwamodules/core
+55 verbose dependent @cwamodules/components depends on @cwamodules/core
+56 silly isPackageDependentOf @cwamodules/components @cwamodules/server
+57 verbose dependent @cwamodules/components depends on @cwamodules/server
+58 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
+59 silly isPackageDependentOf @cwamodules/core @cwamodules/components
+60 silly isPackageDependentOf @cwamodules/core @cwamodules/core
+61 silly isPackageDependentOf @cwamodules/server @cwamodules/core
+62 silly isPackageDependentOf @cwamodules/core @cwamodules/server
+63 verbose dependent @cwamodules/core depends on @cwamodules/server
+64 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
+65 silly isPackageDependentOf @cwamodules/server @cwamodules/components
+66 silly isPackageDependentOf @cwamodules/server @cwamodules/core
+67 silly isPackageDependentOf @cwamodules/server @cwamodules/server
+68 silly collectUpdates
+69 verbose has filtered update @cwamodules/bulma
+70 verbose has filtered update @cwamodules/components
+71 verbose has filtered update @cwamodules/core
+72 verbose has filtered update @cwamodules/server
+73 silly initialize success
+74 silly execute attempt
+75 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/lerna.json
+76 silly runScriptSync preversion undefined
+77 silly runScriptSync preversion @cwamodules/bulma
+78 silly runScriptSync version @cwamodules/bulma
+79 silly runScriptSync preversion @cwamodules/components
+80 silly runScriptSync version @cwamodules/components
+81 silly runScriptSync preversion @cwamodules/core
+82 silly runScriptSync version @cwamodules/core
+83 silly runScriptSync preversion @cwamodules/server
+84 silly runScriptSync version @cwamodules/server
+85 silly runScriptSync version undefined
+86 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/package.json
+87 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/package.json
+88 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/package.json
+89 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/package.json
+90 silly commit v0.2.0
+91 verbose commit [ 'commit', '--no-verify', '-m', 'v0.2.0' ]
+92 silly addTag v0.2.0
+93 silly runScriptSync postversion @cwamodules/bulma
+94 silly runScriptSync postversion @cwamodules/components
+95 silly runScriptSync postversion @cwamodules/core
+96 silly runScriptSync postversion @cwamodules/server
+97 silly runScriptSync postversion undefined
+98 info publish Publishing packages to npm...
+99 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/scripts/prepublish.js
+100 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/scripts/prepublish.js
+101 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/scripts/prepublish.js
+102 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/scripts/prepublish.js
+103 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/scripts/prepublish.js
+104 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/scripts/prepublish.js
+105 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/scripts/prepublish.js
+106 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/scripts/prepublish.js
+107 verbose publishing @cwamodules/server
+108 silly publishTaggedInDir latest server
+109 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
+110 error publish Retrying failed publish: @cwamodules/server
+111 verbose publish error undefined
+112 verbose publishing @cwamodules/server
+113 silly publishTaggedInDir latest server
+114 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
+115 error publish Retrying failed publish: @cwamodules/server
+116 verbose publish error undefined
+117 verbose publishing @cwamodules/server
+118 silly publishTaggedInDir latest server
+119 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
+120 error publish Retrying failed publish: @cwamodules/server
+121 verbose publish error undefined
+122 verbose publishing @cwamodules/server
+123 silly publishTaggedInDir latest server
+124 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
+125 error publish Retrying failed publish: @cwamodules/server
+126 verbose publish error undefined
+127 verbose publishing @cwamodules/server
+128 silly publishTaggedInDir latest server
+129 silly getExecOpts { cwd: '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
+130 error publish Ran out of retries while publishing @cwamodules/server Error: Command failed: yarn publish --tag latest --new-version 0.2.0
+130 error publish warning package.json: No license field
+130 error publish warning package.json: No license field
+130 error publish error Couldn't publish package.
+130 error publish yarn publish v1.6.0
+130 error publish [1/4] Bumping version...
+130 error publish info Current version: 0.2.0
+130 error publish [2/4] Logging in...
+130 error publish [3/4] Publishing...
+130 error publish info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
+130 error publish
+130 error publish     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
+130 error publish     at <anonymous>
+130 error publish     at process._tickCallback (internal/process/next_tick.js:188:7)
+131 error execute callback with error
+132 error Error: Command failed: yarn publish --tag latest --new-version 0.2.0
+132 error warning package.json: No license field
+132 error warning package.json: No license field
+132 error error Couldn't publish package.
+132 error yarn publish v1.6.0
+132 error [1/4] Bumping version...
+132 error info Current version: 0.2.0
+132 error [2/4] Logging in...
+132 error [3/4] Publishing...
+132 error info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
+132 error
+132 error     at Promise.all.then.arr (/usr/local/lib/node_modules/lerna/node_modules/execa/index.js:236:11)
+132 error     at <anonymous>

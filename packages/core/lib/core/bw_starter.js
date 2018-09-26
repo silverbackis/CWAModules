@@ -294,27 +294,31 @@ export default class BWStarter {
 
 const getEntitiesFromLocations = function (locations) {
   let entities = {}
-  locations.forEach((location) => {
-    const component = location.component
+
+  const processComponentGroup = (componentGroup) => {
+    entities[ componentGroup[ '@id' ] ] = Object.assign({}, componentGroup, {
+      componentLocations: componentGroup.componentLocations.map((loc) => loc[ '@id' ])
+    })
+    if (componentGroup.componentLocations) {
+      entities = Object.assign(entities, getEntitiesFromLocations(componentGroup.componentLocations))
+    }
+  }
+
+  locations.forEach((_) => {
+    const location = Object.assign({}, _)
+    const component = Object.assign({}, location.component)
     if (location[ '@id' ]) {
       entities[ location[ '@id' ] ] = Object.assign({}, location, { component: component[ '@id' ] })
     }
     entities[ component[ '@id' ] ] = component
 
     if (component.componentGroups) {
-      component.componentGroups.forEach((componentGroup) => {
-        entities[ componentGroup[ '@id' ] ] = Object.assign({}, componentGroup, {
-          componentLocations: componentGroup.componentLocations.map((loc) => loc[ '@id' ])
-        })
-        if (componentGroup.componentLocations) {
-          entities = Object.assign(entities, getEntitiesFromLocations(componentGroup.componentLocations))
-        }
-      })
+      component.componentGroups.forEach(processComponentGroup)
       component.componentGroups = component.componentGroups.map((group) => group[ '@id' ])
     }
 
     if (component.childComponentGroup && component.childComponentGroup.componentLocations.length) {
-      entities = Object.assign(entities, getEntitiesFromLocations(component.childComponentGroup.componentLocations))
+      processComponentGroup(component.childComponentGroup)
     }
   })
   return entities

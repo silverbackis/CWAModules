@@ -91,7 +91,7 @@
         if (!groups.length || !groups[ 0 ].componentLocations.length) {
           return
         }
-        return groups[ 0 ].componentLocations[ 0 ].component
+        return this.getEntity(this.getEntity(groups[ 0 ].componentLocations[ 0 ]).component)
       },
       imageData () {
         if (!this.component) {
