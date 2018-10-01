@@ -92,7 +92,8 @@
       }
     },
     async asyncData ({ store: { dispatch, getters }, app: { $axios, $bwstarter }, res }) {
-      let response = await $bwstarter.fetchAndStoreLayout();
+      let response = await $bwstarter.fetchAndStoreLayout(null, true)
+
       if (process.server) {
         Utilities.setResponseCookies(res, response)
       }

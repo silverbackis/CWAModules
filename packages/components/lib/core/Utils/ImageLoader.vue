@@ -87,7 +87,7 @@ Author modified: Daniel <daniel@silverback.is>
         ]
       },
       isDataString () {
-        return this.image.publicPath.substring(0, 5) === 'data:'
+        return this.image.publicPath ? this.image.publicPath.substring(0, 5) === 'data:' : false
       },
       imagePath () {
         if (!this.image) {
@@ -205,6 +205,8 @@ Author modified: Daniel <daniel@silverback.is>
       left: 0
       width: 100%
       height: 100%
+      min-width: 30px
+      min-height: 30px
       &.no-placeholder
         position: relative
       .background

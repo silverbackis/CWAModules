@@ -232,7 +232,10 @@ export default class BWStarter {
     return this.fetchLayout(layout[ '@id' ])
   }
 
-  async fetchAndStoreLayout (layout = DEFAULT_LAYOUT, current = false) {
+  async fetchAndStoreLayout (layout = null, current = false) {
+    if (!layout) {
+      layout = DEFAULT_LAYOUT
+    }
     let response = await this.fetchLayout(layout)
     this.storeLayoutContent(response.data, current)
     return response

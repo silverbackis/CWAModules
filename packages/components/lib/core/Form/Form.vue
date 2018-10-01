@@ -45,7 +45,7 @@
       },
       cancelToken: {
         get () {
-          return this.storeForm.cancelToken
+          return this.storeForm ? this.storeForm.cancelToken : null
         },
         set (token) {
           this.setFormCancelToken({ formId: this.formId, token })

@@ -132,7 +132,7 @@ export const mutations = {
     Vue.set(state[ formId ].children[ inputName ].vars, 'errors', errors)
   },
   destroy (state, formId) {
-    Vue.delete(state, formId)
+    if (state[formId]) Vue.delete(state, formId)
   },
 
   // --------
