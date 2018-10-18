@@ -18,7 +18,7 @@ module.exports = {
   enabledComponents: null,
   disabledComponents: null,
   photoswipeInstalled: null,
-  async componentEnabledVoter ({ enabledComponents, disabledComponents, components, componentEnabledVoter, photoswipeInstalled }, { key, component }) {
+  componentEnabledVoter ({ enabledComponents, disabledComponents, components, componentEnabledVoter, photoswipeInstalled }, { key, component }) {
     if (component && !key) {
       if (!photoswipeInstalled && component.startsWith('components/Gallery/')) {
         return false
@@ -36,13 +36,18 @@ module.exports = {
           })
           return false
         } catch (e) {
+          // if we threw a break exception the voter said the matched key was OK
           return true
         }
       }
       // enable if it wasn't setup as a configured component - otherwise enabling would be very hard work...
       return true
     }
+    if (!photoswipeInstalled && key === 'Gallery') {
+      return false
+    }
     return (enabledComponents && enabledComponents.constructor === Array && enabledComponents.indexOf(key) !== -1) ||
-    (disabledComponents && disabledComponents.constructor === Array && disabledComponents.indexOf(key) === -1)
+      (disabledComponents && disabledComponents.constructor === Array && disabledComponents.indexOf(key) === -1) ||
+      true
   }
 }

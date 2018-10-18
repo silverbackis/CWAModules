@@ -7,7 +7,13 @@ const detectInstalled = require('detect-installed')
 const libRoot = resolve(__dirname, '..')
 
 module.exports = async function (moduleOptions) {
-  const options = merge({}, defaults, { photoswipeInstalled: await detectInstalled('photoswipe') }, moduleOptions, this.options.bwstarter)
+  const options = merge(
+    {},
+    defaults,
+    { photoswipeInstalled: await detectInstalled('photoswipe') },
+    moduleOptions,
+    this.options.bwstarter
+  )
   copyCore.call(this, options)
   initPages.call(this, options)
   copyPlugin.call(this, options)
