@@ -2,17 +2,18 @@ const merge = require('lodash/merge')
 const defaults = require('./defaults')
 const { resolve, join } = require('path')
 const rreaddir = require('@cwamodules/core/lib/module/rreaddir')
+const detectInstalled = require('detect-installed')
 
 const libRoot = resolve(__dirname, '..')
 
-module.exports = function (moduleOptions) {
-  const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
+module.exports = async function (moduleOptions) {
+  const options = merge({}, defaults, { photoswipeInstalled: await detectInstalled('photoswipe') }, moduleOptions, this.options.bwstarter)
   copyCore.call(this, options)
   initPages.call(this, options)
   copyPlugin.call(this, options)
 }
 
-function copyCore () {
+function copyCore (options) {
   const coreRoot = resolve(libRoot, 'core')
   let files = rreaddir(coreRoot)
   for (const file of files) {
@@ -22,11 +23,13 @@ function copyCore () {
         fileName: join('bwstarter/bulma', file)
       })
     } else {
-      this.addTemplate({
-        src: resolve(coreRoot, file),
-        fileName: join('bwstarter/bulma', file)
-      })
-      if (file === 'error.vue') {
+      if (options.componentEnabledVoter(options, { component: file })) {
+        this.addTemplate({
+          src: resolve(coreRoot, file),
+          fileName: join('bwstarter/bulma', file)
+        })
+      }
+      if (file === 'error.vue' && !this.options.ErrorPage) {
         this.options.ErrorPage = join(this.options.buildDir, 'bwstarter/bulma', file)
       }
     }

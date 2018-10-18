@@ -72,6 +72,10 @@ export class Storage {
       }
     }
 
+    if (!this.ctx.store) {
+      console.error('Cannot initialise store modules - the store does not exist')
+      return
+    }
     this.ctx.store.registerModule(this.options.vuex.namespace, storeModule, {
       preserveState: this.preserveModuleState(),
       strict: false

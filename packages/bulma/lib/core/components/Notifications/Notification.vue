@@ -33,7 +33,7 @@
 </script>
 
 <style lang="sass">
-  @import '~assets/css/_vars'
+  @import '../../assets/css/_vars'
 
   .notification
     display: block

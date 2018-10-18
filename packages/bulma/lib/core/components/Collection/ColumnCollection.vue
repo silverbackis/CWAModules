@@ -46,7 +46,7 @@
 </script>
 
 <style lang="sass">
-  @import "~assets/css/vars"
+  @import "../../assets/css/vars"
 
   .column-collection
     background: $grey-lightest

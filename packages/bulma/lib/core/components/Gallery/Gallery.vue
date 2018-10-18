@@ -27,7 +27,7 @@
     methods: {
       initPhotoswipe () {
         if (process.browser) {
-          const PhotoSwipe = Vue.extend(PhotoSwipeComponent)
+          const PhotoSwipe = Vue.extend(PhotoSwipeComponent, 0)
           this.$photoswipe = new PhotoSwipe({ el: document.createElement('div') })
           document.body.appendChild(this.$photoswipe.$el)
         } else {

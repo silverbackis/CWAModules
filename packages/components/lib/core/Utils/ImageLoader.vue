@@ -179,8 +179,6 @@ Author modified: Daniel <daniel@silverback.is>
 </script>
 
 <style lang="sass">
-  @import ~assets/css/_vars
-
   .image-loader
     display: inline-block
     line-height: 0
@@ -215,8 +213,8 @@ Author modified: Daniel <daniel@silverback.is>
         left: 0
         width: 100%
         height: 100%
-        border: 2px dashed rgba($grey-lightest, .75)
-        background: linear-gradient(45deg, rgba($black, .05), rgba($grey-lightest, .15))
+        // border: 2px dashed rgba($grey-lightest, .75)
+        // background: linear-gradient(45deg, rgba($black, .05), rgba($grey-lightest, .15))
         min-width: 30px
         min-height: 30px
       .image-small

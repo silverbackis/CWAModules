@@ -55,7 +55,7 @@
 </script>
 
 <style lang="sass">
-  @import "~assets/css/vars"
+  @import "../../../assets/css/vars"
 
   aside.menu
     padding: .75rem
