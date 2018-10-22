@@ -62,13 +62,15 @@ export default class BWServer {
       })
   }
 
-  logout (req, res) {
+  logout (req, res, setResponse = true) {
     req.session.authToken = null
     req.session.destroy()
     this.utilities.clearJwtCookie(res)
-    res
-      .status(200)
-      .json({ success: true })
+    if (setResponse) {
+      res
+        .status(200)
+        .json({ success: true })
+    }
   }
 
   async jwtRefresh (req, res, sendResult = true) {
