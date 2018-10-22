@@ -47,8 +47,14 @@ export default class BWStarter {
     // Private refresh functions
     // --------
     const handleRefreshError = async (refreshError) => {
-      await this.logout()
       logging && console.warn('refreshError', refreshError)
+      this.$storage.setState(TOKEN_KEY, null)
+      try {
+        // If we use axios to post to 127.0.0.1:80 server-side we get a connection error
+        await BWServer.logout(req, res, false)
+      } catch (e) {
+        logging && console.error('Error logging out after failing to refresh JWT token', e)
+      }
       if (refreshError.statusCode >= 500 && refreshError.statusCode < 600) {
         return Promise.reject(refreshError)
       }

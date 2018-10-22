@@ -48,8 +48,25 @@ export class Storage {
           return user ? user.roles : [ 'ROLE_ANONYMOUS' ]
         },
         hasRole: (state, getters) => (role) => {
-          const roles = getters.userRoles
-          return roles.indexOf(role) !== -1
+          const checkRole = (role) => {
+            const roles = getters.userRoles
+            return roles.indexOf(role) !== -1
+          }
+          if (role.constructor === Array) {
+            const BreakException = {}
+            try {
+              role.forEach((r) => {
+                if (checkRole(r)) {
+                  throw BreakException
+                }
+              })
+              return false
+            } catch (e) {
+              return true
+            }
+          } else {
+            return checkRole(role)
+          }
         }
       },
       mutations: {
