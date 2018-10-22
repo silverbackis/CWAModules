@@ -45,7 +45,7 @@ export class Storage {
         },
         userRoles: (state, getters) => {
           const user = getters.user
-          return user ? user.roles : []
+          return user ? user.roles : [ 'ROLE_ANONYMOUS' ]
         },
         hasRole: (state, getters) => (role) => {
           const roles = getters.userRoles

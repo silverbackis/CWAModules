@@ -30,9 +30,9 @@
 </template>
 
 <script>
-  import { name as ADMIN_MODULE } from "~/.nuxt/bwstarter/core/storage/admin";
+  import { name as ADMIN_MODULE } from '~/.nuxt/bwstarter/core/storage/admin'
 
-  export default {
+export default {
     props: {
       autoSave: {
         type: Boolean,
@@ -70,7 +70,7 @@
         }
       },
       autoSaveVars () {
-        return [ this.isModified, this.isSubmitting, this.autoSaveLocal ]
+        return [ this.isModified, this.autoSaveLocal ]
       }
     },
     watch: {

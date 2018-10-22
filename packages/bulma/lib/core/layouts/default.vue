@@ -5,7 +5,32 @@
         <bulma-navbar v-if="structure && structure.navBar"
                       :component="getEntity(structure.navBar['@id'])"
                       :class="navbarClass"
-        />
+        >
+          <slot name="navbar-end">
+            <div class="navbar-item">
+              <div class="field is-grouped">
+                <p class="control">
+                  <a class="button is-primary" :href="getApiUrl('')" rel="noopener" target="_blank">
+                  <span class="icon">
+                    <font-awesome-icon icon="book"/>
+                  </span>
+                    <span>
+                    API Docs
+                  </span>
+                  </a>
+                </p>
+                <p class="control">
+                  <a class="button is-outlined" href="https://github.com/silverbackis/ComponentsWebApp" rel="noopener" target="_blank">
+                  <span class="icon">
+                    <font-awesome-icon :icon="['fab', 'github']" size="lg"/>
+                  </span>
+                    <span>GitHub</span>
+                  </a>
+                </p>
+              </div>
+            </div>
+          </slot>
+        </bulma-navbar>
       </header>
       <nuxt/>
     </div>
@@ -25,12 +50,12 @@
 </template>
 
 <script>
-  import { mapMutations } from 'vuex'
-  import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
+  import LayoutMixin from '~/.nuxt/bwstarter/components/layoutMixin'
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
   import Notifications from '../components/Notifications/Notifications'
 
   export default {
+    mixins: [ LayoutMixin ],
     components: {
       BulmaNavbar: () => import('../components/Nav/Navbar/Navbar.vue'),
       AdminBar: () => import('../components/Admin/AdminBar'),
@@ -38,39 +63,15 @@
       Notifications
     },
     computed: {
-      structure () {
-        return this.$bwstarter.$storage.get('getLayout', [], contentModuleName).structure
-      },
-      getApiUrl () {
-        return this.$bwstarter.$storage.get('getApiUrl')
-      },
       navbarClass () {
         return this.token ? 'is-dark' : ''
-      },
-      token () {
-        return this.$bwstarter.$storage.getState('token')
-      }
-    },
-    methods: {
-      ...mapMutations({
-        setAuthToken: 'setAuthToken',
-        addNotification: 'bwstarter/notifications/addNotification'
-      })
-    },
-    head () {
-      return {
-        title: 'Loading...',
-        meta: [
-          { hid: 'theme', name: 'theme-color', content: '#4770fb' }
-        ],
-        htmlAttrs: { lang: 'en' }
       }
     }
   }
 </script>
 
 <style lang="sass">
-  @import assets/css/_vars.sass
+  @import ../assets/css/_vars.sass
 
   a
     transition: color .25s, border .25s, background-color .25s
