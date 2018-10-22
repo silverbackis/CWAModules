@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = [
   {
@@ -18,7 +18,7 @@ module.exports = [
           test: /\.js$/,
           loader: 'babel-loader',
           options: {
-            presets: [ 'env' ]
+            presets: [ '@babel/preset-env' ]
           },
           include: __dirname,
           exclude: [ /node_modules/ ]
@@ -27,10 +27,10 @@ module.exports = [
     },
     externals: {
       axios: 'axios',
-      "set-cookie-parser": 'set-cookie-parser'
+      'set-cookie-parser': 'set-cookie-parser'
     },
     resolve: {
-      mainFields: [ "module", "main" ]
+      mainFields: [ 'module', 'main' ]
     }
   }
-];
+]

@@ -101,11 +101,11 @@ export default class BWServer {
       }
       res.status(200).json({ token: session.authToken })
     } catch (err) {
-      this.logging && console.error('RefreshToken Error', err)
       this.utilities.clearJwtCookie(res)
       if (!sendResult) {
         throw new Error(err)
       }
+      this.logging && console.error('RefreshToken Error', err)
 
       res.status(500)
       if (err.response === undefined) {
