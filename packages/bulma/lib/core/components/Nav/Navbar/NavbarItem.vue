@@ -1,5 +1,5 @@
 <template>
-  <nuxt-link v-if="!childComponents.length"
+  <nuxt-link v-if="!childComponents.length && hasPermittedRole"
              class="navbar-item"
              :to="toRoute"
              :active-class="activeClass"
@@ -7,7 +7,8 @@
   >
     {{ component.label }}
   </nuxt-link>
-  <div v-else class="navbar-item has-dropdown is-hoverable">
+  <div v-else-if="hasPermittedRole"
+       class="navbar-item has-dropdown is-hoverable">
     <nuxt-link class="navbar-link"
                :to="toRoute"
                :active-class="activeClass"

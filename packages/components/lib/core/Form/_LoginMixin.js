@@ -10,6 +10,11 @@ export default {
     FormTag,
     FormInput
   },
+  data () {
+    return {
+      loginSuccessRedirect: '/'
+    }
+  },
   computed: {
     ...mapGetters({
       getApiUrl: 'bwstarter/getApiUrl'
@@ -27,7 +32,7 @@ export default {
     formSuccess (data) {
       if (data.token) {
         this.$bwstarter.$storage.setState('token', data.token)
-        this.$router.replace('/')
+        this.$router.replace(this.loginSuccessRedirect)
       }
     }
   },
