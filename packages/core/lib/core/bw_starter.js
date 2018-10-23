@@ -72,7 +72,7 @@ export default class BWStarter {
     const clientRefresh = async (config) => {
       try {
         let { data } = await this.$axios.post(
-          'refresh_token',
+          '/refresh_token',
           { _action: '/token/refresh' },
           { baseURL: null, refreshTokenRequest: true }
         )
