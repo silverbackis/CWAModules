@@ -3,10 +3,9 @@
     <div class="level is-mobile">
       <div class="level-left">
         <div class="level-item has-padding">
-          <label class="checkbox custom">
+          <label class="checkbox is-custom">
             <input type="checkbox" v-model="autoSaveLocal" class="custom">
-            <div class="indicator"></div>
-            <span class="input-label">
+            <span class="custom-control-label">
               Auto-save
             </span>
           </label>
