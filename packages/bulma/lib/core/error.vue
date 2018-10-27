@@ -18,7 +18,7 @@
           </p>
         </div>
       </div>
-      <p v-if="error.statusCode === 404">
+      <p v-if="error.statusCode === 404 || error.showHomeButton">
         <nuxt-link class="button is-secondary is-outlined" to="/">Back to the home page</nuxt-link>
       </p>
     </div>
