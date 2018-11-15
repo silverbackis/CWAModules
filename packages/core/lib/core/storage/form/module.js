@@ -74,35 +74,36 @@ export const actions = {
     }
   },
   validateFormView ({ commit }, { formId, formData, isSubmit = false, simulatedInputNames = [] }) {
+    const setValidation = (child) => {
+      if (child.vars.valid === undefined) {
+        return
+      }
+      if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
+        commit('setInputValidationResult', {
+          formId,
+          inputName: child.vars.full_name,
+          valid: child.vars.valid,
+          errors: child.vars.errors
+        })
+        if (isSubmit) {
+          commit('setInputDisplayErrors', {
+            formId,
+            inputName: child.vars.full_name,
+            displayErrors: true
+          })
+        }
+      } else {
+        commit('setInputValidationResult', {
+          formId,
+          inputName: child.vars.full_name,
+          valid: false
+        })
+      }
+    }
     const doValidation = (item) => {
+      setValidation(item)
       for (const child of item.children) {
-        if (child.children) {
-          doValidation(child)
-        }
-        if (child.vars.valid === undefined) {
-          continue
-        }
-        if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
-          commit('setInputValidationResult', {
-            formId,
-            inputName: child.vars.full_name,
-            valid: child.vars.valid,
-            errors: child.vars.errors
-          })
-          if (isSubmit) {
-            commit('setInputDisplayErrors', {
-              formId,
-              inputName: child.vars.full_name,
-              displayErrors: true
-            })
-          }
-        } else {
-          commit('setInputValidationResult', {
-            formId,
-            inputName: child.vars.full_name,
-            valid: false
-          })
-        }
+        doValidation(child)
       }
     }
     doValidation(formData)

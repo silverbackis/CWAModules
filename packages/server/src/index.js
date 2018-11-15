@@ -8,7 +8,7 @@ export default class BWServer {
     this.logging = env.NODE_ENV === 'development'
   }
 
-  login (req, res = null) {
+  login (req, res = null, extraHeaders = {}) {
     // Only allow post requests to API
     let session = req.session
     let _action = req.body._action
@@ -23,7 +23,7 @@ export default class BWServer {
         password: req.body.password
       },
       {
-        headers: this.utilities.cookiesToHeaders(req.cookies)
+        headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
