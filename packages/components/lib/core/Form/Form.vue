@@ -63,6 +63,7 @@
         setFormSubmitting: 'bwstarter/_forms/setFormSubmitting',
         setFormValidationResult: 'bwstarter/_forms/setFormValidationResult',
         setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors',
+        setFormDisplayErrors: 'bwstarter/_forms/setFormDisplayErrors',
         setFormCancelToken: 'bwstarter/_forms/setFormCancelToken'
       }),
       async submit () {
@@ -102,7 +103,15 @@
             valid: status === 200,
             errors: errors
           })
-          if (form) this.validateFormView({ formId: this.formId, formData: form, isSubmit: true })
+          if (form) {
+            this.validateFormView({ formId: this.formId, formData: form, isSubmit: true })
+          } else {
+            if (errors.length) {
+              this.setFormDisplayErrors({ formId: this.formId, displayErrors: true, valid: false })
+            } else {
+              this.setFormDisplayErrors({ formId: this.formId, displayErrors: false, valid: true })
+            }
+          }
         } catch (error) {
           this.submitError(error)
         }

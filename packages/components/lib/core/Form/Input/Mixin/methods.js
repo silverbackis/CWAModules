@@ -21,12 +21,13 @@ export default {
       validateFormView: 'bwstarter/_forms/validateFormView'
     }),
     async inputBlur () {
-      this.displayErrors = true
-      await this.beginValidation()
+      if (this.validationEnabled) {
+        this.displayErrors = true
+        await this.beginValidation()
+      }
     },
     beginValidation () {
-      const SHOULD_VALIDATE = this.form.vars.realtime_validate !== false && [null, '', '#'].indexOf(this.action) === -1
-      if (!SHOULD_VALIDATE || this.input.disableValidation) {
+      if (!this.validationEnabled || this.input.disableValidation) {
         return
       }
       const localValue = this.child ? this.child.vars.value : this.inputModel
@@ -70,7 +71,6 @@ export default {
           }
         }
       }
-
       try {
         let { data } = await this.$axios.request(
           {
@@ -91,19 +91,6 @@ export default {
       } catch (error) {
         this.validateError(error)
       }
-    },
-    findNestedVars (item) {
-      let vars = item.vars
-      if (vars.full_name === this.inputName) {
-        return vars
-      }
-      for (const child of item.children) {
-        const childVars = this.findNestedVars(child)
-        if (childVars) {
-          return childVars
-        }
-      }
-      return null
     },
     validateError (error) {
       if (error.message === DUPLICATE_CANCEL_MESSAGE) {

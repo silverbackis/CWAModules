@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div class="field" v-if="!hidden">
     <label class="label" v-html="label" v-if="label && label !== ''" :for="inputId"></label>
     <div :class="controlClass">
       <div :class="wrapperClass">
@@ -57,6 +57,10 @@
         validator (value) {
           return value === false || [ 'single', 'multiple' ].indexOf(value) !== -1
         }
+      },
+      hidden: {
+        type: Boolean,
+        default: false
       }
     },
     computed: {

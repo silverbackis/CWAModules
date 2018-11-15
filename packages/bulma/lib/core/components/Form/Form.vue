@@ -14,13 +14,14 @@
               </div>
             </slot>
 
-            <slot v-if="!formValid">
+            <slot name="form" v-if="!formValid">
               <form-input v-for="input in form.children"
-                          :key="input.vars.unique_block_prefix"
+                          :key="input.vars.full_name"
                           :input="input"
                           :formId="formId"
                           :wrapped="true"
               />
+              <slot name="form-append"></slot>
             </slot>
 
             <slot name="success" v-else>

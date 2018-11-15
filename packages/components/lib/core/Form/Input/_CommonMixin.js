@@ -1,4 +1,4 @@
-import { mapMutations, mapGetters } from 'vuex'
+import { mapMutations } from 'vuex'
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {

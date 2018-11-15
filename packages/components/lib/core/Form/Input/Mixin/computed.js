@@ -1,5 +1,4 @@
 import { mapGetters } from 'vuex'
-import { splitFormName } from '~/.nuxt/bwstarter/core/storage/form/module'
 
 export default {
   computed: {
@@ -9,12 +8,6 @@ export default {
     }),
     isRepeated () {
       return this.parents.length && this.parents[0].vars.block_prefixes[1] === 'repeated'
-    },
-    isSecondRepeated () {
-      return this.isRepeated && this.vars.name === 'second'
-    },
-    splitFormName () {
-      return splitFormName(this.inputName)
     },
     inputSubmitData () {
       return this.getInputSubmitData(this.extendInputId())
@@ -31,6 +24,15 @@ export default {
         disabled: this.vars.disabled || this.form.submitting
       })
     },
+    hasErrors () {
+      return !this.valid && this.displayErrors && !this.validating // && !!this.errors.length
+    },
+    validClass () {
+      return {
+        'is-success': this.valid && !this.validating,
+        'is-danger': this.hasErrors
+      }
+    },
     classes () {
       let classes = []
       if (this.inputClass !== '') {
@@ -41,12 +43,10 @@ export default {
       if (undefined !== apiClasses) {
         classes.push(apiClasses)
       }
-      if (this.valid) {
-        classes.push('is-success')
+      if (this.valid && !this.validating) {
         this.displayErrors = true
-      } else if (this.displayErrors) {
-        classes.push('is-danger')
       }
+      classes.push(this.validClass)
       return classes
     },
     isCheckRadio () {
@@ -65,7 +65,7 @@ export default {
     },
     validating: {
       get () {
-        return this.validating
+        return this.input.validating
       },
       set (validating) {
         this.setInputValidating(
@@ -113,6 +113,9 @@ export default {
           this.extendInputId({ value })
         )
       }
+    },
+    validationEnabled () {
+      return this.form.vars.realtime_validate !== false && [null, '', '#'].indexOf(this.action) === -1
     }
   }
 }

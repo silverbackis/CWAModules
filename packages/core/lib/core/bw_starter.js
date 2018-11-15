@@ -160,7 +160,7 @@ export default class BWStarter {
     if (error.response && error.response.status) {
       this.error({ statusCode: error.response.status, message: error.response.statusText, url: error.response.config.url })
     } else {
-      this.error({ statusCode: error.statusCode || 500, message: 'Unexpected server erroror', url: error.message })
+      this.error({ statusCode: error.statusCode || 500, message: 'Unexpected server error', url: error.message })
       console.error(error)
     }
   }

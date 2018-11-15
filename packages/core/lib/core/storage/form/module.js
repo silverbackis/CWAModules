@@ -50,12 +50,13 @@ export const actions = {
       commit('setInput', {
         formId,
         inputData: {
-          disableValidation,
-          validating: false,
-          displayErrors: false,
-          debounceValidate: null,
           cancelToken: null,
+          debounceValidate: null,
+          disableValidation,
+          displayErrors: false,
+          hidden: false,
           lastValidationValue: null,
+          validating: false,
           vars: Object.assign({}, inputVars, {
             valid: false,
             errors: [],
@@ -73,7 +74,7 @@ export const actions = {
       commit('setFormCancelToken', { formId, cancelToken })
     }
   },
-  validateFormView ({ commit }, { formId, formData, isSubmit = false, simulatedInputNames = [] }) {
+  validateFormView ({ commit }, { formId, formData, isSubmit, simulatedInputNames = [] }) {
     const setValidation = (child) => {
       if (child.vars.valid === undefined) {
         return
@@ -85,7 +86,7 @@ export const actions = {
           valid: child.vars.valid,
           errors: child.vars.errors
         })
-        if (isSubmit) {
+        if (isSubmit === true) {
           commit('setInputDisplayErrors', {
             formId,
             inputName: child.vars.full_name,
@@ -193,12 +194,12 @@ export const mutations = {
     let input = getNestedInput(state, formId, inputName)
     Vue.set(input.vars, 'value', value)
   },
-  setInputKey (state, { formId, inputName, key, value }) {
+  setInputProp (state, { formId, inputName, property, value }) {
     let input = getNestedInput(state, formId, inputName)
-    Vue.set(input, key, value)
+    Vue.set(input, property, value)
   },
-  setFormKey (state, { formId, key, value }) {
-    Vue.set(state[ formId ], key, value)
+  setFormProp (state, { formId, property, value }) {
+    Vue.set(state[ formId ], property, value)
   },
   setFormValidationResult (state, { formId, valid, errors }) {
     Vue.set(state[ formId ].vars, 'valid', valid)
@@ -219,6 +220,26 @@ export const mutations = {
   setInputDisplayErrors (state, { formId, inputName, displayErrors }) {
     let input = getNestedInput(state, formId, inputName)
     Vue.set(input, 'displayErrors', displayErrors)
+  },
+  setFormDisplayErrors (state, { formId, displayErrors, valid = null }) {
+    const setInput = (inputName) => {
+      let input = getNestedInput(state, formId, inputName)
+      Vue.set(input, 'displayErrors', displayErrors)
+      if (valid !== null) {
+        Vue.set(input.vars, 'valid', valid)
+      }
+    }
+    const displayErrorsDeep = (item) => {
+      for (const [inputName, child] of Object.entries(item.children)) {
+        if (child.vars.block_prefixes[1] !== 'submit') {
+          setInput(inputName)
+        }
+        if (child.children) {
+          displayErrorsDeep(child)
+        }
+      }
+    }
+    displayErrorsDeep(state[ formId ])
   },
   setInputValidating (state, { formId, inputName, validating }) {
     let input = getNestedInput(state, formId, inputName)
