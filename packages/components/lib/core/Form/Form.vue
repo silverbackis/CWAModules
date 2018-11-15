@@ -56,12 +56,12 @@
       ...mapActions({
         init: 'bwstarter/_forms/init',
         submitForm: 'bwstarter/_forms/submit',
-        refreshCancelToken: 'bwstarter/_forms/refreshCancelToken'
+        refreshCancelToken: 'bwstarter/_forms/refreshCancelToken',
+        validateFormView: 'bwstarter/_forms/validateFormView'
       }),
       ...mapMutations({
         setFormSubmitting: 'bwstarter/_forms/setFormSubmitting',
         setFormValidationResult: 'bwstarter/_forms/setFormValidationResult',
-        setInputValidationResult: 'bwstarter/_forms/setInputValidationResult',
         setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors',
         setFormCancelToken: 'bwstarter/_forms/setFormCancelToken'
       }),
@@ -88,7 +88,7 @@
               'X-XSRF-TOKEN': this.$cookie.get('XSRF-TOKEN')
             }
           }
-          if (!this.apiAction) {
+          if (!this.apiAction || this.form.vars.api_request === false) {
             ops.baseURL = null
           }
           let { status, data } = await this.$axios.request(ops)
@@ -102,28 +102,7 @@
             valid: status === 200,
             errors: errors
           })
-          if (form) {
-            let x = form.children.length
-            let child
-            while (x--) {
-              child = form.children[ x ]
-              // E.g. buttons which are not valid/invalid
-              if (child.vars.valid === undefined) {
-                continue
-              }
-              this.setInputValidationResult({
-                formId: this.formId,
-                inputName: child.vars.full_name,
-                valid: child.vars.valid,
-                errors: child.vars.errors
-              })
-              this.setInputDisplayErrors({
-                formId: this.formId,
-                inputName: child.vars.full_name,
-                displayErrors: true
-              })
-            }
-          }
+          if (form) this.validateFormView({ formId: this.formId, formData: form, isSubmit: true })
         } catch (error) {
           this.submitError(error)
         }

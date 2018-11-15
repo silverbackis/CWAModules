@@ -2,6 +2,16 @@ import { Utilities } from '~/.nuxt/bwstarter/core/server'
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
+  props: {
+    successFn: {
+      type: Function,
+      required: false
+    },
+    apiAction: {
+      type: Boolean,
+      default: true
+    }
+  },
   computed: {
     formId () {
       return Utilities.getFormId(this.form.vars)

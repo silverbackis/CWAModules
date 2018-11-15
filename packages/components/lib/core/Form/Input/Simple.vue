@@ -2,7 +2,7 @@
   <div>
     <input v-if="inputType === 'hidden'"
            v-bind="commonProps"
-           :type="'hidden'"
+           type="hidden"
            v-on="events"
            v-model="inputModel"
     />

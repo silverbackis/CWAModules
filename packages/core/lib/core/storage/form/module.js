@@ -5,6 +5,30 @@ import Vue from 'vue'
 
 const AxiosCancelToken = axios.CancelToken
 
+export const splitFormName = (path) => {
+  return path.replace(/\[\]$/, '').split(/\[(.*?)\]/).filter(String)
+}
+
+const getInputNameNestedPath = (inputName, formPrefix = null) => {
+  let prefixNameParts = splitFormName(inputName)
+  let fullNamePath = ''
+  let fullPath = []
+  prefixNameParts.forEach((namePart) => {
+    fullNamePath += fullNamePath !== '' ? `[${namePart}]` : namePart
+    if (fullNamePath === formPrefix) return
+    if (fullPath.length) fullPath.push('children')
+    fullPath.push(fullNamePath)
+  })
+  return fullPath
+}
+
+const getNestedInput = (state, formId, inputName) => {
+  const form = state[ formId ]
+  if (!form) return null
+  let OBJECT_PATH = getInputNameNestedPath(inputName, form.vars.block_prefixes[1])
+  return _.get(form.children, OBJECT_PATH, null)
+}
+
 export const actions = {
   init ({ commit, state }, module) {
     const formData = module.vars
@@ -21,7 +45,7 @@ export const actions = {
     }
   },
   initInput ({ commit, state }, { formId, inputVars, children, disableValidation }) {
-    if (!state[ formId ].children[ inputVars.full_name ]) {
+    if (!getNestedInput(state, formId, inputVars.full_name)) {
       let value = inputVars.multiple ? [] : (inputVars.block_prefixes[ 1 ] === 'checkbox' ? inputVars.checked : inputVars.value)
       commit('setInput', {
         formId,
@@ -36,8 +60,7 @@ export const actions = {
             valid: false,
             errors: [],
             value
-          }),
-          children
+          })
         }
       })
     }
@@ -49,6 +72,40 @@ export const actions = {
     } else {
       commit('setFormCancelToken', { formId, cancelToken })
     }
+  },
+  validateFormView ({ commit }, { formId, formData, isSubmit = false, simulatedInputNames = [] }) {
+    const doValidation = (item) => {
+      for (const child of item.children) {
+        if (child.children) {
+          doValidation(child)
+        }
+        if (child.vars.valid === undefined) {
+          continue
+        }
+        if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
+          commit('setInputValidationResult', {
+            formId,
+            inputName: child.vars.full_name,
+            valid: child.vars.valid,
+            errors: child.vars.errors
+          })
+          if (isSubmit) {
+            commit('setInputDisplayErrors', {
+              formId,
+              inputName: child.vars.full_name,
+              displayErrors: true
+            })
+          }
+        } else {
+          commit('setInputValidationResult', {
+            formId,
+            inputName: child.vars.full_name,
+            valid: false
+          })
+        }
+      }
+    }
+    doValidation(formData)
   }
 }
 
@@ -60,38 +117,41 @@ export const getters = {
     let form = getters.getForm(formId)
     return form ? form.vars.valid : null
   },
-  getInput: (state, getters) => (formId, inputName) => {
-    let form = getters.getForm(formId)
-    return !form ? null : form.children[ inputName ]
+  getInput: (state) => (formId, inputName) => {
+    return getNestedInput(state, formId, inputName)
   },
   getFormSubmitData: (state, getters) => (formId) => {
     let form = getters.getForm(formId)
     if (!form) {
       return {}
     }
-
-    let keys = _.keys(form.children)
-    let x = keys.length
-    let inputName
-    let submit = {}
-    while (x--) {
-      inputName = form.children[ keys[ x ] ].vars.full_name
-      submit = _.merge(
-        submit,
-        getters.getInputSubmitData({ formId, inputName })
-      )
+    const getDeepFormData = (item) => {
+      let submitData = {}
+      for (const [inputName, child] of Object.entries(item.children)) {
+        submitData = _.merge(
+          submitData,
+          getters.getInputSubmitData({ formId, inputName })
+        )
+        if (child.children) {
+          submitData = _.merge(
+            submitData,
+            getDeepFormData(child)
+          )
+        }
+      }
+      return submitData
     }
-    return submit
+    return getDeepFormData(form)
   },
   getInputSubmitData: (state) => ({ formId, inputName }) => {
-    let model = state[ formId ].children[ inputName ]
+    let model = getNestedInput(state, formId, inputName)
     let value = model.vars.value
     if (value === undefined) {
       return {}
     }
     // Remove '[]' from end of name if it exists
     // Split name into parts when using square brackets - e.g. contact[name] = ["contact", "name"]
-    let searchResult = inputName.replace(/\[\]$/, '').split(/\[(.*?)\]/).filter(String)
+    let searchResult = splitFormName(inputName)
     let submitObj = {}
     _.set(submitObj, searchResult, value)
     return submitObj
@@ -108,17 +168,33 @@ export const mutations = {
     )
   },
   setInput (state, { formId, inputData }) {
+    let OBJECT_PATH = getInputNameNestedPath(inputData.vars.full_name, state[ formId ].vars.block_prefixes[1])
+    let finalObjectKey = OBJECT_PATH.splice(-1)[0]
+    // Create the parents if they do not currently exist
+    let currentNestedObj = state[ formId ].children
+    OBJECT_PATH.forEach((pathItem) => {
+      if (!currentNestedObj[pathItem]) {
+        Vue.set(
+          currentNestedObj,
+          pathItem,
+          {}
+        )
+      }
+      currentNestedObj = currentNestedObj[pathItem]
+    })
     Vue.set(
-      state[ formId ].children,
-      inputData.vars.full_name,
+      currentNestedObj,
+      finalObjectKey,
       inputData
     )
   },
   setInputValue (state, { formId, inputName, value }) {
-    Vue.set(state[ formId ].children[ inputName ].vars, 'value', value)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input.vars, 'value', value)
   },
   setInputKey (state, { formId, inputName, key, value }) {
-    Vue.set(state[ formId ].children[ inputName ], key, value)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, key, value)
   },
   setFormKey (state, { formId, key, value }) {
     Vue.set(state[ formId ], key, value)
@@ -128,8 +204,9 @@ export const mutations = {
     Vue.set(state[ formId ].vars, 'errors', errors)
   },
   setInputValidationResult (state, { formId, inputName, valid, errors }) {
-    Vue.set(state[ formId ].children[ inputName ].vars, 'valid', valid)
-    Vue.set(state[ formId ].children[ inputName ].vars, 'errors', errors)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input.vars, 'valid', valid)
+    Vue.set(input.vars, 'errors', errors)
   },
   destroy (state, formId) {
     if (state[formId]) Vue.delete(state, formId)
@@ -139,19 +216,24 @@ export const mutations = {
   // Set specific preset keys - probably need to refine all of this!
   // --------
   setInputDisplayErrors (state, { formId, inputName, displayErrors }) {
-    Vue.set(state[ formId ].children[ inputName ], 'displayErrors', displayErrors)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, 'displayErrors', displayErrors)
   },
   setInputValidating (state, { formId, inputName, validating }) {
-    Vue.set(state[ formId ].children[ inputName ], 'validating', validating)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, 'validating', validating)
   },
   setInputDebounceValidate (state, { formId, inputName, debounce }) {
-    Vue.set(state[ formId ].children[ inputName ], 'debounceValidate', debounce)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, 'debounceValidate', debounce)
   },
   setInputCancelToken (state, { formId, inputName, cancelToken }) {
-    Vue.set(state[ formId ].children[ inputName ], 'cancelToken', cancelToken)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, 'cancelToken', cancelToken)
   },
   setInputLastValidationValue (state, { formId, inputName, value }) {
-    Vue.set(state[ formId ].children[ inputName ], 'lastValidationValue', value)
+    let input = getNestedInput(state, formId, inputName)
+    Vue.set(input, 'lastValidationValue', value)
   },
   setFormSubmitting (state, { formId, submitting }) {
     Vue.set(state[ formId ], 'submitting', submitting)

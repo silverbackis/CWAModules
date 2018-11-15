@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { mapActions, mapMutations } from 'vuex'
 import axios from 'axios'
+import { splitFormName } from '~/.nuxt/bwstarter/core/storage/form/module'
 
 const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
 
@@ -16,14 +17,16 @@ export default {
     }),
     ...mapActions({
       submit: 'bwstarter/_forms/submit',
-      refreshCancelToken: 'bwstarter/_forms/refreshCancelToken'
+      refreshCancelToken: 'bwstarter/_forms/refreshCancelToken',
+      validateFormView: 'bwstarter/_forms/validateFormView'
     }),
     async inputBlur () {
       this.displayErrors = true
       await this.beginValidation()
     },
     beginValidation () {
-      if (this.input.disableValidation) {
+      const SHOULD_VALIDATE = this.form.vars.realtime_validate !== false && [null, '', '#'].indexOf(this.action) === -1
+      if (!SHOULD_VALIDATE || this.input.disableValidation) {
         return
       }
       const localValue = this.child ? this.child.vars.value : this.inputModel
@@ -49,6 +52,25 @@ export default {
     async validate () {
       this.refreshCancelToken({ formId: this.formId, inputName: this.inputName })
       let postObj = this.inputSubmitData
+      let simulatedInputNames = []
+      if (this.isRepeated) {
+        for (const child of this.parents[0].children) {
+          const childName = child.vars.full_name
+          if (childName !== this.inputName) {
+            const repeatedFieldPostObj = this.getInputSubmitData(this.extendInputId({}, childName))
+            const splitChildName = splitFormName(childName)
+            _.merge(postObj, repeatedFieldPostObj)
+
+            // Simulate if empty and validating
+            const otherValue = _.get(postObj, splitChildName)
+            if (!otherValue || otherValue === '') {
+              _.set(postObj, splitChildName, this.inputModel)
+              simulatedInputNames.push(childName)
+            }
+          }
+        }
+      }
+
       try {
         let { data } = await this.$axios.request(
           {
@@ -64,15 +86,24 @@ export default {
             }
           }
         )
-        const VARS = data.form.vars
-        this.setInputValidationResult(this.extendInputId({
-          valid: VARS.valid,
-          errors: VARS.errors
-        }))
         this.validating = false
+        this.validateFormView({ formId: this.formId, formData: data.form, simulatedInputNames })
       } catch (error) {
         this.validateError(error)
       }
+    },
+    findNestedVars (item) {
+      let vars = item.vars
+      if (vars.full_name === this.inputName) {
+        return vars
+      }
+      for (const child of item.children) {
+        const childVars = this.findNestedVars(child)
+        if (childVars) {
+          return childVars
+        }
+      }
+      return null
     },
     validateError (error) {
       if (error.message === DUPLICATE_CANCEL_MESSAGE) {

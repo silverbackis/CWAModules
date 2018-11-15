@@ -1,4 +1,4 @@
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
@@ -14,20 +14,26 @@ export default {
     inputType: {
       type: String,
       require: true
+    },
+    parents: {
+      type: Array,
+      default () {
+        return []
+      }
     }
   },
   methods: {
     ...mapMutations({
       setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors'
     }),
-    extendInputId (data) {
+    extendInputId (data, inputName = null) {
       if (!data) {
         data = {}
       }
       return Object.assign(
         {
           formId: this.formId,
-          inputName: this.inputName
+          inputName: inputName || this.inputName
         },
         data
       )
@@ -37,24 +43,34 @@ export default {
     input () {
       return this.$bwstarter.$storage.get('getInput', [ this.formId, this.inputName ], FORMS_MODULE)
     },
+    vars () {
+      return this.input ? this.input.vars : {}
+    },
+    firstRepeatInput () {
+      if (!this.parents.length) {
+        return this.input
+      }
+      const firstInputName = this.parents[0].children[0].vars.full_name
+      return this.$bwstarter.$storage.get('getInput', [ this.formId, firstInputName ], FORMS_MODULE)
+    },
     inputId () {
-      return this.input.vars.id
+      return this.vars.id
     },
     errors () {
-      return this.input.vars.errors
+      return this.vars.errors || []
     },
     valid () {
-      return this.input.vars.valid
+      return this.vars.valid === true && this.firstRepeatInput.vars.valid === true
     },
     validating () {
-      return this.input.validating
+      return this.input ? this.input.validating : false
     },
     label () {
-      return this.input.vars.label
+      return this.vars.label
     },
     displayErrors: {
       get () {
-        return !!(this.input.displayErrors && this.errors.length)
+        return this.input ? !!(this.input.displayErrors) : false //  && this.errors.length
       },
       set (displayErrors) {
         this.setInputDisplayErrors(

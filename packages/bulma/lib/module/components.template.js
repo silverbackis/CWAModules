@@ -5,4 +5,12 @@ let components = {}
   ) { return; }
 %>
 components['<%= key %>'] = () => import('<%= component %>');<% }); %>
-export default { components }
+export default {
+  components,
+  methods: {
+    componentName (component) {
+      const componentEntity = this.getEntity(component)
+      return componentEntity.componentName || componentEntity[ '@type' ]
+    }
+  }
+}

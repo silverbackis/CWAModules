@@ -14,7 +14,7 @@ export default {
         validating: this.validating,
         valid: this.valid,
         errors: this.errors,
-        displayErrors: this.displayErrors,
+        displayErrors: this.displayErrors && this.firstRepeatInput.displayErrors,
         select: (this.inputType === 'choice' && !this.input.vars.expanded) ? (this.input.vars.multiple ? 'multiple' : 'single') : false
       }
     }

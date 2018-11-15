@@ -29,7 +29,8 @@ export default class Utilities {
   cookiesToHeaders (cookies) {
     return {
       'X-XSRF-TOKEN': cookies[ this.env.XSRF_COOKIE ] || '',
-      'Cookie': 'PHPSESSID=' + cookies[ 'PHPSESSID' ] || ''
+      'Cookie': 'PHPSESSID=' + cookies[ 'PHPSESSID' ] || '',
+      'X-AUTH-TOKEN': this.env.VARNISH_TOKEN || ''
     }
   }
 

@@ -2,7 +2,7 @@
   <div class="bulma-components" v-if="_components">
     <component v-for="component in _components"
                v-if="getEntity(component)"
-               :is="name(component)"
+               :is="componentName(component)"
                :key="component"
                :component="getEntity(component)"
                :nested="nested"
@@ -34,12 +34,6 @@
       nested: {
         type: Boolean,
         required: true
-      }
-    },
-    methods: {
-      name (component) {
-        const componentEntity = this.getEntity(component)
-        return componentEntity.componentName || componentEntity[ '@type' ]
       }
     },
     computed: {

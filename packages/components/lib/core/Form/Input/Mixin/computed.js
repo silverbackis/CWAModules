@@ -1,4 +1,5 @@
 import { mapGetters } from 'vuex'
+import { splitFormName } from '~/.nuxt/bwstarter/core/storage/form/module'
 
 export default {
   computed: {
@@ -6,6 +7,15 @@ export default {
       getForm: 'bwstarter/_forms/getForm',
       getInputSubmitData: 'bwstarter/_forms/getInputSubmitData'
     }),
+    isRepeated () {
+      return this.parents.length && this.parents[0].vars.block_prefixes[1] === 'repeated'
+    },
+    isSecondRepeated () {
+      return this.isRepeated && this.vars.name === 'second'
+    },
+    splitFormName () {
+      return splitFormName(this.inputName)
+    },
     inputSubmitData () {
       return this.getInputSubmitData(this.extendInputId())
     },
@@ -16,9 +26,9 @@ export default {
       return this.form.vars.action
     },
     attr () {
-      return Object.assign({}, this.input.vars.attr, {
-        required: this.input.vars.required,
-        disabled: this.input.vars.disabled || this.form.submitting
+      return Object.assign({}, this.vars.attr, {
+        required: this.vars.required || false,
+        disabled: this.vars.disabled || this.form.submitting
       })
     },
     classes () {
@@ -27,7 +37,7 @@ export default {
         classes.push(this.inputClass)
       }
       // could have classes assigned from API side (this will be a string)
-      let apiClasses = this.input.vars.attr[ 'class' ]
+      let apiClasses = this.vars.attr ? this.vars.attr.class : ''
       if (undefined !== apiClasses) {
         classes.push(apiClasses)
       }
@@ -40,11 +50,11 @@ export default {
       return classes
     },
     isCheckRadio () {
-      return this.input.vars.checked !== undefined || this.child
+      return this.vars.checked !== undefined || this.child
     },
     inputModel: {
       get () {
-        return this.input.vars.value
+        return this.vars.value
       },
       set (value) {
         this.setInputValue(this.extendInputId({
@@ -55,7 +65,7 @@ export default {
     },
     validating: {
       get () {
-        return this.input.validating
+        return this.validating
       },
       set (validating) {
         this.setInputValidating(
@@ -76,7 +86,7 @@ export default {
      */
     debounceValidate: {
       get () {
-        return this.input.debounceValidate
+        return this.input ? this.input.debounceValidate : {}
       },
       set (debounce) {
         this.setInputDebounceValidate(
@@ -86,7 +96,7 @@ export default {
     },
     cancelToken: {
       get () {
-        return this.input.cancelToken
+        return this.input ? this.input.cancelToken : null
       },
       set (token) {
         this.setInputCancelToken(
@@ -96,7 +106,7 @@ export default {
     },
     lastValidationValue: {
       get () {
-        return this.input.lastValidationValue
+        return this.input ? this.input.lastValidationValue : null
       },
       set (value) {
         this.setInputLastValidationValue(

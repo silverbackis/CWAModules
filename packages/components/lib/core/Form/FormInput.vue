@@ -1,16 +1,31 @@
 <template>
-  <component :is="inputComponent"
-             :formId="formId"
-             :inputName="inputName"
-             :wrapped="wrapped"
-             :inputType="inputType"
-  />
+  <div class="field">
+    <component v-if="!input.children || !input.children.length"
+               :is="inputComponent"
+               :form-id="formId"
+               :input-name="inputName"
+               :wrapped="wrapped"
+               :input-type="inputType"
+               :parents="parents"
+    />
+    <form-input
+      v-for="(child, index) of input.children"
+      :key="index"
+      :input="child"
+      :wrapped="wrapped"
+      :form-id="formId"
+      :disable-validation="disableValidation"
+      :css-framework="cssFramework"
+      :parents="[input, ...parents]"
+    />
+  </div>
 </template>
 
 <script>
   import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
   export default {
+    name: 'form-input',
     props: {
       input: {
         type: Object,
@@ -31,6 +46,12 @@
       cssFramework: {
         type: String,
         default: 'bulma'
+      },
+      parents: {
+        type: Array,
+        default () {
+          return []
+        }
       }
     },
     data () {

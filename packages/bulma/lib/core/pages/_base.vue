@@ -16,17 +16,6 @@
 
   export default {
     mixins: [ pageMixin ],
-    computed: {
-      pageClass () {
-        // const names = [...Array(this.depth+1)].map((_, i) => {
-        //   console.log('mapping', _, i)
-        //   return this.$route.params['page' + i] || this.$route.name
-        // })
-        // console.log('names', names)
-        // return names.join(' ')
-        return this.$route.params[ `page${this.depth}` ] || this.$route.name
-      }
-    },
     components: {
       BulmaComponents
     }

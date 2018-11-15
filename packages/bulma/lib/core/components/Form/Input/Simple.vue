@@ -6,6 +6,7 @@
     <form-input :formId="formId"
                 :inputName="inputName"
                 :inputType="inputType"
+                :parents="parents"
     />
   </wrapper>
 </template>

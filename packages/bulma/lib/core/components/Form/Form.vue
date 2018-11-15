@@ -5,11 +5,11 @@
     <div :class="[...containerClass, 'form-container']">
       <div class="card">
         <div class="card-content">
-          <form-tag :form="form">
+          <form-tag :form="form" :success-fn="successFn" :api-action="apiAction">
             <slot name="errors" v-if="formErrors.length">
               <div>
                 <ul class="content">
-                  <li v-for="(error, index) in formErrors" :key="index"><h4 class="help is-danger" v-html="error"></h4></li>
+                  <li v-for="(error, index) in formErrors" :key="index"><h4 class="help is-danger" v-html="$t ? $t(error) : error"></h4></li>
                 </ul>
               </div>
             </slot>

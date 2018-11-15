@@ -27,7 +27,7 @@
       },
       label: {
         type: String,
-        required: true
+        required: false
       },
       validating: {
         type: Boolean,
@@ -61,7 +61,7 @@
     },
     computed: {
       hasErrors () {
-        return !this.valid && this.displayErrors && !!this.errors.length && !this.validating
+        return !this.valid && this.displayErrors && !this.validating // && !!this.errors.length
       },
       controlClass () {
         return [
