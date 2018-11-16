@@ -8,58 +8,82 @@ export default class BWServer {
     this.logging = env.NODE_ENV === 'development'
   }
 
-  login (req, res = null, extraHeaders = {}) {
+  loginSuccess ({ session }, res, loginRes) {
+    this.logging && console.log(loginRes)
+
+    // Reference: Auth0: https://auth0.com/docs/tokens/refresh-token/current#restrictions
+    // "A Single Page Application (normally implementing Implicit Grant) should not under any circumstances get a refresh token. The reason for that is the sensitivity of this piece of information."
+    session.authToken = loginRes.data.token
+    session.refreshToken = loginRes.data.refresh_token
+
+    this.utilities.setJwtCookie(res, session.authToken)
+    this.utilities.setResponseCookies(res, loginRes)
+    if (!res) {
+      return session.authToken
+    }
+    res.status(200).json({ token: session.authToken })
+  }
+
+  loginError (res, err) {
+    if (!res) {
+      this.logging && console.error(err)
+      return err
+    }
+    if (!err.response) {
+      this.logging && console.error(err.message)
+      res.status(500).json({ message: err.message })
+    } else {
+      const response = err.response
+      this.logging && console.error(response)
+      if (response.status === 401 || response.status === 400 || response.data['@type'] === 'hydra:Error') {
+        res.status(response.status).json(response.data)
+        return
+      }
+      if (response.data) {
+        let exception
+        const isException = (response.data.error && (exception = response.data.error.exception))
+        res.status(response.status).json({
+          message:
+            (isException ? exception[ 0 ].message : response.data.message)
+        })
+        return
+      }
+      res.status(response.status).json({
+        message: 'unknown error'
+      })
+    }
+  }
+
+  post (req, res, data, successFn = null, errorFn = null, extraHeaders = {}) {
     // Only allow post requests to API
-    let session = req.session
     let _action = req.body._action
+    // make sure _action is prefixed with a slash
     _action.substr(0, 1) !== '/' && (_action = '/' + _action)
+    // concat host and path
     const postPath = this.env.API_URL + _action
+
     this.logging && console.log('login posting to: ' + postPath)
-    // Post login credentials with Session ID and XSRF Header
     return axios.post(
       postPath,
-      {
-        username: req.body.username,
-        password: req.body.password
-      },
+      data,
       {
         headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
-        this.logging && console.error(loginRes)
-
-        // Set the session variable for subsequent page refreshes - cookie is http only
-        // save the refresh token to the session (NEVER to the client/browser)
-        // Reference: Auth0: https://auth0.com/docs/tokens/refresh-token/current#restrictions
-        // "A Single Page Application (normally implementing Implicit Grant) should not under any circumstances get a refresh token. The reason for that is the sensitivity of this piece of information."
-
-        session.authToken = loginRes.data.token
-        session.refreshToken = loginRes.data.refresh_token
-        this.utilities.setJwtCookie(res, session.authToken)
-        this.utilities.setResponseCookies(res, loginRes)
-        if (!res) {
-          return session.authToken
-        }
-        res.status(200).json({ token: session.authToken })
+        this.loginSuccess(req, res, loginRes)
       })
       .catch((err) => {
-        this.logging && console.error(err)
-        if (!res) {
-          return err
-        }
-        if (!err.response) {
-          res.status(500).json({ message: err.message })
-        } else {
-          if (err.response.status === 401) {
-            res.status(401).json(err.response.data)
-          } else {
-            res.status(err.response.status).json({
-              message: !err.response.data ? err.message : ((err.response.data.error && err.response.data.error.exception) ? err.response.data.error.exception[ 0 ].message : err.response.data.message)
-            })
-          }
-        }
+        this.loginError(res, err)
       })
+  }
+
+  login (req, res, extraHeaders = {}) {
+    const data = {
+      username: req.body.username,
+      password: req.body.password
+    }
+    this.post(req, res, data, this.loginSuccess, this.loginError, extraHeaders)
   }
 
   logout (req, res, setResponse = true) {

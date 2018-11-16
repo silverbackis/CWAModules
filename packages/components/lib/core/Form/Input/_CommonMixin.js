@@ -1,4 +1,3 @@
-import { mapMutations } from 'vuex'
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
@@ -23,9 +22,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors'
-    }),
     extendInputId (data, inputName = null) {
       if (!data) {
         data = {}
@@ -73,9 +69,7 @@ export default {
         return this.input ? !!(this.input.displayErrors) : false //  && this.errors.length
       },
       set (displayErrors) {
-        this.setInputDisplayErrors(
-          this.extendInputId({ displayErrors })
-        )
+        this.$bwstarter.$storage.commit('setInputData', this.extendInputId({ data: { displayErrors } }), FORMS_MODULE)
       }
     }
   }

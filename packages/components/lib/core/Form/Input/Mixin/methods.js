@@ -2,15 +2,14 @@ import _ from 'lodash'
 import { mapActions, mapMutations } from 'vuex'
 import axios from 'axios'
 import { splitFormName } from '~/.nuxt/bwstarter/core/storage/form/module'
+import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
 
 export default {
   methods: {
     ...mapMutations({
-      setInputValue: 'bwstarter/_forms/setInputValue',
       setInputValidating: 'bwstarter/_forms/setInputValidating',
-      setInputValidationResult: 'bwstarter/_forms/setInputValidationResult',
       setInputDebounceValidate: 'bwstarter/_forms/setInputDebounceValidate',
       setInputCancelToken: 'bwstarter/_forms/setInputCancelToken',
       setInputLastValidationValue: 'bwstarter/_forms/setInputLastValidationValue'
@@ -18,7 +17,7 @@ export default {
     ...mapActions({
       submit: 'bwstarter/_forms/submit',
       refreshCancelToken: 'bwstarter/_forms/refreshCancelToken',
-      validateFormView: 'bwstarter/_forms/validateFormView'
+      applyFormResultValidation: 'bwstarter/_forms/applyFormResultValidation'
     }),
     async inputBlur () {
       if (this.validationEnabled) {
@@ -87,7 +86,7 @@ export default {
           }
         )
         this.validating = false
-        this.validateFormView({ formId: this.formId, formData: data.form, simulatedInputNames })
+        this.applyFormResultValidation({ formId: this.formId, formData: data.form, simulatedInputNames })
       } catch (error) {
         this.validateError(error)
       }
@@ -101,13 +100,15 @@ export default {
           console.warn(error)
         } else if (error.response) {
           console.warn('validate request error: ', error.response)
-          this.setInputValidationResult(this.extendInputId({
-            valid: false,
-            errors: [
-              '<b>' + error.response.status + ' ' + error.response.statusText + ':</b> ' +
-              error.response.data[ 'hydra:description' ]
-            ]
-          }))
+          this.$bwstarter.$storage.commit('setInputData', this.extendInputId({
+            data: {
+              valid: false,
+              errors: [
+                '<b>' + error.response.status + ' ' + error.response.statusText + ':</b> ' +
+                error.response.data[ 'hydra:description' ]
+              ]
+            }
+          }), FORMS_MODULE)
         } else {
           console.warn('validate unknown error: ', error)
         }

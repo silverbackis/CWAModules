@@ -1,9 +1,9 @@
 import { mapGetters } from 'vuex'
+import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
   computed: {
     ...mapGetters({
-      getForm: 'bwstarter/_forms/getForm',
       getInputSubmitData: 'bwstarter/_forms/getInputSubmitData'
     }),
     isRepeated () {
@@ -13,7 +13,7 @@ export default {
       return this.getInputSubmitData(this.extendInputId())
     },
     form () {
-      return this.getForm(this.formId)
+      return this.$bwstarter.$storage.state[FORMS_MODULE][this.formId]
     },
     action () {
       return this.form.vars.action
@@ -57,9 +57,11 @@ export default {
         return this.vars.value
       },
       set (value) {
-        this.setInputValue(this.extendInputId({
-          value
-        }))
+        this.$bwstarter.$storage.commit('setInputData', this.extendInputId({
+          data: {
+            value
+          }
+        }), FORMS_MODULE)
         this.beginValidation()
       }
     },

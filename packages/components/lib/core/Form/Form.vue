@@ -12,13 +12,9 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters, mapMutations } from 'vuex'
+  import { mapActions } from 'vuex'
   import FormMixin from './_Mixin'
-  import axios from 'axios'
-  import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
-
-  const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
-  const DESTROY_CANCEL_MESSAGE = 'destroyed'
+  import { name as FORMS_MODULE, DESTROY_CANCEL_MESSAGE } from '~/.nuxt/bwstarter/core/storage/form'
 
   export default {
     mixins: [ FormMixin ],
@@ -37,114 +33,21 @@
       }
     },
     computed: {
-      ...mapGetters({
-        getFormSubmitData: 'bwstarter/_forms/getFormSubmitData'
-      }),
-      submitData () {
-        return this.getFormSubmitData(this.formId)
-      },
-      cancelToken: {
-        get () {
-          return this.storeForm ? this.storeForm.cancelToken : null
-        },
-        set (token) {
-          this.setFormCancelToken({ formId: this.formId, token })
-        }
+      cancelToken () {
+        return this.storeForm ? this.storeForm.cancelToken : null
       }
     },
     methods: {
       ...mapActions({
         init: 'bwstarter/_forms/init',
-        submitForm: 'bwstarter/_forms/submit',
-        refreshCancelToken: 'bwstarter/_forms/refreshCancelToken',
-        validateFormView: 'bwstarter/_forms/validateFormView'
-      }),
-      ...mapMutations({
-        setFormSubmitting: 'bwstarter/_forms/setFormSubmitting',
-        setFormValidationResult: 'bwstarter/_forms/setFormValidationResult',
-        setInputDisplayErrors: 'bwstarter/_forms/setInputDisplayErrors',
-        setFormDisplayErrors: 'bwstarter/_forms/setFormDisplayErrors',
-        setFormCancelToken: 'bwstarter/_forms/setFormCancelToken'
+        submitForm: 'bwstarter/_forms/submitForm'
       }),
       async submit () {
-        this.setFormSubmitting({
-          formId: this.formId,
-          submitting: true
-        })
-
-        if (this.cancelToken) {
-          this.cancelToken.cancel(DUPLICATE_CANCEL_MESSAGE)
-        }
-        this.refreshCancelToken({ formId: this.formId })
-        try {
-          let ops = {
-            url: this.form.vars.action,
-            data: this.submitData,
-            method: 'POST',
-            cancelToken: this.cancelToken.token,
-            validateStatus (status) {
-              return [ 400, 200, 201, 401 ].indexOf(status) !== -1
-            },
-            headers: {
-              'X-XSRF-TOKEN': this.$cookie.get('XSRF-TOKEN')
-            }
-          }
-          if (!this.apiAction || this.form.vars.api_request === false) {
-            ops.baseURL = null
-          }
-          let { status, data } = await this.$axios.request(ops)
-          if (this.successFn) {
-            this.successFn(data)
-          }
-          const form = data.form
-          const errors = form ? form.vars.errors : (data.message ? [ data.message ] : [])
-          this.setFormValidationResult({
-            formId: this.formId,
-            valid: status === 200,
-            errors: errors
-          })
-          if (form) {
-            this.validateFormView({ formId: this.formId, formData: form, isSubmit: true })
-          } else {
-            if (errors.length) {
-              this.setFormDisplayErrors({ formId: this.formId, displayErrors: true, valid: false })
-            } else {
-              this.setFormDisplayErrors({ formId: this.formId, displayErrors: false, valid: true })
-            }
-          }
-        } catch (error) {
-          this.submitError(error)
-        }
-
-        this.setFormSubmitting({
-          formId: this.formId,
-          submitting: false
-        })
-      },
-      submitError (error) {
-        if (error.message === DUPLICATE_CANCEL_MESSAGE) {
-          console.log('previous form submission cancelled')
-        } else {
-          if (axios.isCancel(error)) {
-            console.warn(error)
-          } else if (error.response) {
-            console.warn('validate request error: ', error.response)
-            this.setFormValidationResult({
-              formId: this.formId,
-              valid: false,
-              errors: [
-                '<b>' + error.response.status + ' ' + error.response.statusText + ':</b> ' +
-                error.response.data[ 'hydra:description' ]
-              ]
-            })
-          } else {
-            console.warn('validate unknown error: ', error)
-          }
-        }
+        this.submitForm({ formId: this.formId, apiAction: this.apiAction, successFn: this.successFn })
       }
     },
     created () {
-      this.$bwstarter.$storage.dispatch('init', this.form, FORMS_MODULE)
+      this.$bwstarter.$storage.commit('initForm', { form: this.form }, FORMS_MODULE)
     },
     beforeDestroy () {
       if (this.cancelToken) {

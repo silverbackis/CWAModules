@@ -9,7 +9,7 @@
         <font-awesome-icon :icon="iconClass"/>
       </span>
     </div>
-    <div v-if="displayErrors && errors.length"
+    <div v-if="displayErrors && errors.length && !this.validating"
          class="help is-danger">
       <ul>
         <li v-for="(error, errorIndex) in errors" :key="errorIndex" v-html="error"></li>

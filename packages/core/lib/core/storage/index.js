@@ -121,6 +121,9 @@ export class Storage {
   }
 
   commit (mutation, args = [], modules = []) {
+    if (!Array.isArray(args)) {
+      args = [args]
+    }
     let path = [ this.options.vuex.namespace, ...modules, mutation ]
     this.ctx.store.commit(join(...path), ...args)
   }

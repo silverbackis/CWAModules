@@ -105,7 +105,7 @@
         children: this.input.children,
         disableValidation: this.disableValidation
       }
-      this.$bwstarter.$storage.dispatch('initInput', args, FORMS_MODULE)
+      this.$bwstarter.$storage.commit('initInput', args, FORMS_MODULE)
       this.resolveInputComponent()
     }
   }

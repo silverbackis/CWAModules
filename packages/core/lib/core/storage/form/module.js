@@ -2,8 +2,12 @@ import { Utilities } from '../../server/index'
 import axios from 'axios'
 import _ from 'lodash'
 import Vue from 'vue'
+import TinyCookie from 'tiny-cookie'
 
 const AxiosCancelToken = axios.CancelToken
+
+export const DUPLICATE_CANCEL_MESSAGE = 'duplicate'
+export const DESTROY_CANCEL_MESSAGE = 'destroyed'
 
 export const splitFormName = (path) => {
   return path.replace(/\[\]$/, '').split(/\[(.*?)\]/).filter(String)
@@ -29,101 +33,18 @@ const getNestedInput = (state, formId, inputName) => {
   return _.get(form.children, OBJECT_PATH, null)
 }
 
-export const actions = {
-  init ({ commit, state }, module) {
-    const formData = module.vars
-    const formId = Utilities.getFormId(formData)
-    if (!state[ formId ]) {
-      commit('setForm', {
-        formData: {
-          vars: Object.assign({}, formData, { valid: false }),
-          children: {},
-          cancelToken: null,
-          submitting: false
-        }
-      })
-    }
-  },
-  initInput ({ commit, state }, { formId, inputVars, children, disableValidation }) {
-    if (!getNestedInput(state, formId, inputVars.full_name)) {
-      let value = inputVars.multiple ? [] : (inputVars.block_prefixes[ 1 ] === 'checkbox' ? inputVars.checked : inputVars.value)
-      commit('setInput', {
-        formId,
-        inputData: {
-          cancelToken: null,
-          debounceValidate: null,
-          disableValidation,
-          displayErrors: false,
-          hidden: false,
-          lastValidationValue: null,
-          validating: false,
-          vars: Object.assign({}, inputVars, {
-            valid: false,
-            errors: [],
-            value
-          })
-        }
-      })
-    }
-  },
-  refreshCancelToken ({ commit }, { formId, inputName }) {
-    let cancelToken = AxiosCancelToken.source()
-    if (inputName) {
-      commit('setInputCancelToken', { formId, inputName, cancelToken })
-    } else {
-      commit('setFormCancelToken', { formId, cancelToken })
-    }
-  },
-  validateFormView ({ commit }, { formId, formData, isSubmit, simulatedInputNames = [] }) {
-    const setValidation = (child) => {
-      if (child.vars.valid === undefined) {
-        return
-      }
-      if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
-        commit('setInputValidationResult', {
-          formId,
-          inputName: child.vars.full_name,
-          valid: child.vars.valid,
-          errors: child.vars.errors
-        })
-        if (isSubmit === true) {
-          commit('setInputDisplayErrors', {
-            formId,
-            inputName: child.vars.full_name,
-            displayErrors: true
-          })
-        }
-      } else {
-        commit('setInputValidationResult', {
-          formId,
-          inputName: child.vars.full_name,
-          valid: false
-        })
-      }
-    }
-    const doValidation = (item) => {
-      setValidation(item)
-      for (const child of item.children) {
-        doValidation(child)
-      }
-    }
-    doValidation(formData)
-  }
-}
-
 export const getters = {
   getForm: (state) => (formId) => {
     return !state[ formId ] ? null : state[ formId ]
   },
-  isValid: (state, getters) => (formId) => {
-    let form = getters.getForm(formId)
-    return form ? form.vars.valid : null
+  isValid: (state) => (formId) => {
+    return state[ formId ].vars.valid
   },
   getInput: (state) => (formId, inputName) => {
     return getNestedInput(state, formId, inputName)
   },
   getFormSubmitData: (state, getters) => (formId) => {
-    let form = getters.getForm(formId)
+    let form = state[ formId ]
     if (!form) {
       return {}
     }
@@ -143,7 +64,10 @@ export const getters = {
       }
       return submitData
     }
-    return getDeepFormData(form)
+    return Object.assign(
+      form && form.vars.post_app_proxy ? { _action: form.vars.action } : {},
+      getDeepFormData(form)
+    )
   },
   getInputSubmitData: (state) => ({ formId, inputName }) => {
     let model = getNestedInput(state, formId, inputName)
@@ -160,16 +84,221 @@ export const getters = {
   }
 }
 
+export const actions = {
+  refreshCancelToken ({ commit }, { formId, inputName }) {
+    let cancelToken = AxiosCancelToken.source()
+    if (inputName) {
+      commit('setInputCancelToken', { formId, inputName, cancelToken })
+    } else {
+      commit('setFormCancelToken', { formId, cancelToken })
+    }
+  },
+  applyFormResultValidation ({ commit }, { formId, formData, isSubmit, simulatedInputNames = [] }) {
+    const setValidation = (child) => {
+      if (child.vars.valid === undefined) {
+        return
+      }
+      if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
+        commit('setInputData', {
+          formId,
+          inputName: child.vars.full_name,
+          data: {
+            valid: child.vars.valid,
+            errors: child.vars.errors
+          }
+        })
+        if (isSubmit === true) {
+          commit('setInputData', {
+            formId,
+            inputName: child.vars.full_name,
+            data: {
+              displayErrors: true
+            }
+          })
+        }
+      } else {
+        commit('setInputData', {
+          formId,
+          inputName: child.vars.full_name,
+          data: {
+            valid: false
+          }
+        })
+      }
+    }
+    const doValidation = (item) => {
+      setValidation(item)
+      for (const child of item.children) {
+        doValidation(child)
+      }
+    }
+    doValidation(formData)
+  },
+  async submitForm ({ commit, state, getters, dispatch }, { formId, apiAction = null, successFn = null }) {
+    commit('setFormSubmitting', {
+      formId: formId,
+      submitting: true
+    })
+
+    const form = state[formId]
+
+    if (form.cancelToken) {
+      form.cancelToken.cancel(DUPLICATE_CANCEL_MESSAGE)
+    }
+    dispatch('refreshCancelToken', { formId })
+    let ops = {
+      url: form.vars.post_app_proxy || form.vars.action,
+      data: getters.getFormSubmitData(formId),
+      method: 'POST',
+      cancelToken: form.cancelToken.token,
+      validateStatus (status) {
+        return [ 400, 200, 201, 401 ].indexOf(status) !== -1
+      },
+      headers: {
+        'X-XSRF-TOKEN': TinyCookie.get('XSRF-TOKEN')
+      }
+    }
+    if (form.vars.api_request === false || form.vars.post_app_proxy || apiAction === false) {
+      ops.baseURL = null
+    }
+
+    try {
+      let { status, data } = await this.$axios.request(ops)
+      if (successFn) {
+        successFn(data)
+      }
+      const form = data.form
+      const errors = form ? form.vars.errors : (data.message ? [ data.message ] : [])
+      commit('setFormData', {
+        formId,
+        data: {
+          valid: status === 200,
+          errors
+        }
+      })
+      if (form) {
+        dispatch('applyFormResultValidation', { formId, formData: form, isSubmit: true })
+      } else {
+        if (errors.length) {
+          commit('setFormDisplayErrors', { formId, displayErrors: true, valid: false })
+        } else {
+          commit('setFormDisplayErrors', { formId, displayErrors: false, valid: true })
+        }
+      }
+    } catch (error) {
+      if (error.message === DUPLICATE_CANCEL_MESSAGE) {
+        console.log('previous form submission cancelled')
+      } else {
+        if (axios.isCancel(error)) {
+          console.warn(error)
+        } else if (error.response) {
+          console.warn('validate request error: ', error.response)
+          commit('setFormData', {
+            formId,
+            data: {
+              valid: false,
+              errors: [
+                '<b>' + error.response.status + ' ' + error.response.statusText + ': </b> ' +
+                (error.response.data[ 'hydra:description' ] || error.response.data.message)
+              ]
+            }
+          })
+        } else {
+          console.warn('validate unknown error: ', error)
+        }
+      }
+    }
+    commit('setFormSubmitting', {
+      formId: formId,
+      submitting: false
+    })
+  }
+}
+
+const setPathValue = (stateObject, path, value) => {
+  if (typeof path === 'string') {
+    let basePath = stateObject.vars[path] !== undefined ? stateObject.vars : stateObject
+    Vue.set(basePath, path, value)
+  } else if (Array.isArray(path)) {
+    const lastPathItem = path.splice(-1)
+    Vue.set(_.get(stateObject, path), lastPathItem, value)
+  } else {
+    console.error('Cannot set value on input. Unknown path.', path)
+  }
+}
+
+const setData = (stateObject, data) => {
+  if (!stateObject) {
+    return
+  }
+  if (Array.isArray(data)) {
+    for (const { path, value } of data) {
+      setPathValue(stateObject, path, value)
+    }
+  } else {
+    for (const [path, value] of Object.entries(data)) {
+      setPathValue(stateObject, path, value)
+    }
+  }
+}
+
 export const mutations = {
-  setForm (state, { formData }) {
-    let formId = Utilities.getFormId(formData.vars)
+  initForm (state, { form: { vars } }) {
+    const formId = Utilities.getFormId(vars)
+    if (state[ formId ]) {
+      return
+    }
+
+    const formData = {
+      vars: Object.assign({}, vars, { valid: false }),
+      children: {},
+      cancelToken: null,
+      submitting: false
+    }
+
     Vue.set(
       state,
       formId,
       formData
     )
   },
-  setInput (state, { formId, inputData }) {
+  setFormData (state, { formId, data }) {
+    let form = state[ formId ]
+    setData(form, data)
+  },
+  destroy (state, formId) {
+    if (state[formId]) Vue.delete(state, formId)
+  },
+  initInput (state, { formId, inputVars, children, disableValidation }) {
+    /*
+     * Ignore if this is already initialised
+     */
+    if (getNestedInput(state, formId, inputVars.full_name)) {
+      return
+    }
+
+    /*
+     * Create the data object
+     */
+    let value = inputVars.multiple ? [] : (inputVars.block_prefixes[ 1 ] === 'checkbox' ? inputVars.checked : inputVars.value)
+    const inputData = {
+      cancelToken: null,
+      debounceValidate: null,
+      disableValidation,
+      displayErrors: false,
+      hidden: false,
+      lastValidationValue: null,
+      validating: false,
+      vars: Object.assign({}, inputVars, {
+        valid: false,
+        errors: [],
+        value
+      })
+    }
+
+    /*
+     * Create children of parents if required
+     */
     let OBJECT_PATH = getInputNameNestedPath(inputData.vars.full_name, state[ formId ].vars.block_prefixes[1])
     let finalObjectKey = OBJECT_PATH.splice(-1)[0]
     // Create the parents if they do not currently exist
@@ -184,42 +313,19 @@ export const mutations = {
       }
       currentNestedObj = currentNestedObj[pathItem]
     })
+
+    /*
+     * Finally set the initial input data nested correctly
+     */
     Vue.set(
       currentNestedObj,
       finalObjectKey,
       inputData
     )
   },
-  setInputValue (state, { formId, inputName, value }) {
+  setInputData (state, { formId, inputName, data }) {
     let input = getNestedInput(state, formId, inputName)
-    Vue.set(input.vars, 'value', value)
-  },
-  setInputProp (state, { formId, inputName, property, value }) {
-    let input = getNestedInput(state, formId, inputName)
-    Vue.set(input, property, value)
-  },
-  setFormProp (state, { formId, property, value }) {
-    Vue.set(state[ formId ], property, value)
-  },
-  setFormValidationResult (state, { formId, valid, errors }) {
-    Vue.set(state[ formId ].vars, 'valid', valid)
-    Vue.set(state[ formId ].vars, 'errors', errors)
-  },
-  setInputValidationResult (state, { formId, inputName, valid, errors }) {
-    let input = getNestedInput(state, formId, inputName)
-    Vue.set(input.vars, 'valid', valid)
-    Vue.set(input.vars, 'errors', errors)
-  },
-  destroy (state, formId) {
-    if (state[formId]) Vue.delete(state, formId)
-  },
-
-  // --------
-  // Set specific preset keys - probably need to refine all of this!
-  // --------
-  setInputDisplayErrors (state, { formId, inputName, displayErrors }) {
-    let input = getNestedInput(state, formId, inputName)
-    Vue.set(input, 'displayErrors', displayErrors)
+    setData(input, data)
   },
   setFormDisplayErrors (state, { formId, displayErrors, valid = null }) {
     const setInput = (inputName) => {
@@ -241,6 +347,12 @@ export const mutations = {
     }
     displayErrorsDeep(state[ formId ])
   },
+
+  // --------
+  // Set specific preset keys - probably need to refine all of this!
+  // ALL DEPRECATED AND WILL BE REMOVED - USE setInputData INSTEAD
+  // NEED TO GO THROUGH AND CONVERT ALL REFERENCES TO THIS METHODS
+  // --------
   setInputValidating (state, { formId, inputName, validating }) {
     let input = getNestedInput(state, formId, inputName)
     Vue.set(input, 'validating', validating)
