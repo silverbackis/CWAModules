@@ -1,10 +1,11 @@
-let components = {}
-<% _.forEach(options.components, function(component, key) {
-  if(
-    !component || !options.componentEnabledVoter(options, { key, component })
-  ) { return; }
-%>
-components['<%= key %>'] = () => import('<%= component %>');<% }); %>
+let components = {};
+
+<%
+  for(const [ key, component ] of Object.entries(options.components)) {
+    const isDisabled = !component || !options.componentEnabledVoter(options, { key, component })
+    if (isDisabled) { continue }
+%>components['<%=key%>'] = () => import('<%=component%>'); <% } %>
+
 export default {
   components,
   methods: {

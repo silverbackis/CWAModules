@@ -18,7 +18,7 @@ module.exports = {
   enabledComponents: null,
   disabledComponents: null,
   photoswipeInstalled: null,
-  componentEnabledVoter ({ enabledComponents, disabledComponents, components, componentEnabledVoter, photoswipeInstalled }, { key, component }) {
+  componentEnabledVoter ({ enabledComponents, disabledComponents, components, componentEnabledVoter, photoswipeInstalled }, { key = null, component }) {
     if (component && !key) {
       if (!photoswipeInstalled && component.startsWith('components/Gallery/')) {
         return false
@@ -43,11 +43,16 @@ module.exports = {
       // enable if it wasn't setup as a configured component - otherwise enabling would be very hard work...
       return true
     }
+
     if (!photoswipeInstalled && key === 'Gallery') {
       return false
     }
-    return (enabledComponents && enabledComponents.constructor === Array && enabledComponents.indexOf(key) !== -1) ||
-      (disabledComponents && disabledComponents.constructor === Array && disabledComponents.indexOf(key) === -1) ||
-      true
+
+    if (key) {
+      return (enabledComponents && Array.isArray(enabledComponents) && enabledComponents.indexOf(key) !== -1) ||
+        (disabledComponents && Array.isArray(disabledComponents) && disabledComponents.indexOf(key) === -1) ||
+        true
+    }
+    return true
   }
 }
