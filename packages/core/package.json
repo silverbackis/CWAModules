@@ -1,6 +1,6 @@
 {
     "name": "@cwamodules/core",
-    "version": "0.2.14",
+    "version": "0.2.15",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,7 +9,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/server": "^0.2.13",
+        "@cwamodules/server": "^0.2.15",
         "@nuxtjs/axios": "^5.3.1",
         "jwt-decode": "^2.2.0",
         "lodash": "^4.17.10",
