@@ -30,6 +30,12 @@
       apiAction: {
         type: Boolean,
         default: true
+      },
+      extraData: {
+        type: Object,
+        default () {
+          return {}
+        }
       }
     },
     computed: {
@@ -47,7 +53,7 @@
       }
     },
     created () {
-      this.$bwstarter.$storage.commit('initForm', { form: this.form }, FORMS_MODULE)
+      this.$bwstarter.$storage.commit('initForm', { form: this.form, extraData: this.extraData }, FORMS_MODULE)
     },
     beforeDestroy () {
       if (this.cancelToken) {

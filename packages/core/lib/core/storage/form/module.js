@@ -34,6 +34,10 @@ const getNestedInput = (state, formId, inputName) => {
 }
 
 export const getters = {
+  getFormByComponent: (state) => ({ form: { vars } }) => {
+    const formId = Utilities.getFormId(vars)
+    return state[ formId ]
+  },
   getForm: (state) => (formId) => {
     return !state[ formId ] ? null : state[ formId ]
   },
@@ -66,6 +70,7 @@ export const getters = {
     }
     return Object.assign(
       form && form.vars.post_app_proxy ? { _action: form.vars.action } : {},
+      form.extraData,
       getDeepFormData(form)
     )
   },
@@ -243,17 +248,17 @@ const setData = (stateObject, data) => {
 }
 
 export const mutations = {
-  initForm (state, { form: { vars } }) {
+  initForm (state, { form: { vars }, extraData = {} }) {
     const formId = Utilities.getFormId(vars)
     if (state[ formId ]) {
       return
     }
-
     const formData = {
       vars: Object.assign({}, vars, { valid: false }),
       children: {},
       cancelToken: null,
-      submitting: false
+      submitting: false,
+      extraData
     }
 
     Vue.set(

@@ -5,7 +5,12 @@
     <div :class="[...containerClass, 'form-container']">
       <div class="card">
         <div class="card-content">
-          <form-tag :form="form" :success-fn="successFn" :api-action="apiAction">
+          <form-tag
+            :form="form"
+            :success-fn="successFn"
+            :api-action="apiAction"
+            :extra-data="extraData"
+          >
             <slot name="errors" v-if="formErrors.length">
               <div>
                 <ul class="content">
@@ -14,7 +19,7 @@
               </div>
             </slot>
 
-            <slot name="form" v-if="!formValid">
+            <slot name="form" v-if="!formValid || !showSuccess">
               <form-input v-for="input in form.children"
                           :key="input.vars.full_name"
                           :input="input"
@@ -48,6 +53,14 @@
 
   export default {
     mixins: [ ComponentMixin, FormMixin ],
+    props: {
+      extraData: {
+        type: Object,
+        default () {
+          return {}
+        }
+      }
+    },
     computed: {
       form () {
         return this.component.form

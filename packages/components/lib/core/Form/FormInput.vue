@@ -1,5 +1,5 @@
 <template>
-  <div class="field">
+  <div :class="{ 'field': (!input.hidden && inputType !== 'hidden') }">
     <component v-if="!input.children || !input.children.length"
                :is="inputComponent"
                :form-id="formId"

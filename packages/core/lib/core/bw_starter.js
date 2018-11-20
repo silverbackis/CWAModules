@@ -165,20 +165,19 @@ export default class BWStarter {
     }
   }
 
-  logout () {
-    this.$axios.post('/logout',
-      {},
-      {
-        baseURL: null
-      }
-    )
-      .then(() => {
-        this.$storage.setState(TOKEN_KEY, null)
-        this.addNotification('You have successfully logged out')
-      })
-      .catch((err) => {
-        console.warn(err)
-      })
+  async logout () {
+    try {
+      await this.$axios.post('/logout',
+        {},
+        {
+          baseURL: null
+        }
+      )
+      this.$storage.setState(TOKEN_KEY, null)
+      this.addNotification('You have successfully logged out')
+    } catch (err) {
+      console.warn(err)
+    }
   }
 
   get isAdmin () {

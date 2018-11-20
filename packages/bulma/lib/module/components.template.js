@@ -1,5 +1,4 @@
-let components = {};
-
+let components = {}
 <%
   for(const [ key, component ] of Object.entries(options.components)) {
     const isDisabled = !component || !options.componentEnabledVoter(options, { key, component })

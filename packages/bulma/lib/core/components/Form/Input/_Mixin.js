@@ -16,7 +16,7 @@ export default {
         errors: this.errors,
         displayErrors: this.displayErrors && this.firstRepeatInput.displayErrors,
         select: (this.inputType === 'choice' && !this.input.vars.expanded) ? (this.input.vars.multiple ? 'multiple' : 'single') : false,
-        hidden: this.input.hidden
+        hidden: this.input.hidden || this.inputType === 'hidden'
       }
     }
   }

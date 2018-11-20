@@ -10,6 +10,10 @@ export default {
     apiAction: {
       type: Boolean,
       default: true
+    },
+    showSuccess: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {

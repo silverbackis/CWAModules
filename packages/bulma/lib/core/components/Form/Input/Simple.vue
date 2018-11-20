@@ -1,6 +1,5 @@
 <template>
-  <wrapper v-if="inputType !== 'hidden'"
-           v-bind="wrapperData"
+  <wrapper v-bind="wrapperData"
            :useIcons="true"
   >
     <form-input :formId="formId"

@@ -16,6 +16,9 @@
       </ul>
     </div>
   </div>
+  <div v-else>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
