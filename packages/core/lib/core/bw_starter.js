@@ -86,7 +86,7 @@ export default class BWStarter {
     // Adjust requests to include auth + xsrf headers
     // --------
     const addHeaders = (config) => {
-      const token = process.server ? req.session.authToken : this.$storage.getState('token')
+      const token = process.server ? (req.session ? req.session.authToken : null) : this.$storage.getState('token')
       if (token) {
         config.headers.Authorization = 'Bearer ' + token
       }
