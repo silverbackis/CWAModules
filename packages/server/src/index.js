@@ -108,7 +108,7 @@ export default class BWServer {
       this.logging && console.log(message)
       res.status(400).json({ message })
     }
-    const ACTION = this.env.API_URL + '/token/refresh'
+    const ACTION = this.env.API_URL + (this.env.TOKEN_REFRESH_PATH || '/token/refresh')
     try {
       let response = await axios.post(
         ACTION,
