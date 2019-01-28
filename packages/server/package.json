@@ -1,7 +1,7 @@
 {
     "name": "@cwamodules/server",
     "licence": "MIT",
-    "version": "0.2.19",
+    "version": "0.2.20",
     "description": "Express server routes and common utilities for server and BW Starter front-end application",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
     "main": "dist/index.js",
