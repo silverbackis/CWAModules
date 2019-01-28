@@ -5,7 +5,9 @@ import { name as contentModuleName } from './storage/content'
 import { name as entitiesModuleName } from './storage/entities'
 
 const logging = process.env.NODE_ENV === 'development'
-const TOKEN_EXPIRE_BUFFER_SECS = 10
+// a user must still be authenticated when we try to refresh their token to avoid a 403 on the refresh request
+// 1 day before the JWT token expires we will refresh it
+const TOKEN_EXPIRE_BUFFER_SECS = 86400
 const TOKEN_KEY = 'token'
 const DEFAULT_LAYOUT = '/layouts/default'
 

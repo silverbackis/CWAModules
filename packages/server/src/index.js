@@ -99,7 +99,7 @@ export default class BWServer {
     }
   }
 
-  async jwtRefresh (req, res, sendResult = true) {
+  async jwtRefresh (req, res, sendResult = true, extraHeaders = {}) {
     let session = req.session
     let message
     if (!session.refreshToken) {
@@ -116,7 +116,7 @@ export default class BWServer {
           refresh_token: session.refreshToken
         },
         {
-          headers: this.utilities.cookiesToHeaders(req.cookies),
+          headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
           refreshTokenRequest: true
         })
       this.logging && console.error('jwtRefresh response', response)
