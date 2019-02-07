@@ -34,7 +34,7 @@ Author modified: Daniel <daniel@silverback.is>
               :key="'canvas'"
               ref="canvas"
               class="image-small"
-      />
+
       <div v-show="loadedRes !== 'high'"
            :key="'loader'"
            class="loader-outer"
@@ -50,7 +50,6 @@ Author modified: Daniel <daniel@silverback.is>
 import { mapGetters } from 'vuex'
 import canvasCover from './canvasCover'
 import stackBlur from './stackBlur'
-import { createCanvas } from 'canvas'
 
 export default {
   props: {
@@ -114,10 +113,7 @@ export default {
     },
     placeholderDataUrl () {
       if (this.canvasSize.width || this.canvasSize.height) {
-        const canvas = new HTMLCanvasElement()
-        canvas.width = this.canvasSize.width
-        canvas.height = this.canvasSize.height
-        return canvas.toDataURL()
+        return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 ${this.canvasSize.width} ${this.canvasSize.height}" width="${this.canvasSize.width}" height="${this.canvasSize.height}"></svg>`
       }
       return this.imagePath
     }
@@ -151,21 +147,20 @@ export default {
     },
     initImage () {
       this.portrait = this.image.width < this.image.height
-      // this.createCanvasPlaceholderDataUrl();
 
-      // let hiResImg = new Image();
-      // let loResImg = this.setupPlaceholder();
-      //
-      // hiResImg.onload = () => {
-      //   if (loResImg) {
-      //     loResImg.onload = null
-      //   }
-      //   this.portrait = hiResImg.width < hiResImg.height
-      //   this.currentSrc = this.imagePath
-      //   this.loadedRes = 'high'
-      // }
-      //
-      // hiResImg.src = this.imagePath
+      let hiResImg = new Image();
+      let loResImg = this.setupPlaceholder();
+
+      hiResImg.onload = () => {
+        if (loResImg) {
+          loResImg.onload = null
+        }
+        this.portrait = hiResImg.width < hiResImg.height
+        this.currentSrc = this.imagePath
+        this.loadedRes = 'high'
+      }
+
+      hiResImg.src = this.imagePath
     }
   },
   watch: {
