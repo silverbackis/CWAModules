@@ -59,7 +59,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
       routeData = routeData.redirect
       redirects++
     }
-    if (redirects) {
+    if (redirects > 0) {
       redirect(routeData.route)
       return
     }

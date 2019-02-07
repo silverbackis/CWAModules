@@ -4,8 +4,8 @@
       <component :is="linkComponent" class="card-image" :to="toRoute">
         <image-loader
           class="article-image"
-          :image="component['file:imagine'].thumbnail || component['file:image']"
-          :placeholder="component['file:imagine'].placeholderSquare || null"
+          :image="getImageData()"
+          :placeholder="getImageData('placeholderSquare', true)"
           :alt="component.title"
           :cover="true"
         />
@@ -26,11 +26,12 @@
 
 <script>
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+  import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
   export default {
-    mixins: [ ComponentMixin ],
+    mixins: [ ComponentMixin, ImageDataMixin ],
     components: {
       ImageLoader,
       AppLink

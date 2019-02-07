@@ -5,7 +5,7 @@
              :active-class="activeClass"
              :exact="toRoute === '/'"
   >
-    {{ component.label }}
+    <span :class="component.className">{{ component.label }}</span>
   </nuxt-link>
   <div v-else-if="hasPermittedRole"
        class="navbar-item has-dropdown is-hoverable">
@@ -14,7 +14,7 @@
                :active-class="activeClass"
                :exact="toRoute === '/'"
     >
-      {{ component.label }}
+      <span :class="component.className">{{ component.label }}</span>
     </nuxt-link>
     <div class="navbar-dropdown"
          v-for="(group, index) in childComponents"
@@ -33,6 +33,11 @@
 
   export default {
     name: 'BulmaNavbarItem',
-    mixins: [ NavItemMixin ]
+    mixins: [ NavItemMixin ],
+    computed: {
+      navbarItemClass () {
+        return this.component.className || 'navbar-item'
+      }
+    }
   }
 </script>

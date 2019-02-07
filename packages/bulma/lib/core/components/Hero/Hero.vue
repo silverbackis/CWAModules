@@ -17,7 +17,7 @@
                 />
                 <span v-else>{{ realComponentData.title }}</span>
               </h1>
-              <h2 class="subtitle">
+              <h2 v-if="realComponentData.subtitle || $bwstarter.isAdmin" class="subtitle">
                 <admin-text-input v-if="$bwstarter.isAdmin"
                                   :model="realComponentData.subtitle"
                                   :componentId="endpoint"
@@ -26,6 +26,7 @@
                 />
                 <span v-else>{{ realComponentData.subtitle }}</span>
               </h2>
+              <slot name="title-end" />
             </div>
             <div v-if="hasImage"
                  class="column is-narrow"

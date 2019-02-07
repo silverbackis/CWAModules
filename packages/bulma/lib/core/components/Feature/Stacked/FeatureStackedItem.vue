@@ -6,10 +6,10 @@
                  class="feature-stacked-item has-text-centered"
       >
         <image-loader
-          v-if="image"
+          v-if="getImageData()"
           class="image-loader"
-          :image="image"
-          :placeholder="placeholder"
+          :image="getImageData()"
+          :placeholder="getImageData('placeholder', true)"
           :alt="injectDynamicData(component.title)"
         />
       </component>
@@ -31,12 +31,12 @@
 
 <script>
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
-  import { mapGetters } from 'vuex'
+  import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
   import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
   export default {
-    mixins: [ ComponentMixin ],
+    mixins: [ ComponentMixin, ImageDataMixin ],
     components: {
       ImageLoader,
       AppLink
@@ -59,29 +59,6 @@
       },
       toRoute () {
         return this.component.url || (this.component.route ? this.component.route.route : null)
-      },
-      image () {
-        let image;
-        if (this.component[ 'file:imagine' ]) {
-          image = this.component[ 'file:imagine' ].thumbnail
-        } else if (this.component[ 'file:image' ]) {
-          image = this.component[ 'file:image' ]
-        } else {
-          //svg
-          image = {
-            publicPath: this.component[ 'file:publicPath' ]
-          }
-        }
-        if (image) {
-          return this.injectImageData(image)
-        }
-        return null
-      },
-      placeholder () {
-        if (this.component[ 'file:imagine' ] && this.component[ 'file:imagine' ].placeholder) {
-          return this.injectImageData((this.component[ 'file:imagine' ].placeholder))
-        }
-        return null
       }
     }
   }

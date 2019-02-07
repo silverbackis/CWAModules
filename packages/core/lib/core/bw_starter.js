@@ -142,7 +142,8 @@ export default class BWStarter {
           method,
           data,
           cancelToken,
-          validateStatus
+          validateStatus,
+          progress: false
         })
         .then((response) => {
           resolve(response)

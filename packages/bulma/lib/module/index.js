@@ -1,6 +1,6 @@
 const merge = require('lodash/merge')
 const defaults = require('./defaults')
-const { resolve, join } = require('path')
+const { resolve, join, basename } = require('path')
 const rreaddir = require('@cwamodules/core/lib/module/rreaddir')
 const detectInstalled = require('detect-installed')
 

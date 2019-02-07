@@ -10,7 +10,8 @@
     },
     "dependencies": {
         "@cwamodules/core": "^0.2.21",
-        "@cwamodules/server": "^0.2.21"
+        "@cwamodules/server": "^0.2.21",
+        "canvas": "^2.3.1"
     },
     "scripts": {
         "lint": "eslint lib ",

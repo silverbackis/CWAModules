@@ -2,7 +2,11 @@ import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/conten
 
 export default {
   middleware: 'routeLoader',
-  data: () => ({}),
+  data () {
+    return {
+      loadedRoute: this.$route.path
+    }
+  },
   head () {
     if (!this.pageData) {
       return {}
@@ -59,11 +63,6 @@ export default {
     return {
       name: 'page',
       mode: 'out-in'
-    }
-  },
-  asyncData ({ route }) {
-    return {
-      loadedRoute: route.path
     }
   }
 }

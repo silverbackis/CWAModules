@@ -52,7 +52,7 @@ export class Storage {
             const roles = getters.userRoles
             return roles.indexOf(role) !== -1
           }
-          if (role.constructor === Array) {
+          if (Array.isArray(role)) {
             const BreakException = {}
             try {
               role.forEach((r) => {

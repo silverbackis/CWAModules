@@ -7,8 +7,7 @@ Author modified: Daniel <daniel@silverback.is>
 -->
 <template>
   <div :class="loaderClass">
-    <canvas class="is-hidden" ref="canvasPlaceholder"/>
-    <img v-if="placeholderDataUrl" class="image-placeholder" :src="placeholderDataUrl"/>
+    <img v-if="placeholderDataUrl" class="image-placeholder" :src="placeholderDataUrl" />
 
     <transition-group
       name="fade"
@@ -48,134 +47,137 @@ Author modified: Daniel <daniel@silverback.is>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import canvasCover from './canvasCover'
-  import stackBlur from './stackBlur'
+import { mapGetters } from 'vuex'
+import canvasCover from './canvasCover'
+import stackBlur from './stackBlur'
+import { createCanvas } from 'canvas'
 
-  export default {
-    props: {
-      image: {
-        type: Object,
-        required: true
-      },
-      placeholder: {
-        type: Object,
-        required: false
-      },
-      alt: {
-        type: String,
-        required: false
-      },
-      cover: {
-        type: Boolean,
-        default: false
-      }
+export default {
+  props: {
+    image: {
+      type: Object,
+      required: true
     },
-    data: () => ({
-      currentSrc: null,
-      loadedRes: null,
-      portrait: false,
-      placeholderDataUrl: null
-    }),
-    computed: {
-      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-      loaderClass () {
-        return [
-          'image-loader',
-          this.cover ? 'cover' : 'contain',
-          this.portrait ? 'portrait' : 'landscape'
-        ]
-      },
-      isDataString () {
-        return this.image.publicPath ? this.image.publicPath.substring(0, 5) === 'data:' : false
-      },
-      imagePath () {
-        if (!this.image) {
-          return null
-        }
-        if (this.isDataString) {
-          return this.image.publicPath
-        }
-        return this.getApiUrl(this.image.publicPath)
-      },
-      placeholderPath () {
-        if (!this.placeholder) {
-          return null
-        }
-        if (this.placeholder.publicPath.substring(0, 5) === 'data:') {
-          return this.placeholder.publicPath
-        }
-        return this.getApiUrl(this.placeholder.publicPath)
-      }
+    placeholder: {
+      type: Object,
+      required: false
     },
-    methods: {
-      setupPlaceholder () {
-        if (this.placeholderPath) {
-          let loResImg = new Image()
-          // HTML5 - send Origin header - no credentials though
-          loResImg.crossOrigin = 'anonymous'
-          let loResCanvas = this.$refs.canvas
-
-          loResImg.onload = () => {
-            let matchSizeEl = this.cover ? this.$el : loResImg
-            let ctx = loResCanvas.getContext('2d')
-            loResCanvas.width = matchSizeEl.clientWidth || matchSizeEl.width
-            loResCanvas.height = matchSizeEl.clientHeight || matchSizeEl.height
-            if (this.cover) {
-              canvasCover(ctx, loResImg)
-            } else {
-              ctx.drawImage(loResImg, 0, 0)
-            }
-            stackBlur(ctx, 0, 0, loResCanvas.width, loResCanvas.height, 8)
-            this.currentSrc = this.placeholderPath
-            this.loadedRes = 'low'
-          }
-          loResImg.src = this.placeholderPath
-          return loResImg
-        }
+    alt: {
+      type: String,
+      required: false
+    },
+    cover: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: () => ({
+    currentSrc: null,
+    loadedRes: null,
+    portrait: false
+  }),
+  computed: {
+    ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
+    loaderClass () {
+      return [
+        'image-loader',
+        this.cover ? 'cover' : 'contain',
+        this.portrait ? 'portrait' : 'landscape'
+      ]
+    },
+    isDataString () {
+      return this.image.publicPath ? this.image.publicPath.substring(0, 5) === 'data:' : false
+    },
+    imagePath () {
+      if (!this.image) {
         return null
-      },
-      createCanvasPlaceholderDataUrl () {
-        let canvas = this.$refs.canvasPlaceholder;
-        canvas.width = this.cover && this.placeholder ? this.placeholder.width : this.image.width
-        canvas.height = this.cover && this.placeholder ? this.placeholder.height : this.image.height
-        if (canvas.width || canvas.height) {
-          this.placeholderDataUrl = canvas.toDataURL()
-        } else {
-          this.placeholderDataUrl = this.imagePath
-        }
-      },
-      initImage () {
-        this.portrait = this.image.width < this.image.height
-        this.createCanvasPlaceholderDataUrl();
+      }
+      if (this.isDataString) {
+        return this.image.publicPath
+      }
+      return this.getApiUrl(this.image.publicPath)
+    },
+    placeholderPath () {
+      if (!this.placeholder) {
+        return null
+      }
+      if (this.placeholder.publicPath.substring(0, 5) === 'data:') {
+        return this.placeholder.publicPath
+      }
+      return this.getApiUrl(this.placeholder.publicPath)
+    },
+    canvasSize() {
+      return {
+        width: this.cover && this.placeholder ? this.placeholder.width : this.image.width,
+        height: this.cover && this.placeholder ? this.placeholder.height : this.image.height
+      }
+    },
+    placeholderDataUrl() {
+      if (this.canvasSize.width || this.canvasSize.height) {
+        const canvas = createCanvas(this.canvasSize.width, this.canvasSize.height)
+        return canvas.toDataURL()
+      }
+      return this.imagePath
+    }
+  },
+  methods: {
+    setupPlaceholder () {
+      if (this.placeholderPath) {
+        let loResImg = new Image()
+        // HTML5 - send Origin header - no credentials though
+        loResImg.crossOrigin = 'anonymous'
+        let loResCanvas = this.$refs.canvas
 
-        let hiResImg = new Image();
-        let loResImg = this.setupPlaceholder();
-
-        hiResImg.onload = () => {
-          if (loResImg) {
-            loResImg.onload = null
+        loResImg.onload = () => {
+          let matchSizeEl = this.cover ? this.$el : loResImg
+          let ctx = loResCanvas.getContext('2d')
+          loResCanvas.width = matchSizeEl.clientWidth || matchSizeEl.width
+          loResCanvas.height = matchSizeEl.clientHeight || matchSizeEl.height
+          if (this.cover) {
+            canvasCover(ctx, loResImg)
+          } else {
+            ctx.drawImage(loResImg, 0, 0)
           }
-          this.portrait = hiResImg.width < hiResImg.height
-          this.currentSrc = this.imagePath
-          this.loadedRes = 'high'
+          stackBlur(ctx, 0, 0, loResCanvas.width, loResCanvas.height, 8)
+          this.currentSrc = this.placeholderPath
+          this.loadedRes = 'low'
         }
+        loResImg.src = this.placeholderPath
+        return loResImg
+      }
+      return null
+    },
+    initImage () {
+      this.portrait = this.image.width < this.image.height
+      // this.createCanvasPlaceholderDataUrl();
 
-        hiResImg.src = this.imagePath
-      }
+      // let hiResImg = new Image();
+      // let loResImg = this.setupPlaceholder();
+      //
+      // hiResImg.onload = () => {
+      //   if (loResImg) {
+      //     loResImg.onload = null
+      //   }
+      //   this.portrait = hiResImg.width < hiResImg.height
+      //   this.currentSrc = this.imagePath
+      //   this.loadedRes = 'high'
+      // }
+      //
+      // hiResImg.src = this.imagePath
+    }
+  },
+  watch: {
+    image () {
+      this.initImage()
     },
-    watch: {
-      image () {
-        this.initImage()
-      },
-      placeholder () {
-        this.initImage()
-      }
-    },
-    mounted () {
+    placeholder () {
       this.initImage()
     }
+  },
+  mounted () {
+    this.initImage()
   }
+}
 </script>
 
 <style lang="sass">
