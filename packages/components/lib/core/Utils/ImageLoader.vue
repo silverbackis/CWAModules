@@ -106,15 +106,17 @@ export default {
       }
       return this.getApiUrl(this.placeholder.publicPath)
     },
-    canvasSize() {
+    canvasSize () {
       return {
         width: this.cover && this.placeholder ? this.placeholder.width : this.image.width,
         height: this.cover && this.placeholder ? this.placeholder.height : this.image.height
       }
     },
-    placeholderDataUrl() {
+    placeholderDataUrl () {
       if (this.canvasSize.width || this.canvasSize.height) {
-        const canvas = createCanvas(this.canvasSize.width, this.canvasSize.height)
+        const canvas = new HTMLCanvasElement()
+        canvas.width = this.canvasSize.width
+        canvas.height = this.canvasSize.height
         return canvas.toDataURL()
       }
       return this.imagePath
