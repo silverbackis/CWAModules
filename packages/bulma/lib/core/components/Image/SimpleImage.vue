@@ -4,17 +4,17 @@
          itemscope
          itemtype="https://schema.org/ImageGallery"
     >
-      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject" v-if="imageData['file:image']">
+      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject" v-if="getImageData()">
         <div class="is-block image-holder">
           <image-loader class="image simple-image"
-                        :image="imageData['file:image']"
-                        :placeholder="imageData['file:imagine'].placeholder || null"
+                        :image="getImageData()"
+                        :placeholder="getImageData('placeholder', true)"
                         :cover="false"
                         :alt="caption"
           />
         </div>
-        <meta itemprop="width" :content="imageData['file:image'].width">
-        <meta itemprop="height" :content="imageData['file:image'].height">
+        <meta itemprop="width" :content="getImageData().width">
+        <meta itemprop="height" :content="getImageData().height">
         <figcaption v-if="caption"
                     itemprop="caption description"
                     v-html="caption"
@@ -28,9 +28,10 @@
   import { mapGetters } from 'vuex'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+  import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
 
   export default {
-    mixins: [ ComponentMixin ],
+    mixins: [ ComponentMixin, ImageDataMixin ],
     components: {
       ImageLoader
     },
@@ -38,9 +39,6 @@
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       isDynamic () {
         return this.injectDynamicData(this.component.filePath) !== this.component.filePath
-      },
-      imageData () {
-        return this.isDynamic ? this.dynamicData : this.component
       },
       caption () {
         return this.injectDynamicData(this.component.caption)
