@@ -4,6 +4,7 @@
            :useIcons="false"
            label=""
            :errors="[]"
+           class="is-button"
   >
     <form-input :formId="formId"
                 :inputName="inputName"

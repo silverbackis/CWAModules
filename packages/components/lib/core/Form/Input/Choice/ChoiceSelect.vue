@@ -3,6 +3,7 @@
           v-bind="commonProps"
           :multiple="input.vars.multiple"
           v-model="inputModel"
+          @change="displayErrors = true"
   >
     <select-option v-for="(choice, choiceIndex) in input.vars.choices"
                    :key="choiceIndex"

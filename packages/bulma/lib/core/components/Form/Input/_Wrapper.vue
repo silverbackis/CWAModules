@@ -1,5 +1,5 @@
 <template>
-  <div class="field" v-if="!hidden">
+  <div class="field form-wrapper" v-if="!hidden">
     <label class="label" v-html="label" v-if="label && label !== ''" :for="inputId"></label>
     <div :class="controlClass">
       <div :class="wrapperClass">

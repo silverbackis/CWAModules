@@ -205,6 +205,7 @@
         this.$axios.post('/files/filePath/' + this.component[ '@id' ],
           formData,
           {
+            progress: false,
             headers: {
               'Content-Type': 'multipart/form-data'
             },
@@ -226,7 +227,7 @@
       },
       deleteItem () {
         const doDelete = () => {
-          return this.$axios.delete(this.component['@id'])
+          return this.$axios.delete(this.component['@id'], { progress: false })
             .then(() => {
               this.$emit('deleted')
             })

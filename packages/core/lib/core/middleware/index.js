@@ -18,7 +18,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
   // Middleware defined on pages - prevent route loading for each page depth
   const path = compile(route.path)(route.params) || '/'
   if (path === currentPath) {
-    logging && console.log('Page not loading, already at path ' + path)
+    logging && console.log('Page not loading from API. Not required: already loaded current path', path)
     return
   }
   logging && console.log('Page loading ' + path)

@@ -174,7 +174,7 @@
           this.$axios.post('/gallery_items', {
             title: 'New Image',
             parentComponentGroup: this.componentGroup[ '@id' ]
-          })
+          }, { progress: false })
             .then(() => {
               this.reloading = false
               this.reloadCollection()

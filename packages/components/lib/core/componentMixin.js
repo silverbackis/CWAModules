@@ -39,7 +39,7 @@ export default {
     realComponentData () {
       let tempComponent = Object.assign({}, this.component)
       for (let [ key, value ] of Object.entries(this.component)) {
-        if (this.isString(value)) {
+        if (this.isString(value) && this.dynamicData) {
           const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
           const matches = expr.exec(value)
           const injectVar = matches && matches.length >= 3 ? matches[ 2 ] : null

@@ -8,15 +8,7 @@ export default {
     }
   },
   head () {
-    if (!this.pageData) {
-      return {}
-    }
-    return {
-      title: this.title,
-      meta: [
-        { name: 'description', content: this.metaDescription }
-      ]
-    }
+    return this.headData
   },
   props: {
     componentGroup: {
@@ -57,6 +49,22 @@ export default {
         return this.componentGroup
       }
       return this.pageData
+    },
+    headData () {
+      const defaultObj = {
+        bodyAttrs: {
+          class: this.pageClass
+        }
+      }
+      if (!this.pageData) {
+        return defaultObj
+      }
+      return Object.assign({
+        title: this.title,
+        meta: [
+          { name: 'description', content: this.metaDescription }
+        ]
+      }, defaultObj)
     }
   },
   transition () {

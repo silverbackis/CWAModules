@@ -236,6 +236,9 @@ export default class BWStarter {
   }
 
   storeAndFetchLayout (layout, current = false) {
+    if (!layout) {
+      return this.fetchAndStoreLayout(layout, current)
+    }
     this.storeLayoutContent(layout, current)
     return this.fetchLayout(layout[ '@id' ])
   }
@@ -257,6 +260,7 @@ export default class BWStarter {
   }
 
   async fetchLayout (url) {
+    logging && console.log('Fetch layout', url)
     let response = await this.request({ url })
     const layout = response.data
     this.$storage.commit('setEntity', [ { id: layout[ '@id' ], data: layout } ], entitiesModuleName)
@@ -272,7 +276,7 @@ export default class BWStarter {
     let { data } = await this.request({ url: id })
     let entities = getEntitiesFromLocations(data.componentLocations)
     // When reloading component group, we want the group itself to update as well with new locations
-    if (data[ '@type' ] === 'ComponentGroup') {
+    if (data[ '@type' ] === 'ComponentGroup' || data.dynamic) {
       entities[ data[ '@id' ] ] = stripContent(data)
     }
     this.setEntities(entities)
@@ -298,7 +302,11 @@ export default class BWStarter {
           collection: Array.from(component.collection, item => item[ '@id' ] || item)
         })
       }
-      this.$storage.commit('setEntity', [ { id: componentId, data: component } ], entitiesModuleName)
+      if (componentId) {
+        this.$storage.commit('setEntity', [ { id: componentId, data: component } ], entitiesModuleName)
+      } else if (typeof component === 'string' && !this.$storage.get('getEntity', component, entitiesModuleName)) {
+        console.error('Cannot set an entity without a component ID and it does not already exist', componentId, component)
+      }
     }
   }
 }
@@ -318,8 +326,16 @@ const getEntitiesFromLocations = function (locations) {
   locations.forEach((_) => {
     const location = Object.assign({}, _)
     const component = Object.assign({}, location.component)
+    const isComponentReference = typeof component === 'string'
     if (location[ '@id' ]) {
-      entities[ location[ '@id' ] ] = Object.assign({}, location, { component: component[ '@id' ] })
+      entities[ location[ '@id' ] ] = Object.assign({}, location, { component: isComponentReference ? component : component[ '@id' ] })
+    }
+    if (isComponentReference) {
+      logging && console.log('component found as string. it is probably already registered', component)
+      return
+    }
+    if (!component[ '@id' ]) {
+      console.error('ID not found for component - it is likely the entity was not returned as an API resource and needs to be configured for an IRI', component[ '@id' ], component)
     }
     entities[ component[ '@id' ] ] = component
 

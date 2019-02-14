@@ -80,9 +80,7 @@ export default {
             validateStatus (status) {
               return [ 400, 200, 201 ].indexOf(status) !== -1
             },
-            headers: {
-              'X-XSRF-TOKEN': this.$cookie.get('XSRF-TOKEN')
-            }
+            progress: false
           }
         )
         this.validating = false

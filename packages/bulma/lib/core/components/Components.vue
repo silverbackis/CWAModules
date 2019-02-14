@@ -7,7 +7,7 @@
                :component="getEntity(component)"
                :nested="nested"
                :depth="depth"
-               :dynamicData="dynamicDataObj"
+               :dynamic-data="dynamicDataObj"
     />
   </div>
 </template>

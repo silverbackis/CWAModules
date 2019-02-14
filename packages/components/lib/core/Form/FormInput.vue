@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'field': (!input.hidden && inputType !== 'hidden') }">
-    <component v-if="!input.children || !input.children.length"
+    <component v-if="input.vars.expanded || (!input.children || !input.children.length)"
                :is="inputComponent"
                :form-id="formId"
                :input-name="inputName"
@@ -9,6 +9,7 @@
                :parents="parents"
     />
     <form-input
+      v-if="!input.vars.expanded"
       v-for="(child, index) of input.children"
       :key="index"
       :input="child"

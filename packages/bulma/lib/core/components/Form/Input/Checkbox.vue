@@ -2,6 +2,7 @@
   <wrapper v-bind="wrapperData"
            :label="''"
            :useIcons="false"
+           class="is-checkbox"
   >
     <form-input :formId="formId"
                 :inputName="inputName"

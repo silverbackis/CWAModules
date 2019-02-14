@@ -1,6 +1,7 @@
 <template>
   <wrapper v-bind="wrapperData"
            :useIcons="false"
+           class="is-choice"
   >
     <form-input :formId="formId"
                 :inputName="inputName"

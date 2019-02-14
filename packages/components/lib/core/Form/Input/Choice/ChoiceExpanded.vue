@@ -4,9 +4,9 @@
       v-for="(choice, choiceIndex) in input.children"
       :key="choiceIndex"
       :index="choiceIndex"
-      :inputName="inputName"
-      :formId="formId"
-      inputClass=""
+      :input-name="inputName"
+      :form-id="formId"
+      input-class=""
     />
   </div>
 </template>
@@ -24,6 +24,9 @@
     },
     components: {
       ChoiceExpandedOption
+    },
+    created () {
+      this.displayErrors = true
     }
   }
 </script>

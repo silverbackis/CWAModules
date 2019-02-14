@@ -1,6 +1,6 @@
 <template>
   <div class="section column-collection">
-    <h4 class="is-size-4" v-if="component.title">{{ component.title }}</h4>
+    <h4 class="subtitle is-size-3 has-text-primary has-text-weight-normal is-marginless" v-if="component.title">{{ component.title }}</h4>
     <hr v-if="component.title"/>
     <div class="columns is-mobile is-centered"
          :class="containerClass"

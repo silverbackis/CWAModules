@@ -4,8 +4,7 @@
            v-bind="commonProps"
            :type="'checkbox'"
     >
-    <div class="indicator" v-if="isCustom"></div>
-    <span class="input-label" v-html="input.vars.label"></span>
+    <span :class="labelTextClass" v-html="input.vars.label"></span>
   </label>
 </template>
 
@@ -22,12 +21,19 @@
     },
     computed: {
       isCustom () {
-        return this.input.vars.attr.class && this.input.vars.attr.class.indexOf('custom') !== -1
+        const inputClasses = this.input.vars.attr.class
+        return inputClasses && (inputClasses.indexOf('is-custom') !== -1 || inputClasses.indexOf('custom') !== -1)
       },
       labelClass () {
         return {
           checkbox: true,
-          custom: this.isCustom
+          'is-custom': this.isCustom
+        }
+      },
+      labelTextClass () {
+        return {
+          'input-label': true,
+          'custom-control-label': this.isCustom
         }
       }
     }

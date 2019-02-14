@@ -159,9 +159,7 @@ export const actions = {
       validateStatus (status) {
         return [ 400, 200, 201, 401 ].indexOf(status) !== -1
       },
-      headers: {
-        'X-XSRF-TOKEN': TinyCookie.get('XSRF-TOKEN')
-      }
+      progress: false
     }
     if (form.vars.api_request === false || form.vars.post_app_proxy || apiAction === false) {
       ops.baseURL = null
@@ -325,7 +323,7 @@ export const mutations = {
     Vue.set(
       currentNestedObj,
       finalObjectKey,
-      inputData
+      Object.assign(inputData.vars.expanded ? { children } : {}, inputData)
     )
   },
   setInputData (state, { formId, inputName, data }) {

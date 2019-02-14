@@ -1,12 +1,10 @@
 <template>
   <div>
     <choice-select v-if="!input.vars.expanded"
-                   :formId="formId"
-                   :inputName="inputName"
+                   v-bind="$props"
     />
     <choice-expanded v-else
-                     :formId="formId"
-                     :inputName="inputName"
+                     v-bind="$props"
     />
   </div>
 </template>
@@ -21,9 +19,6 @@
     components: {
       ChoiceSelect,
       ChoiceExpanded
-    },
-    created () {
-      this.displayErrors = true
     }
   }
 </script>

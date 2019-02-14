@@ -2,49 +2,56 @@
   <component-wrapper :nested="nested">
     <div :class="containerClass">
       <div class="collection-columns columns is-mobile is-multiline">
-        <div class="column is-12" v-if="component.title">
-          <h4 class="is-size-4">{{ component.title }}</h4>
-          <hr/>
+        <slot name="title">
+          <div class="column is-12" v-if="component.title">
+            <h4 class="is-size-4">{{ component.title }}</h4>
+            <hr/>
+          </div>
+        </slot>
+        <div v-if="!component.collection.length" class="column is-12">
+          <h4 class="subtitle is-size-5 has-text-grey">There are no items to display</h4>
         </div>
-        <component :is="itemComponent"
-                   v-for="item in component.collection"
-                   v-if="getEntity(item)"
-                   :component="getEntity(item)"
-                   :key="item['@id']"
-        />
+        <template v-else>
+          <component :is="itemComponent"
+                     v-for="item in component.collection"
+                     v-if="getEntity(item)"
+                     :component="getEntity(item)"
+                     :key="item['@id']"
+          />
+        </template>
       </div>
     </div>
   </component-wrapper>
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import { mapGetters } from 'vuex'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
-  export default {
-    mixins: [ ComponentMixin ],
-    data () {
-      return {
-        itemComponent: null
-      }
-    },
-    computed: {
-      ...mapGetters({
-        getContentById: 'bwstarter/getContentById'
-      })
-    },
-    methods: {
-      resolveItemComponent () {
-        let resourceParts = this.component.resource.split('\\')
-        this.itemComponent = () => ({
-          component: import('./Item/' + resourceParts[ resourceParts.length - 1 ])
-        })
-      }
-    },
-    created () {
-      this.resolveItemComponent()
+export default {
+  mixins: [ ComponentMixin ],
+  data () {
+    return {
+      itemComponent: null
     }
+  },
+  computed: {
+    ...mapGetters({
+      getContentById: 'bwstarter/getContentById'
+    })
+  },
+  methods: {
+    resolveItemComponent () {
+      let resourceParts = this.component.resource.split('\\')
+      this.itemComponent = () => ({
+        component: import('./Item/' + resourceParts[ resourceParts.length - 1 ])
+      })
+    }
+  },
+  created () {
+    this.resolveItemComponent()
   }
+}
 </script>
 
 <style lang="sass">

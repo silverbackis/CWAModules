@@ -100,7 +100,6 @@
         }
         let imagePath = this.injectDynamicData(this.component.publicPath)
         if (imagePath !== this.component.publicPath) {
-          //injected from the dynamic page
           return this.dynamicData
         }
         return this.component

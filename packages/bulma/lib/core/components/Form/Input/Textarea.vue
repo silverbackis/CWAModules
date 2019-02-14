@@ -1,6 +1,7 @@
 <template>
   <wrapper v-bind="wrapperData"
            :useIcons="true"
+           class="is-textarea"
   >
     <form-input :formId="formId"
                 :inputName="inputName"

@@ -1,7 +1,12 @@
 <template>
   <div :class="cardClass">
     <div class="card is-inline-block">
-      <component :is="linkComponent" class="card-image" :to="toRoute">
+      <component
+        v-if="getImageData()"
+        :is="linkComponent"
+        class="card-image"
+        :to="toRoute"
+      >
         <image-loader
           class="article-image"
           :image="getImageData()"
@@ -12,13 +17,12 @@
         <img src="/img/1x1.png" class="square-space"/>
       </component>
       <div class="card-content">
-        <h4 class="title is-4">{{ component.title }}</h4>
+        <h4 class="title is-4 is-spaced">{{ component.title }}</h4>
         <h5 class="subtitle is-6">{{ component.subtitle }}</h5>
         <app-link v-if="component.routes.length"
                   :to="toRoute"
-                  class="button is-primary"
-        >View
-        </app-link>
+                  class="button is-primary is-rounded is-outlined"
+        >Read More</app-link>
       </div>
     </div>
   </div>
@@ -80,6 +84,11 @@
           left: 0
           width: 100%
           height: 100%
+      .card-content
+        .button
+          min-width: 100px
+        .title:not(:last-child)
+          margin-bottom: 1rem
     &.is-12
       .card
         max-width: 250px

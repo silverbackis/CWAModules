@@ -3,7 +3,7 @@ This component was inspired by: Louis Zawadzki
 Github: https://github.com/louiszawadzki/vue-lazy-img-loading
 Medium blog post: https://www.theodo.fr/blog/2017/02/medium-like-image-loading-with-vue-js-part-2/
 
-Author modified: Daniel <daniel@silverback.is>
+Author modified significantly: Daniel <daniel@silverback.is>
 -->
 <template>
   <div :class="loaderClass">
@@ -33,8 +33,7 @@ Author modified: Daniel <daniel@silverback.is>
       <canvas v-show="loadedRes === 'low'"
               :key="'canvas'"
               ref="canvas"
-              class="image-small"
-
+              class="image-small" />
       <div v-show="loadedRes !== 'high'"
            :key="'loader'"
            class="loader-outer"
