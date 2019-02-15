@@ -9,6 +9,15 @@
             <template slot="success">
               <slot name="success" />
             </template>
+            <template slot="errors">
+              <slot name="errors" />
+            </template>
+            <template slot="form">
+              <slot name="form" />
+            </template>
+            <template slot="form-append">
+              <slot name="form-append" />
+            </template>
           </form-inner>
         </div>
       </div>
@@ -19,9 +28,10 @@
 <script>
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
   import FormInner from './FormInner'
+  import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 
   export default {
-    mixins: [ ComponentMixin ],
+    mixins: [ ComponentMixin, FormMixin ],
     props: {
       extraData: {
         type: Object,

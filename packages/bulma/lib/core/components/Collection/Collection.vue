@@ -11,14 +11,16 @@
         <div v-if="!component.collection.length" class="column is-12">
           <h4 class="subtitle is-size-5 has-text-grey">There are no items to display</h4>
         </div>
-        <template v-else>
-          <component :is="itemComponent"
-                     v-for="item in component.collection"
-                     v-if="getEntity(item)"
-                     :component="getEntity(item)"
-                     :key="item['@id']"
-          />
-        </template>
+        <div v-else class="column is-12">
+          <div class="columns justify-content-center">
+            <component :is="itemComponent"
+                       v-for="item in component.collection"
+                       v-if="getEntity(item)"
+                       :component="getEntity(item)"
+                       :key="item['@id']"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </component-wrapper>
@@ -60,5 +62,7 @@ export default {
     hr
       margin: .3rem 0 1.5rem 0
     +mobile
+      justify-content: center
+    .justify-content-center
       justify-content: center
 </style>
