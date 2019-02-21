@@ -1,7 +1,11 @@
 <template>
   <div class="section column-collection">
-    <h4 class="subtitle is-size-3 has-text-primary has-text-weight-normal is-marginless" v-if="component.title">{{ component.title }}</h4>
-    <hr v-if="component.title"/>
+    <slot name="title">
+      <template v-if="component.title">
+        <h4 class="subtitle is-size-3 has-text-primary has-text-weight-normal is-marginless">{{ component.title }}</h4>
+        <hr />
+      </template>
+    </slot>
     <div class="columns is-mobile is-centered"
          :class="containerClass"
          v-for="item in component.collection">

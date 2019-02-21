@@ -106,8 +106,8 @@ export default class BWStarter {
       const noBaseUrl = (config.baseURL === null || config.baseURL === '')
       let isApiRequest = false
       if (!noBaseUrl) {
-        const API_URL = process.server ? process.env.API_URL : this.$storage.getState('apiUrl')
-        isApiRequest = API_URL.startsWith(config.baseURL)
+        const API_URL = (process.server ? process.env.API_URL : this.$storage.getState('apiUrl')) || console.warn('Could not find an API_URL variable for the $axios interceptor')
+        isApiRequest = API_URL ? API_URL.startsWith(config.baseURL) : false
       }
       if (!isApiRequest) {
         return config

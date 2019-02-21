@@ -1,5 +1,5 @@
 <template>
-  <div class="layout">
+  <div class="bw-starter-default layout">
     <div class="site-content">
       <header>
         <bulma-navbar v-if="structure && structure.navBar"
@@ -73,33 +73,7 @@
 <style lang="sass">
   @import ../assets/css/_vars.sass
 
-  a
-    transition: color .25s, border .25s, background-color .25s
-
-  .appear-active
-    transition: opacity .4s ease
-
-  .page-enter-active, .page-leave-active
-    transition: all .2s ease
-
-  .appear, .page-enter, .page-leave-active
-    opacity: 0
-
-  =selection
-    color: $white
-    background: $primary
-
-  ::selection
-    +selection
-
-  ::-moz-selection
-    +selection
-
-  body,
-  html
-    height: 100%
-
-  .layout
+  .layout.bw-starter-default
     padding-top: 3.75rem
     display: flex
     min-height: 100vh
