@@ -43,8 +43,6 @@
 </script>
 
 <style lang="sass">
-  @import '../../assets/css/_vars'
-
   .notifications-box
     padding: 1rem 1rem 1rem 0
     position: fixed

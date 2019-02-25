@@ -39,12 +39,18 @@ export default {
     realComponentData () {
       let tempComponent = Object.assign({}, this.component)
       for (let [ key, value ] of Object.entries(this.component)) {
-        if (this.isString(value) && this.dynamicData) {
-          const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
-          const matches = expr.exec(value)
-          const injectVar = matches && matches.length >= 3 ? matches[ 2 ] : null
-          if (injectVar && this.dynamicData[ injectVar ]) {
-            tempComponent[ key ] = this.dynamicData[ injectVar ]
+        if (this.dynamicData) {
+          if (value === null && this.dynamicData[key]) {
+            tempComponent[ key ] = this.dynamicData[key]
+          } else if (this.isString(value)) {
+            const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
+            let matches
+            while ((matches = expr.exec(value)) !== null) {
+              const injectVar = matches && matches.length >= 3 ? matches[ 2 ] : null
+              if (injectVar && injectVar in this.dynamicData) {
+                tempComponent[ key ] = this.dynamicData[ injectVar ]
+              }
+            }
           }
         }
       }
@@ -54,6 +60,18 @@ export default {
   methods: {
     isString (value) {
       return typeof value === 'string' || value instanceof String
+    },
+    getDynamicVars (string) {
+      if (!string || !this.isString(string)) {
+        return string
+      }
+      const re = new RegExp(/{{\s+?(\S{1,})\s+?}}/g)
+      let matches = []
+      let match
+      while ((match = re.exec(string)) !== null) {
+        matches.push(match[1])
+      }
+      return matches.length ? matches : null
     },
     injectDynamicData (string) {
       if (!string || !this.isString(string)) {

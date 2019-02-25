@@ -1,6 +1,6 @@
 <template>
   <div :class="['page', pageClass]">
-    <bulma-components v-if="realPageData && realPageData.componentLocations.length"
+    <bulma-components v-if="realPageData && realPageData.componentLocations && realPageData.componentLocations.length"
                       :pageData="realPageData"
                       :depth="depth"
                       :nested="nested"

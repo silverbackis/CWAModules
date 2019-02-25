@@ -18,3 +18,8 @@
     mixins: [ _Input ]
   }
 </script>
+
+<style lang="sass">
+  .cms-text-input
+    text-align: inherit
+</style>

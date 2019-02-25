@@ -47,4 +47,6 @@
   .ql-container
     font-size: inherit
     height: auto
+  .ql-editor
+    text-align: inherit
 </style>

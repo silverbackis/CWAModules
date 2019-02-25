@@ -13,5 +13,5 @@ const store = {
 
 export default {
   name,
-  store
+  store: () => store
 }

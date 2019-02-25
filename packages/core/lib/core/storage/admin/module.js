@@ -130,13 +130,13 @@ export const actions = {
       commit('setSubmitting', { endpointKey, value: cancel })
 
       this.$axios
-        .put(endpointKey, patchEndpoints[ endpointKey ], { cancelToken: cancel.token })
+        .put(endpointKey, patchEndpoints[ endpointKey ], { cancelToken: cancel.token, progress: false })
         .then(({ data }) => {
           commit('updateComponent', data)
           commit('deleteSubmitting', endpointKey)
-          const component = this.$bwstarter.$storage.get('getComponent', [ endpointKey ], ENTITIES_MODULE)
+          const component = this.$bwstarter.$storage.get('getEntity', [ endpointKey ], ENTITIES_MODULE)
           if (component) {
-            this.$bwstarter.$storage.commit('setComponent', [ { id: endpointKey, data } ], ENTITIES_MODULE)
+            this.$bwstarter.$storage.commit('setEntity', [ { id: endpointKey, data } ], ENTITIES_MODULE)
           }
           const content = this.$bwstarter.$storage.get('getContentById', [ endpointKey ])
           if (content) {

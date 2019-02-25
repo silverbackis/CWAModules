@@ -1,24 +1,60 @@
 <template>
   <component-wrapper v-if="component" :nested="nested">
-    <div class="image-component"
-         itemscope
-         itemtype="https://schema.org/ImageGallery"
-    >
-      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject" v-if="getImageData()">
-        <div class="is-block image-holder">
-          <image-loader class="image simple-image"
-                        :image="getImageData()"
-                        :placeholder="getImageData('placeholder', true)"
-                        :cover="false"
-                        :alt="caption"
+    <div class="image-component">
+      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
+        <div v-if="uploaderImage || $bwstarter.isAdmin">
+          <div class="image-top-wrapper">
+            <template v-if="uploaderImage">
+              <div class="is-block image-holder">
+                <image-loader class="image simple-image"
+                              :image="uploaderImage"
+                              :placeholder="uploaderPlaceholder"
+                              :cover="false"
+                              :alt="caption"
+                />
+              </div>
+              <meta itemprop="width" :content="uploaderImage.width">
+              <meta itemprop="height" :content="uploaderImage.height">
+            </template>
+            <div v-else-if="$bwstarter.isAdmin" class="image-admin-placeholder box has-background-grey-light is-marginless">
+              <div class="line a has-background-grey"></div>
+              <div class="line b has-background-grey"></div>
+            </div>
+            <upload-progress
+              v-if="$bwstarter.isAdmin"
+              :uploading="uploading"
+              :percent="uploadPercentage"
+              :error="uploadError"
+            />
+          </div>
+          <upload-button
+            v-if="$bwstarter.isAdmin"
+            :component-id="endpoint"
+            @preview="(newValue) => { preview = newValue }"
+            @uploading="(newValue) => { uploading = newValue }"
+            @uploadPercentage="(newValue) => { uploadPercentage = newValue }"
+            @uploadError="(newValue) => { uploadError = newValue }"
           />
         </div>
-        <meta itemprop="width" :content="getImageData().width">
-        <meta itemprop="height" :content="getImageData().height">
-        <figcaption v-if="caption"
+
+        <figcaption v-if="caption && !$bwstarter.isAdmin"
                     itemprop="caption description"
                     v-html="caption"
         />
+        <div v-else-if="$bwstarter.isAdmin" class="field caption-field">
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <admin-text-input :model="caption"
+                                  :component-id="endpoint"
+                                  :component-field="getDynamicVars(this.component.caption)[0] || 'caption'"
+                                  placeholder="Enter caption"
+                                  class="input"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </figure>
     </div>
   </component-wrapper>
@@ -27,13 +63,13 @@
 <script>
   import { mapGetters } from 'vuex'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
-  import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
+  import UploadMixin from '~/.nuxt/bwstarter/bulma/components/Admin/File/UploadMixin'
 
   export default {
-    mixins: [ ComponentMixin, ImageDataMixin ],
+    mixins: [ UploadMixin ],
     components: {
-      ImageLoader
+      ImageLoader,
+      AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
     },
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
@@ -41,7 +77,7 @@
         return this.injectDynamicData(this.component.filePath) !== this.component.filePath
       },
       caption () {
-        return this.injectDynamicData(this.component.caption)
+        return this.realComponentData.caption
       }
     }
   }
@@ -52,6 +88,9 @@
   @import "../../assets/css/vars"
 
   .image-component
+    .image-top-wrapper
+      position: relative
+      display: inline-block
     figcaption
       font-style: italic
       font-size: .8rem
@@ -70,4 +109,24 @@
           height: 100%
         .landscape ~ .image-small
           width: 100%
+    .image-admin-placeholder
+      width: 200px
+      height: 200px
+      overflow: hidden
+      position: relative
+      .line
+        content: ''
+        position: absolute
+        height: 300px
+        width: 1px
+        left: 50%
+        top: 50%
+        margin-top: -150px
+        transform-origin: center
+        &.b
+          transform: rotate(45deg)
+        &.a
+          transform: rotate(-45deg)
+    .caption-field
+      margin-top: 1rem
 </style>

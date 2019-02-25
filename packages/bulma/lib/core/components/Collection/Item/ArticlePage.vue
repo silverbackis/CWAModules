@@ -2,7 +2,7 @@
   <div :class="cardClass">
     <div class="card is-inline-block">
       <component
-        v-if="getImageData()"
+        v-if="showImage && getImageData()"
         :is="linkComponent"
         class="card-image"
         :to="toRoute"
@@ -14,15 +14,30 @@
           :alt="component.title"
           :cover="true"
         />
-        <img src="/img/1x1.png" class="square-space"/>
+        <img :src="transparentImage" class="square-space"/>
       </component>
       <div class="card-content">
-        <h4 class="title is-4 is-spaced">{{ component.title }}</h4>
-        <h5 class="subtitle is-6">{{ component.subtitle }}</h5>
-        <app-link v-if="component.routes.length"
-                  :to="toRoute"
-                  class="button is-primary is-rounded is-outlined"
-        >Read More</app-link>
+        <h4 class="title is-4 is-spaced">
+          {{ component.title }}
+        </h4>
+        <h5 v-if="component.subtitle" class="subtitle is-6">{{ component.subtitle }}</h5>
+
+        <div class="columns is-gapless is-mobile card-bottom-columns">
+          <div class="column">
+            <app-link v-if="toRoute"
+                      :to="toRoute"
+                      class="button is-primary is-rounded is-outlined"
+            >Read More</app-link>
+          </div>
+          <div v-if="$bwstarter.isAdmin" class="column is-narrow">
+            <div class="tags has-addons">
+              <span class="tag is-rounded">
+                status
+              </span>
+              <span :class="['tag', 'is-rounded', component.published ? 'is-success' : 'is-warning']">{{ component.published ? publishedLabel : 'draft' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -44,11 +59,20 @@
       type: {
         type: String,
         required: false
+      },
+      showImage: {
+        type: Boolean,
+        default: true
+      }
+    },
+    data () {
+      return {
+        transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
       }
     },
     computed: {
       linkComponent () {
-        return (this.component.routes.length) ? 'app-link' : 'div'
+        return this.toRoute ? 'app-link' : 'div'
       },
       toRoute () {
         if (this.component.routes.length) return this.component.routes[ 0 ].route
@@ -57,9 +81,20 @@
       cardClass () {
         return {
           'article-card column': true,
-          'is-10-mobile is-6-tablet is-4-desktop is-3-fullhd': this.type !== 'column',
+          'is-10-touch is-4-desktop is-3-fullhd': this.type !== 'column',
           'is-12 has-text-centered-mobile': this.type === 'column'
-        };
+        }
+      },
+      publishedLabel () {
+        const publishedText = 'published'
+        if (!this.component.publishedDate) {
+          return publishedText
+        }
+        const publishedDate = new Date(this.component.publishedDate)
+        if (this.now >= publishedDate) {
+          return publishedText
+        }
+        return 'available ' + publishedDate.toLocaleString('en-GB', { hour12: false }) + ' '
       }
     }
   }
@@ -68,6 +103,8 @@
 <style lang="sass">
   @import ~bulma/sass/utilities/mixins
   .article-card
+    .card-bottom-columns
+      align-items: flex-end
     .card
       width: 100%
       .card-image

@@ -310,19 +310,4 @@
     min-width: 50px
     max-width: 70px
     text-align: center
-
-  .gallery-item
-    .progress-outer
-      z-index: 10
-      width: 60%
-      top: 50%
-      left: 20%
-      margin-top: -.375rem
-      position: absolute
-      .progress
-        margin-bottom: .5rem
-      .help
-        background-color: $red
-        padding: .2rem
-
 </style>

@@ -2,7 +2,6 @@ import { Utilities } from '../../server/index'
 import axios from 'axios'
 import _ from 'lodash'
 import Vue from 'vue'
-import TinyCookie from 'tiny-cookie'
 
 const AxiosCancelToken = axios.CancelToken
 

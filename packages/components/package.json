@@ -10,7 +10,8 @@
     },
     "dependencies": {
         "@cwamodules/core": "^0.3.2",
-        "@cwamodules/server": "^0.2.21"
+        "@cwamodules/server": "^0.2.21",
+        "flatpickr": "^4.5.4"
     },
     "scripts": {
         "lint": "eslint lib ",

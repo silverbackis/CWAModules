@@ -99,7 +99,7 @@ export class Storage {
     })
 
     MODULES.forEach((store) => {
-      this.ctx.store.registerModule([ this.options.vuex.namespace, store.name ], Object.assign({ namespaced: true }, store.store), {
+      this.ctx.store.registerModule([ this.options.vuex.namespace, store.name ], Object.assign({ namespaced: true }, store.store(this.options.vuex.namespace)), {
         preserveState: this.preserveModuleState(store.name),
         strict: false
       })

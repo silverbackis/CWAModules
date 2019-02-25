@@ -145,6 +145,7 @@ export default {
       return null
     },
     initImage () {
+      this.loadedRes = null
       this.portrait = this.image.width < this.image.height
 
       let hiResImg = new Image();

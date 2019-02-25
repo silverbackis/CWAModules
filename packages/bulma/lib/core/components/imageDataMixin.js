@@ -1,4 +1,7 @@
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+
 export default {
+  mixins: [ComponentMixin],
   props: {
     imagineKey: {
       type: String,
@@ -10,7 +13,7 @@ export default {
       if (!imagineKey) {
         imagineKey = this.imagineKey
       }
-      const fileData = this.component.fileData
+      const fileData = this.realComponentData.fileData
       if (!fileData) {
         return null
       }
@@ -25,8 +28,12 @@ export default {
       }
       return fileData
     },
+    injectImageData (imageObject) {
+      imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
+      return imageObject
+    },
     image (imagineKey, requiresImagine) {
-      const imageData = this.imageData(imagineKey, requiresImagine)
+      const imageData = this.getImageData(imagineKey, requiresImagine)
       if (!imageData) {
         return null
       }

@@ -2,7 +2,7 @@
   <component-wrapper v-if="component" :nested="nested">
     <div :class="containerClass">
       <div v-if="$bwstarter.isAdmin">
-        <editor :model="injectDynamicData(component.content)"
+        <editor :model="realComponentData.content"
                 :componentId="endpoint"
                 componentField="content"
         />
@@ -41,7 +41,7 @@
     computed: {
       transformed () {
         // Inject dynamic data
-        let converted = this.injectDynamicData(this.component.content)
+        let converted = this.realComponentData.content
         if (process.client) {
           const div = document.createElement('div')
           div.innerHTML = converted

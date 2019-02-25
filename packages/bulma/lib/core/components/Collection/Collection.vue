@@ -12,7 +12,7 @@
           <h4 class="subtitle is-size-5 has-text-grey">There are no items to display</h4>
         </div>
         <div v-else class="column is-12">
-          <div class="columns justify-content-center" :class="{'is-multiline': isMultiline}">
+          <div class="columns is-multiline is-mobile" :class="{'is-centered': isCentered}">
             <component :is="itemComponent"
                        v-for="item in component.collection"
                        v-if="getEntity(item)"
@@ -33,9 +33,9 @@ import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 export default {
   mixins: [ ComponentMixin ],
   props: {
-    isMultiline: {
+    isCentered: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data () {

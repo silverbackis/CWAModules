@@ -18,12 +18,23 @@ export const store = {
   },
   mutations: {
     setEntity (state, { id, data }) {
+      if (data.componentLocations) {
+        data.componentLocations = data.componentLocations.map((location) => {
+          if (typeof location === 'string') {
+            return location
+          }
+          return location['@id']
+        })
+      }
       Vue.set(state, id, data)
+    },
+    setEntityProperty (state, { id, property, data }) {
+      Vue.set(state[id], property, data)
     }
   }
 }
 
 export default {
   name,
-  store
+  store: () => store
 }

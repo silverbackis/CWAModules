@@ -41,12 +41,6 @@
       ImageLoader,
       AppLink
     },
-    methods: {
-      injectImageData (imageObject) {
-        imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
-        return imageObject
-      }
-    },
     computed: {
       dynamicComponent () {
         return this.toRoute ? 'app-link' : 'div'
