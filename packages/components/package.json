@@ -1,6 +1,6 @@
 {
     "name": "@cwamodules/components",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "",
     "licence": "MIT",
     "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,7 +9,7 @@
         "access": "public"
     },
     "dependencies": {
-        "@cwamodules/core": "^0.3.2",
+        "@cwamodules/core": "^0.3.3",
         "@cwamodules/server": "^0.2.21",
         "flatpickr": "^4.5.4"
     },
