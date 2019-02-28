@@ -12,7 +12,7 @@
         "@cwamodules/server": "^0.2.21",
         "@nuxtjs/axios": "^5.3.1",
         "jwt-decode": "^2.2.0",
-        "lodash": "^4.17.10",
+        "lodash": "^4.17.11",
         "set-cookie-parser": "^2.1.1",
         "vue-cookie": "^1.1.4",
         "vue-quill-editor": "^3.0.6"
