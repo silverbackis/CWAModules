@@ -7,12 +7,12 @@
             <label class="checkbox is-custom checkbox-autosave has-padding is-toggle">
               <input type="checkbox" v-model="autoSaveLocal" class="custom">
               <span class="custom-control-label">
-                Auto-Save {{ autoSaveLocal ? 'On' : 'Off' }}
+                Auto<span class="is-hidden-mobile">-Save</span> {{ autoSaveLocal ? 'On' : 'Off' }}
               </span>
             </label>
             <div
               class="published-checkbox-wrapper"
-              v-if="('published' in rootPageData)"
+              v-if="rootPageData && ('published' in rootPageData)"
               @mouseover.prevent="showPublishedTooltip = true"
               @mouseout.prevent="showPublishedTooltip = false"
             >
@@ -30,69 +30,183 @@
         </div>
         <div class="level-right">
           <div class="has-padding" v-if="!isModified">
-            All changes saved
+            <span class="is-hidden-touch">All changes saved</span>
+            <span class="is-hidden-desktop">Saved</span>
           </div>
           <div v-else class="level-item is-marginless">
             <button @click="$bwstarter.save()"
                     class="button button-save is-small is-success is-uppercase is-radiusless"
                     :disabled="isSubmitting == 1"
-            />
+            >
+              <span class="icon">
+                <font-awesome-icon icon="save"/>
+              </span>
+              <span class="is-hidden-mobile">
+                <span v-if="isSubmitting">Saving...</span>
+                <span v-else>
+                  Save Changes
+                </span>
+              </span>
+            </button>
           </div>
           <div class="level-item">
             <button @click="showEditPage = true" class="button is-small is-dark is-uppercase is-radiusless">
               <span class="icon">
                 <font-awesome-icon icon="edit"/>
               </span>
-                <span>
+              <span class="is-hidden-mobile">
                 Edit Page
-            </span>
+              </span>
             </button>
           </div>
         </div>
       </div>
     </div>
-    <div :class="['modal', { 'is-active': showEditPage }]">
+    <div v-if="rootPageData" :class="['modal', { 'is-active': showEditPage }]">
       <div class="modal-background" @click="showEditPage = false"></div>
       <div class="modal-card">
         <header class="modal-card-head">
-          <p class="modal-card-title">Page Settings</p>
+          <p class="modal-card-title">Edit Page</p>
           <button class="delete" aria-label="close" @click="showEditPage = false"></button>
         </header>
         <section class="modal-card-body">
-          <div class="field">
-            <label class="label">Page Title</label>
-            <div class="control">
-              <admin-text
-                :component-id="rootPageData['@id']"
-                :model="rootPageData.title"
-                component-field="title"
-                placeholder="Enter the title for the page"
-                class="input"
-              />
+          <nav class="tabs">
+            <ul>
+              <li :class="{'is-active': currentTab==='page'}">
+                <a @click="currentTab = 'page'">
+                  Page
+                </a>
+              </li>
+              <li :class="{'is-active': currentTab==='routing'}">
+                <a @click="currentTab = 'routing'">
+                  Routing
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div v-if="currentTab === 'page'">
+            <div class="field">
+              <label class="label">Page Title</label>
+              <div class="control">
+                <admin-text
+                  :component-id="rootPageData['@id']"
+                  :model="rootPageData.title"
+                  component-field="title"
+                  placeholder="Enter the title for the page"
+                  class="input"
+                />
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Page Meta Description</label>
+              <div class="control">
+                <admin-text
+                  :component-id="rootPageData['@id']"
+                  :model="rootPageData.meta_description"
+                  component-field="meta_description"
+                  placeholder="Enter the meta description for the page"
+                  class="input"
+                />
+              </div>
+            </div>
+            <div class="field" v-if="rootPageData && ('publishedDate' in rootPageData)">
+              <label class="label">Publish Date</label>
+              <div class="control">
+                <admin-date
+                  :component-id="rootPageData['@id']"
+                  :model="rootPageData.publishedDate"
+                  component-field="publishedDate"
+                  placeholder="Enter the date this page was published"
+                  class="input"
+                />
+              </div>
             </div>
           </div>
-          <div class="field">
-            <label class="label">Page Meta Description</label>
-            <div class="control">
-              <admin-text
-                :component-id="rootPageData['@id']"
-                :model="rootPageData.meta_description"
-                component-field="meta_description"
-                placeholder="Enter the meta description for the page"
-                class="input"
-              />
+          <div v-else-if="currentTab === 'routing'">
+            <div v-if="regenerateRouteError" class="message is-danger">
+              <div class="message-body">
+                {{ regenerateRouteError }}
+              </div>
             </div>
-          </div>
-          <div class="field" v-if="('publishedDate' in rootPageData)">
-            <label class="label">Publish Date</label>
-            <div class="control">
-              <admin-date
-                :component-id="rootPageData['@id']"
-                :model="rootPageData.publishedDate"
-                component-field="publishedDate"
-                placeholder="Enter the date this page was published"
-                class="input"
-              />
+            <div class="field">
+              <div class="control">
+                <a @click="regenerateRoute" :class="['button', 'is-primary']" :disabled="regenerating">
+                  <span class="icon">
+                    <font-awesome-icon icon="sync" />
+                  </span>
+                  <span>Regenerate route using page title & create redirect</span>
+                </a>
+              </div>
+            </div>
+            <div class="field has-text-danger">
+              <label class="label">Page Route</label>
+              <div class="control">
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input v-model="routePath"
+                           type="text"
+                           :class="['input', { 'is-danger': saveRouteError }]"
+                    />
+                  </div>
+                  <div class="control">
+                    <a :class="['button is-danger', { 'is-loading': savingRoute }]" :disabled="savingRoute" @click="saveRoute">
+                      Save
+                    </a>
+                  </div>
+                </div>
+                <p v-if="saveRouteError" class="help has-text-danger has-text-weight-bold">
+                  {{ saveRouteError }}
+                </p>
+              </div>
+              <p class="help">
+                Changing page routes can cause broken links from websites other than your own including social media and search engines. It is usually best to create a redirect from your old route if you think this is a possibility.
+              </p>
+            </div>
+
+
+            <div v-if="routeListError" class="message is-danger">
+              <div class="message-body">
+                {{ routeListError }}
+              </div>
+            </div>
+
+            <div :class="['panel', {'is-loading': deletingRoute || reloadingRedirects}]">
+              <p class="panel-heading">
+                Routes redirecting to this page
+              </p>
+              <p v-if="redirectedFrom.length === 0" class="panel-block">
+                There are no redirects to this page
+              </p>
+              <span
+                v-for="route of redirectedFrom"
+                :key="route['@id']"
+                class="panel-block justify-space-between"
+              >
+                {{ route.route }}
+                <a
+                  @click="deleteRoute(route)"
+                  class="panel-icon has-text-danger">
+                  <font-awesome-icon icon="trash-alt" />
+                </a>
+              </span>
+              <div class="panel-block">
+                <div class="control">
+                  <div class="field has-addons">
+                    <p class="control is-expanded">
+                      <input v-model="newRedirectModel" :class="['input', { 'is-danger': addRouteError }]" type="text" placeholder="Type route to redirect to this page">
+                    </p>
+                    <p class="control">
+                      <button :class="['button', addRouteError ? 'is-danger' : 'is-success', { 'is-loading': addingRedirect }]" :disabled="addingRedirect" @click="addRedirect">
+                        Add
+                      </button>
+                    </p>
+                  </div>
+
+                  <p v-if="addRouteError" class="help has-text-danger has-text-weight-bold">
+                    {{ addRouteError }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -107,6 +221,7 @@
 <script>
 import { name as ADMIN_MODULE } from '~/.nuxt/bwstarter/core/storage/admin'
 import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
+import _omit from 'lodash/omit'
 
 export default {
   components: {
@@ -134,7 +249,19 @@ export default {
       saveDebounced: null,
       showEditPage: false,
       now: new Date(),
-      showPublishedTooltip: false
+      showPublishedTooltip: false,
+      currentTab: 'page',
+      routePath: this.$route.path,
+      regenerating: false,
+      savingRoute: false,
+      newRedirectModel: null,
+      addingRedirect: false,
+      deletingRoute: false,
+      reloadingRedirects: false,
+      regenerateRouteError: null,
+      saveRouteError: null,
+      routeListError: null,
+      addRouteError: null
     }
   },
   computed: {
@@ -169,6 +296,14 @@ export default {
         return publishedText
       }
       return 'Available ' + publishedDate.toLocaleString('en-GB', { hour12: false }) + ' *'
+    },
+    currentRoute () {
+      const rootState = this.$bwstarter.$storage.getRootState()
+      const contentState = rootState[contentModuleName]
+      return contentState.routes[contentState.currentRoute]
+    },
+    redirectedFrom () {
+      return this.getRedirectedFrom(this.currentRoute)
     }
   },
   watch: {
@@ -183,6 +318,105 @@ export default {
       } else {
         this.$cookie.set(this.cookieName, false, { expires: this.cookieExpires })
       }
+    },
+    '$route.path': function (newVal) {
+      this.routePath = newVal
+    }
+  },
+  methods: {
+    errorFromResponse (error) {
+      if (error.response && error.response.data) {
+        const data = error.response.data
+        return data['hydra:description'] || data['hydra:title'] || data
+      }
+    },
+    async regenerateRoute () {
+      this.regenerateRouteError = null
+      this.regenerating = true
+      try {
+        const { data } = await this.$axios.put(this.rootPageData['@id'], {
+          regenerateRoute: true
+        }, {
+          progress: false
+        })
+        const key = Object.keys(data.routes)[0]
+        const route = data.routes[key]
+        await this.reloadRoute()
+        this.routePath = route.route
+        this.replaceRoute()
+      } catch (error) {
+        console.error(error)
+        this.regenerateRouteError = this.errorFromResponse(error)
+      }
+      this.regenerating = false
+    },
+    async saveRoute () {
+      this.saveRouteError = null
+      this.savingRoute = true
+      try {
+        await this.$axios.put('/routes/' + encodeURI(this.$route.path), {
+          route: this.routePath
+        }, { progress: false })
+        this.replaceRoute()
+      } catch (error) {
+        console.error(error)
+        this.saveRouteError = this.errorFromResponse(error)
+      }
+      this.savingRoute = false
+    },
+    replaceRoute () {
+      window.history.replaceState({}, document.getElementsByTagName('title')[0].innerHTML, this.routePath)
+    },
+    async deleteRoute (route) {
+      this.routeListError = null
+      this.deletingRoute = true
+      try {
+        await this.$axios.delete(decodeURI(route['@id']), { progress: false })
+      } catch (error) {
+        console.error(error)
+        this.routeListError = this.errorFromResponse(error)
+      }
+      this.deletingRoute = false
+      await this.reloadRoute()
+    },
+    async addRedirect () {
+      this.addRouteError = null
+      this.addingRedirect = true
+      try {
+        await this.$axios.post('/routes', {
+          route: this.newRedirectModel,
+          redirectRoute: `/routes/${encodeURI(this.$route.path)}`
+        }, {
+          progress: false
+        })
+        this.newRedirectModel = null
+        await this.reloadRoute()
+      } catch (error) {
+        console.error(error)
+        this.addRouteError = this.errorFromResponse(error)
+      }
+      this.addingRedirect = false
+    },
+    getRedirectedFrom (routeEntity) {
+      let childRoutes = []
+      for (const route of routeEntity.redirectedFrom) {
+        childRoutes.push(_omit(route, ['redirectedFrom']))
+        childRoutes.push(...this.getRedirectedFrom(route))
+      }
+      return childRoutes
+    },
+    async reloadRoute () {
+      this.reloadingRedirects = true
+      try {
+        const { data } = await this.$axios.get('/routes/' + encodeURI(this.$route.path), {
+          progress: false
+        })
+        this.$bwstarter.initRoute(data)
+      } catch (error) {
+        console.error(error)
+        this.routeListError = this.errorFromResponse(error)
+      }
+      this.reloadingRedirects = false
     }
   },
   mounted () {
@@ -213,11 +447,17 @@ export default {
       transform: scale(1)
     45%, 100%
       box-shadow: 0 .2rem 0 1rem rgba($warning, 0), 0 0 .1rem .4rem rgba($success, -.1)
-  .admin-bar-wrapper .modal
-    padding-bottom: 2.5rem
-    .modal-card
-      margin-top: .5rem
-      margin-bottom: .5rem
+  .admin-bar-wrapper
+    .modal
+      padding-bottom: 2.5rem
+      .modal-card
+        margin-top: .5rem
+        margin-bottom: .5rem
+        .justify-space-between
+          justify-content: space-between
+      .panel.is-loading
+        .panel-block
+          opacity: .5
   .admin-bar
     position: fixed
     background: rgba($success, .95)
@@ -226,6 +466,9 @@ export default {
     left: 0
     bottom: 0
     z-index: 50
+    +mobile
+      .custom-control-label
+        font-size: .8rem
     .published-checkbox-wrapper
       position: relative
       .tag
@@ -257,12 +500,8 @@ export default {
             margin-left: 0
           &.button-save
             z-index: 2
-            &[disabled]:before
-              content: 'Saving...'
             &:not([disabled])
               animation: pulse 2s infinite ease-out
-              &:before
-                content: 'Save Changes'
       .level-right,
       .level-left
         height: 100%

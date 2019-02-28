@@ -22,4 +22,5 @@
 <style lang="sass">
   .cms-text-input
     text-align: inherit
+    font-size: inherit
 </style>

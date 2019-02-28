@@ -17,7 +17,11 @@ export const store = (rootNamespace) => {
         return state.currentRoute
       },
       getContentAtDepth: (state, getters, rootState, rootGetters) => (depth, loadedRoute) => {
-        let content = state.routes[ loadedRoute ].structure[ depth ] || null
+        const loadedRouteObject = state.routes[ loadedRoute ]
+        if (!loadedRouteObject) {
+          return null
+        }
+        let content = loadedRouteObject.structure[ depth ] || null
         if (content && content[ '@id' ]) {
           const module = join(rootNamespace, ...entitiesModuleName)
           const entityContent = rootGetters[ `${module}/getEntity` ](content[ '@id' ])
@@ -32,8 +36,8 @@ export const store = (rootNamespace) => {
       }
     },
     mutations: {
-      setRoute (state, { route, data }) {
-        Vue.set(state.routes, route, { timestamp: new Date(), structure: data })
+      setRoute (state, { route, data, redirectedFrom, id }) {
+        Vue.set(state.routes, route, { timestamp: new Date(), structure: data, redirectedFrom, id })
       },
       setLayout (state, { id, data }) {
         Vue.set(state.layouts, id, { timestamp: new Date(), structure: data })

@@ -13,11 +13,18 @@
   export default {
     name: 'admin-quill',
     mixins: [ _Input ],
+    props: {
+      editorToolbar: {
+        type: Array,
+        required: false,
+        default: null
+      }
+    },
     data () {
       return {
         editorOptions: {
           modules: {
-            toolbar: [
+            toolbar: this.editorToolbar || [
               [ { 'header': [ 1, 2, 3, 4, false ] } ],
               [ 'bold', 'italic', 'underline', 'strike' ],
               [ 'blockquote' ],
@@ -35,7 +42,7 @@
         // Initialize again, the innerHTML used to fetch HTML may remove whitespace between tags
         this.$bwstarter.initAdminInput(this.adminInputData({
           model: this.$refs.quillEditor.querySelector('.ql-editor').innerHTML
-        }));
+        }))
       }
     }
   }

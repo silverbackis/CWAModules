@@ -31,11 +31,12 @@ export default {
         return this.$bwstarter.getAdminInputModel(this.adminInputData())
       },
       set (model) {
+        const isFocussed = this.$el === document.activeElement
         this.$bwstarter.setAdminInputModel(this.adminInputData({
           model
         }))
         this.$nextTick(() => {
-          if (this.$el !== document.activeElement) {
+          if (isFocussed && this.$el !== document.activeElement) {
             this.$el.focus()
           }
         })

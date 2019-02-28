@@ -1,7 +1,7 @@
 <template>
   <div :class="['file', 'edit-button', 'is-primary', {'is-disabled': uploading}]">
     <label class="file-label">
-      <input class="file-input" type="file" name="image" accept="image/*" @change="handleFileUpload()" ref="file" :disabled="uploading"/>
+      <input class="file-input" type="file" name="image" accept="image/*" @change="handleFileUpload()" ref="file" :disabled="uploading" />
       <div class="file-cta">
         <span class="file-icon">
           <font-awesome-icon :icon="['fas', 'upload']"/>
@@ -100,6 +100,7 @@ export default {
         .then(({ data }) => {
           this.uploading = false
           this.preview = null
+          this.$refs.file.value = ''
           this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
         })
         .catch((error) => {
@@ -123,6 +124,7 @@ export default {
           this.uploading = false
           this.uploadError = status
           this.file = null
+          this.$refs.file.value = ''
         })
     }
   }

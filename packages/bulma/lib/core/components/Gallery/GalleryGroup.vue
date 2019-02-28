@@ -153,7 +153,6 @@
           this.reloading = true
           this.$bwstarter.fetchContent(this.componentGroup[ '@id' ])
             .then((componentLocations) => {
-              console.log(componentLocations)
               this.initAdminInputLocations(componentLocations, true)
               this.reloading = false
             })

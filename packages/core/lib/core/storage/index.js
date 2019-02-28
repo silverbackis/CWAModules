@@ -120,6 +120,10 @@ export class Storage {
     return this.state[ key ]
   }
 
+  getRootState () {
+    return this.ctx.store.state[this.options.vuex.namespace]
+  }
+
   commit (mutation, args = [], modules = []) {
     if (!Array.isArray(args)) {
       args = [args]

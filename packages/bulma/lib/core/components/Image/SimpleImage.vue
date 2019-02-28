@@ -27,27 +27,40 @@
               :error="uploadError"
             />
           </div>
-          <upload-button
+          <div
             v-if="$bwstarter.isAdmin"
-            :component-id="endpoint"
-            @preview="(newValue) => { preview = newValue }"
-            @uploading="(newValue) => { uploading = newValue }"
-            @uploadPercentage="(newValue) => { uploadPercentage = newValue }"
-            @uploadError="(newValue) => { uploadError = newValue }"
-          />
+            class="admin-button-holder columns has-text-left">
+            <div class="column is-narrow">
+              <upload-button
+                :component-id="endpoint"
+                @preview="(newValue) => { preview = newValue }"
+                @uploading="(newValue) => { uploading = newValue }"
+                @uploadPercentage="(newValue) => { uploadPercentage = newValue }"
+                @uploadError="(newValue) => { uploadError = newValue }"
+              />
+            </div>
+            <div v-if="uploaderImage" class="column">
+              <button class="button is-danger delete-button" @click="removeImage" :disabled="removingImage">
+                <span class="icon">
+                  <font-awesome-icon icon="trash-alt"/>
+                </span>
+                <span>Remove Image</span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <figcaption v-if="caption && !$bwstarter.isAdmin"
                     itemprop="caption description"
                     v-html="caption"
         />
-        <div v-else-if="$bwstarter.isAdmin" class="field caption-field">
+        <div v-else-if="$bwstarter.isAdmin && 'caption' in component" class="field caption-field">
           <div class="field-body">
             <div class="field">
               <div class="control">
                 <admin-text-input :model="caption"
                                   :component-id="endpoint"
-                                  :component-field="getDynamicVars(this.component.caption)[0] || 'caption'"
+                                  :component-field="dynamicCaptionField"
                                   placeholder="Enter caption"
                                   class="input"
                 />
@@ -61,6 +74,7 @@
 </template>
 
 <script>
+  import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
   import { mapGetters } from 'vuex'
   import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
   import UploadMixin from '~/.nuxt/bwstarter/bulma/components/Admin/File/UploadMixin'
@@ -71,6 +85,11 @@
       ImageLoader,
       AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
     },
+    data () {
+      return {
+        removingImage: false
+      }
+    },
     computed: {
       ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
       isDynamic () {
@@ -78,6 +97,20 @@
       },
       caption () {
         return this.realComponentData.caption
+      },
+      dynamicCaptionField () {
+        const dynamicVarArray = this.getDynamicVars(this.component.caption)
+        return dynamicVarArray ? dynamicVarArray[0] : 'caption'
+      }
+    },
+    methods: {
+      async removeImage () {
+        this.removingImage = true
+        const { data } = await this.$axios.put(this.endpoint, {
+          filePath: null
+        })
+        this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
+        this.removingImage = false
       }
     }
   }

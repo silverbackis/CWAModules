@@ -13,7 +13,16 @@
       />
     </div>
     <h4 class="title is-4">{{ injectDynamicData(component.title) }}</h4>
-    <h5 class="subtitle is-size-6-touch">{{ injectDynamicData(component.description) }}</h5>
+    <h5 class="subtitle is-size-6-touch">
+      <admin-text-input v-if="$bwstarter.isAdmin"
+                        :model="realComponentData.description"
+                        :componentId="endpoint"
+                        componentField="description"
+                        placeholder="Enter feature description here"
+                        class="input"
+      />
+      <template v-else>{{ realComponentData.description }}</template>
+    </h5>
   </component>
 </template>
 

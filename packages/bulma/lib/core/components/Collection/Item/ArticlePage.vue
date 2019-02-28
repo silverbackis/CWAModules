@@ -39,6 +39,14 @@
           </div>
         </div>
       </div>
+
+      <button v-if="!disabledAdmin && $bwstarter.isAdmin"
+              class="button delete-button is-danger is-small"
+              @click="deleteItem"
+      >
+        <span class="sr-only">Delete</span>
+        <font-awesome-icon icon="trash-alt"/>
+      </button>
     </div>
   </div>
 </template>
@@ -63,6 +71,10 @@
       showImage: {
         type: Boolean,
         default: true
+      },
+      disabledAdmin: {
+        type: Boolean,
+        default: false
       }
     },
     data () {
@@ -81,7 +93,7 @@
       cardClass () {
         return {
           'article-card column': true,
-          'is-10-touch is-4-desktop is-3-fullhd': this.type !== 'column',
+          'is-10-touch is-4-desktop': this.type !== 'column',
           'is-12 has-text-centered-mobile': this.type === 'column'
         }
       },
@@ -94,7 +106,29 @@
         if (this.now >= publishedDate) {
           return publishedText
         }
-        return 'available ' + publishedDate.toLocaleString('en-GB', { hour12: false }) + ' '
+        return 'coming soon'
+      }
+    },
+    methods: {
+      deleteItem () {
+        const doDelete = () => {
+          return this.$axios.delete(this.component['@id'], { progress: false })
+            .then(() => {
+              this.$emit('deleted')
+            })
+            .catch((error) => {
+              console.error('error deleting gallery item', error)
+            })
+        }
+        this.$dialog.confirm({
+          title: 'Are you sure?',
+          body: 'This will permanently delete this article.'
+        })
+          .then(async (dialog) => {
+            await doDelete()
+            dialog.close()
+          })
+          .catch(() => { console.log('Cancelled delete.') })
       }
     }
   }
@@ -103,6 +137,10 @@
 <style lang="sass">
   @import ~bulma/sass/utilities/mixins
   .article-card
+    .delete-button
+      position: absolute
+      top: 5px
+      right: 5px
     .card-bottom-columns
       align-items: flex-end
     .card
@@ -126,6 +164,10 @@
           min-width: 100px
         .title:not(:last-child)
           margin-bottom: 1rem
+        .subtitle
+          white-space: nowrap
+          overflow: hidden
+          text-overflow: ellipsis
     &.is-12
       .card
         max-width: 250px

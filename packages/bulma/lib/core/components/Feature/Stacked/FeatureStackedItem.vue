@@ -17,7 +17,17 @@
     <div class="column has-text-centered-mobile">
       <div class="content">
         <h3>{{ injectDynamicData(component.title) }}</h3>
-        <p v-html="injectDynamicData(component.description)"></p>
+        <div v-if="$bwstarter.isAdmin">
+          <quill-editor :model="realComponentData.description"
+                        :componentId="endpoint"
+                        :editor-toolbar="[ 'bold', 'italic', 'underline' ]"
+                        componentField="description"
+                        placeholder="Enter feature description here"
+                        class="input"
+          />
+        </div>
+        <p v-else v-html="realComponentData.description"></p>
+
         <app-link v-if="toRoute && component.buttonText"
                   :to="toRoute"
                   :class="injectDynamicData(component.buttonClass) || 'button is-primary'"
@@ -39,7 +49,8 @@
     mixins: [ ComponentMixin, ImageDataMixin ],
     components: {
       ImageLoader,
-      AppLink
+      AppLink,
+      AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
     },
     computed: {
       dynamicComponent () {

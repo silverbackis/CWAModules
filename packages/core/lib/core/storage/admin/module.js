@@ -6,7 +6,8 @@ import { name as ENTITIES_MODULE } from '../entities'
 export const state = () => ({
   endpoints: {},
   submitting: {},
-  waitingToSubmit: {}
+  waitingToSubmit: {},
+  saveDebounce: null
 })
 
 export const mutations = {
@@ -59,6 +60,9 @@ export const mutations = {
   },
   deleteWaitingToSubmit (state, endpointKey) {
     Vue.delete(state.waitingToSubmit, endpointKey)
+  },
+  updateSaveDebounce (state, value) {
+    state.saveDebounce = value
   }
 }
 
@@ -112,16 +116,21 @@ export const actions = {
     })
     return endpoints
   },
+  async cancelSubmits ({ state }, patchEndpoints) {
+    Object.keys(state.submitting).forEach(async (submittingKey) => {
+      if (submittingKey in patchEndpoints) {
+        await state.submitting[ submittingKey ].cancel(
+          'Original request cancelled, a new request will be made'
+        )
+      }
+    })
+  },
   async save ({ state, dispatch, commit }, patchEndpoints) {
     if (!patchEndpoints) {
       patchEndpoints = await dispatch('modifiedEndpoints')
     }
     // Cancel patches we are going to send again if they still exist (therefore not completed)
-    Object.keys(state.submitting).forEach((submittingKey) => {
-      if (patchEndpoints[ submittingKey ]) {
-        state.submitting[ submittingKey ].cancel('Original request cancelled, a new request will be made')
-      }
-    })
+    dispatch('cancelSubmits', patchEndpoints)
 
     // Setup new patch requests
     Object.keys(patchEndpoints).forEach((endpointKey) => {
@@ -148,17 +157,22 @@ export const actions = {
         })
     })
   },
-  async debouncedSave ({ dispatch, commit }) {
+  async debouncedSave ({ dispatch, commit, state: { saveDebounce } }) {
     let patchEndpoints = await dispatch('modifiedEndpoints')
-    const saveDebounce = _debounce(async () => {
-      dispatch('save', patchEndpoints)
+    if (saveDebounce) {
+      saveDebounce.cancel()
+    }
+    dispatch('cancelSubmits', patchEndpoints)
+    const newSaveDebounce = _debounce(async () => {
       Object.keys(patchEndpoints).forEach((endpointKey) => {
         commit('deleteWaitingToSubmit', endpointKey)
       })
+      dispatch('save', patchEndpoints)
     }, 250)
+    commit('updateSaveDebounce', newSaveDebounce)
     Object.keys(patchEndpoints).forEach((endpointKey) => {
-      commit('setWaitingToSubmit', { endpointKey, value: saveDebounce })
+      commit('setWaitingToSubmit', { endpointKey, value: newSaveDebounce })
     })
-    saveDebounce()
+    newSaveDebounce()
   }
 }

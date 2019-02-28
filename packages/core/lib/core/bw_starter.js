@@ -215,7 +215,7 @@ export default class BWStarter {
     return this.$storage.dispatch(debounce ? 'debouncedSave' : 'save', null, ADMIN_MODULE)
   }
 
-  initRoute ({ route, content }) {
+  initRoute ({ route, content, redirectedFrom, id }) {
     let contentData = [ stripContent(content) ]
     let promises = [ this.storeAndFetchLayout(content.layout, true) ]
     while (content.parent) {
@@ -223,7 +223,7 @@ export default class BWStarter {
       promises.push(this.storeAndFetchLayout(content.parent.layout, false))
       content = content.parent
     }
-    this.$storage.commit('setRoute', [ { route, data: contentData } ], contentModuleName)
+    this.$storage.commit('setRoute', [ { route, data: contentData, redirectedFrom, id } ], contentModuleName)
     // --------
     // Request all components / layouts and add to a promises array
     // --------
@@ -293,14 +293,13 @@ export default class BWStarter {
   setEntities (components) {
     for (let [ componentId, component ] of Object.entries(components)) {
       if (component.collection) {
-        const collectionObj = component.collection.reduce((obj, item) => {
+        const collectionEntities = Object.values(component.collection['hydra:member'])
+        const collectionObj = collectionEntities.reduce((obj, item) => {
           obj[ item[ '@id' ] ] = item
           return obj
         }, {})
         this.setEntities(collectionObj)
-        component = Object.assign({}, component, {
-          collection: Array.from(component.collection, item => item[ '@id' ] || item)
-        })
+        component.collection['hydra:member'] = component.collection['hydra:member'].map(item => item[ '@id' ] || item)
       }
       if (componentId) {
         this.$storage.commit('setEntity', [ { id: componentId, data: component } ], entitiesModuleName)

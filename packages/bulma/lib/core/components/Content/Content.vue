@@ -2,7 +2,7 @@
   <component-wrapper v-if="component" :nested="nested">
     <div :class="containerClass">
       <div v-if="$bwstarter.isAdmin">
-        <editor :model="realComponentData.content"
+        <quill-editor :model="realComponentData.content"
                 :componentId="endpoint"
                 componentField="content"
         />
@@ -21,9 +21,6 @@
 
   export default {
     mixins: [ ComponentMixin ],
-    components: {
-      editor: () => import('~/.nuxt/bwstarter/components/Admin/Quill')
-    },
     methods: {
       convertAnchor (anchor) {
         // console.log(anchor, anchor.attributes, anchor.innerHTML)
