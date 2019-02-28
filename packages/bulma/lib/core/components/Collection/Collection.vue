@@ -3,8 +3,8 @@
     <div :class="containerClass">
       <div class="collection-columns columns is-mobile is-multiline">
         <slot name="title">
-          <div class="column is-12" v-if="component.title">
-            <h4 class="is-size-4">{{ component.title }}</h4>
+          <div class="column is-12" v-if="realComponentData.title">
+            <h4 class="is-size-4">{{ realComponentData.title }}</h4>
             <hr/>
           </div>
         </slot>
@@ -104,14 +104,14 @@ export default {
         return page.split('&')[0] / 1
       }
       const hydraView = this.component.collection['hydra:view']
-      const totalItems = this.component.collection['hydra:totalItems']
-      return {
-        first: parseURL(hydraView['hydra:first']),
-        last: parseURL(hydraView['hydra:last']),
-        next: parseURL(hydraView['hydra:next']),
-        previous: parseURL(hydraView['hydra:previous']),
-        totalItems
+      const keys = ['first', 'last', 'next', 'previous']
+      let data = {
+        totalItems: this.component.collection['hydra:totalItems']
       }
+      for (const key of keys) {
+        data[key] = hydraView ? parseURL(hydraView[`hydra:${key}`]) : null
+      }
+      return data
     }
   },
   methods: {

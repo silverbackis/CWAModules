@@ -1,14 +1,14 @@
 <template>
   <div class="section column-collection">
     <slot name="title">
-      <template v-if="component.title">
-        <h4 class="subtitle is-size-3 has-text-primary has-text-weight-normal is-marginless">{{ component.title }}</h4>
+      <template v-if="realComponentData.title">
+        <h4 class="subtitle is-size-3 has-text-primary has-text-weight-normal is-marginless">{{ realComponentData.title }}</h4>
         <hr />
       </template>
     </slot>
     <div class="columns is-mobile is-centered"
          :class="containerClass"
-         v-for="item in component.collection">
+         v-for="item in component.collection['hydra:member']">
       <component :is="itemComponent"
                  v-if="getEntity(item)"
                  :component="getEntity(item)"
