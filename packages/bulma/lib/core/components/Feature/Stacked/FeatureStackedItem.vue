@@ -18,7 +18,7 @@
       <div class="content">
         <h3>{{ injectDynamicData(component.title) }}</h3>
         <div v-if="$bwstarter.isAdmin">
-          <quill-editor :model="realComponentData.description"
+          <admin-quill-editor :model="realComponentData.description"
                         :componentId="endpoint"
                         :editor-toolbar="[ 'bold', 'italic', 'underline' ]"
                         componentField="description"

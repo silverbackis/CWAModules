@@ -1,7 +1,7 @@
 <template>
   <div class="content quill-editor"
        v-quill:quill="editorOptions"
-       v-model="dataModel"
+       :content="dataModel"
        @ready="editorReady"
        ref="quillEditor"
   ></div>
@@ -11,7 +11,6 @@
   import _Input from './_Input'
 
   export default {
-    name: 'admin-quill',
     mixins: [ _Input ],
     props: {
       editorToolbar: {
@@ -34,11 +33,16 @@
               [ 'clean' ]
             ]
           }
-        }
+        },
+        initialised: false
       }
     },
     methods: {
       editorReady () {
+        if (this.initialised) {
+          return
+        }
+        this.initialised = true
         // Initialize again, the innerHTML used to fetch HTML may remove whitespace between tags
         this.$bwstarter.initAdminInput(this.adminInputData({
           model: this.$refs.quillEditor.querySelector('.ql-editor').innerHTML

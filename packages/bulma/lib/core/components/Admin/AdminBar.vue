@@ -84,7 +84,7 @@
               </li>
             </ul>
           </nav>
-          <div v-if="currentTab === 'page'">
+          <div v-show="currentTab === 'page'">
             <div class="field">
               <label class="label">Page Title</label>
               <div class="control">
@@ -122,7 +122,7 @@
               </div>
             </div>
           </div>
-          <div v-else-if="currentTab === 'routing'">
+          <div v-show="currentTab === 'routing'">
             <div v-if="regenerateRouteError" class="message is-danger">
               <div class="message-body">
                 {{ regenerateRouteError }}
@@ -399,6 +399,9 @@ export default {
     },
     getRedirectedFrom (routeEntity) {
       let childRoutes = []
+      if (!routeEntity) {
+        return childRoutes
+      }
       for (const route of routeEntity.redirectedFrom) {
         childRoutes.push(_omit(route, ['redirectedFrom']))
         childRoutes.push(...this.getRedirectedFrom(route))

@@ -3,13 +3,13 @@
     <div :class="containerClass">
       <div class="collection-columns columns is-mobile is-multiline">
         <slot name="title">
-          <div class="column is-12" v-if="realComponentData.title">
-            <h4 class="is-size-4">{{ realComponentData.title }}</h4>
+          <div class="column is-12" v-if="component.title">
+            <h4 class="is-size-4">{{ component.title }}</h4>
             <hr/>
           </div>
         </slot>
         <div v-if="!component.collection['hydra:member'].length" class="column is-12">
-          <h4 class="subtitle is-size-5 has-text-grey">There are no items to display</h4>
+          <h4 class="subtitle is-size-5 has-text-grey has-text-centered">There are no items to display</h4>
         </div>
         <div v-else class="column is-12">
           <div :class="['columns is-multiline is-mobile item-columns', {'is-loading': reloading, 'is-centered': isCentered}]">

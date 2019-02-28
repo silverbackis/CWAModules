@@ -2,9 +2,9 @@
   <component-wrapper v-if="component" :nested="nested">
     <div :class="containerClass">
       <div v-if="$bwstarter.isAdmin">
-        <quill-editor :model="realComponentData.content"
-                :componentId="endpoint"
-                componentField="content"
+        <admin-quill-editor :model="realComponentData.content"
+                      :componentId="endpoint"
+                      componentField="content"
         />
       </div>
       <component v-else

@@ -1,7 +1,7 @@
 export default {
   components: {
     AdminTextInput: () => import('./Admin/Text'),
-    QuillEditor: () => import('./Admin/Quill')
+    AdminQuillEditor: () => import('./Admin/Quill')
   },
   props: {
     component: {

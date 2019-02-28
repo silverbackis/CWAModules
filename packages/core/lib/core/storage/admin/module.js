@@ -26,6 +26,7 @@ export const mutations = {
     }
   },
   setModel (state, { componentId, componentField, model }) {
+    console.trace();
     let field = state.endpoints[ componentId ].inputs[ componentField ]
     field.model = model
   },
