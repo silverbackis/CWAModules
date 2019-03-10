@@ -2,7 +2,7 @@
   <component-wrapper ref="nav"
                      dom-tag="nav"
                      :extendClass="false"
-                     :class-name="['navbar', 'is-fixed-top', 'has-shadow', component.className]"
+                     :class-name="['navbar', 'is-fixed-top', component.className]"
                      :style="{transform: 'translateY(' + this.navY + 'px)'}"
   >
     <div class="navbar-brand">
@@ -119,7 +119,7 @@
     width: auto
     height: 28px
 
-  .navbar.has-shadow
+  .navbar
     .tabs
       &:not(.is-boxed):not(.is-toggle)
         > ul

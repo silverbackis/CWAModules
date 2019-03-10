@@ -80,7 +80,7 @@
         if (this.component.className) {
           className.push(this.component.className)
         } else {
-          className.push(...[ 'is-primary', 'is-bold' ])
+          className.push('is-primary')
         }
         if (this.hasImage) {
           className.push('has-image')

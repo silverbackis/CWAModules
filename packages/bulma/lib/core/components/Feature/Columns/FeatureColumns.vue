@@ -1,21 +1,19 @@
-<template xmlns="http://www.w3.org/1999/html">
-  <component-wrapper :className="['hero', 'feature-horizontal', className]"
+<template>
+  <component-wrapper :className="['feature-horizontal', className]"
                      :extendClass="false"
                      :nested="nested"
   >
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <h3 class="title features-title">{{ injectDynamicData(component.title) }}</h3>
-        <nav class="columns"
-             v-for="(components, index) in this.childComponents"
-             :key="index"
-        >
-          <feature-column-item v-for="(feature, count) in components"
-                               :component="feature"
-                               :key="count"
-          />
-        </nav>
-      </div>
+    <div class="container has-text-centered">
+      <h3 class="subtitle features-title" v-if="component.title" v-html="component.title" />
+      <nav class="columns"
+           v-for="(components, index) in this.childComponents"
+           :key="index"
+      >
+        <feature-column-item v-for="(feature, count) in components"
+                             :component="feature"
+                             :key="count"
+        />
+      </nav>
     </div>
   </component-wrapper>
 </template>
@@ -36,7 +34,7 @@
     },
     computed: {
       className () {
-        return this.component.className || 'is-dark'
+        return this.component.className || ''
       }
     }
   }

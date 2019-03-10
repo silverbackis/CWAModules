@@ -1,6 +1,15 @@
 <template>
-  <component-wrapper v-if="component" :nested="nested">
+  <component-wrapper v-if="component" :nested="nested" :class="component.className">
     <div :class="containerClass">
+      <h3 class="subtitle" v-if="$bwstarter.isAdmin || component.title">
+        <admin-text-input v-if="$bwstarter.isAdmin"
+                          :model="component.title"
+                          :componentId="endpoint"
+                          componentField="title"
+                          placeholder="Enter page title here"
+        />
+        <span v-else v-html="component.title" />
+      </h3>
       <div v-if="$bwstarter.isAdmin">
         <admin-quill-editor :model="realComponentData.content"
                       :componentId="endpoint"

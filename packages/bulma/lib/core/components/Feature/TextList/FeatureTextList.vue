@@ -1,32 +1,30 @@
 <template>
-  <component-wrapper :className="['hero', 'feature-list', className]"
+  <component-wrapper :className="['section', 'feature-list', className]"
                      :extendClass="false"
                      :nested="nested"
   >
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <h3 class="title features-title" v-if="component.title">{{ injectDynamicData(component.title) }}</h3>
-        <div class="is-inline-block-mobile">
-          <div class="columns is-centered has-text-left">
-            <div v-for="(features) in featureChunks()"
-                 class="column is-narrow">
-              <ul class="fa-ul">
-                <li v-for="(feature) in features" :class="injectDynamicData(feature.className)">
-                  <span class="fa-li">
-                    <font-awesome-icon icon="check-circle" class="has-text-success" size="lg"/>
-                  </span>
-                  <app-link v-if="feature.url" :to="feature.url">
-                    <strong>{{ injectDynamicData(feature.title) }}</strong>
-                  </app-link>
-                  <app-link v-else-if="feature.route" :to="feature.route.route">
-                    <strong>{{ injectDynamicData(feature.title) }}</strong>
-                  </app-link>
-                  <span v-else>
-                    {{ injectDynamicData(feature.title) }}
-                  </span>
-                </li>
-              </ul>
-            </div>
+    <div class="container has-text-centered">
+      <h3 class="subtitle features-title" v-if="component.title" v-html="component.title" />
+      <div class="is-inline-block-mobile">
+        <div class="columns is-centered has-text-left">
+          <div v-for="(features) in featureChunks()"
+               class="column is-narrow">
+            <ul class="fa-ul">
+              <li v-for="(feature) in features" :class="injectDynamicData(feature.className)">
+                <span class="fa-li">
+                  <font-awesome-icon icon="check-circle" class="check-icon" />
+                </span>
+                <app-link v-if="feature.url" :to="feature.url">
+                  <strong>{{ injectDynamicData(feature.title) }}</strong>
+                </app-link>
+                <app-link v-else-if="feature.route" :to="feature.route.route">
+                  <strong>{{ injectDynamicData(feature.title) }}</strong>
+                </app-link>
+                <span v-else>
+                  {{ injectDynamicData(feature.title) }}
+                </span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -46,7 +44,7 @@
     },
     computed: {
       className () {
-        return this.injectDynamicData(this.component.className) || 'is-light'
+        return this.injectDynamicData(this.component.className) || ''
       }
     },
     methods: {
