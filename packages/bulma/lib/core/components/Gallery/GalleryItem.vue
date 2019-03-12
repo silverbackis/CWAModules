@@ -250,7 +250,7 @@
 </script>
 
 <style lang="sass">
-  @import "../../../../../../node_modules/bulma/sass/utilities/mixins"
+  @import "~bulma/sass/utilities/mixins"
 
   .gallery-thumb
     width: 100%
