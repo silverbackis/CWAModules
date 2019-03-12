@@ -1,23 +1,9 @@
-const merge = require('lodash/merge')
-const defaults = require('./defaults')
-const { resolve, join, basename } = require('path')
-const rreaddir = require('@cwamodules/core/lib/module/rreaddir')
-const detectInstalled = require('detect-installed')
+import { join, resolve } from 'path'
+import merge from 'lodash/merge'
+import rreaddir from '@cwamodules/core/lib/module/rreaddir'
+import defaults from './defaults'
 
 const libRoot = resolve(__dirname, '..')
-
-module.exports = async function (moduleOptions) {
-  const options = merge(
-    {},
-    defaults,
-    { photoswipeInstalled: await detectInstalled('photoswipe') },
-    moduleOptions,
-    this.options.bwstarter
-  )
-  copyCore.call(this, options)
-  initPages.call(this, options)
-  copyPlugin.call(this, options)
-}
 
 function copyCore (options) {
   const coreRoot = resolve(libRoot, 'core')
@@ -88,4 +74,21 @@ function copyPlugin (options) {
     ssr: false,
     options
   })
+}
+
+export default async function (moduleOptions) {
+  const photoswipeInstalled = await new Promise((resolve) => {
+    import('photoswipe')
+      .then(() => { resolve(true) })
+      .catch(() => { resolve(false) })
+  })
+  const options = merge(
+    { photoswipeInstalled },
+    defaults,
+    moduleOptions,
+    this.options.bwstarter
+  )
+  copyCore.call(this, options)
+  initPages.call(this, options)
+  copyPlugin.call(this, options)
 }

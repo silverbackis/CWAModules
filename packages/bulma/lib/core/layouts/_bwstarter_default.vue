@@ -71,7 +71,7 @@
 </script>
 
 <style lang="sass">
-  @import ../assets/css/_vars.sass
+  @import "../assets/css/_vars.sass"
 
   .layout.bw-starter-default
     padding-top: 3.75rem

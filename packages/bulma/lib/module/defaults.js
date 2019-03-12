@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   pagesDepth: 5,
   components: {
     Hero: '~/.nuxt/bwstarter/bulma/components/Hero/Hero.vue',

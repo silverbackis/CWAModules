@@ -62,7 +62,7 @@
 </script>
 
 <style lang="sass">
-  @import ~bulma/sass/utilities/mixins
+  @import "../../../../../../../node_modules/bulma/sass/utilities/mixins"
 
   .feature-horizontal-item
     display: block

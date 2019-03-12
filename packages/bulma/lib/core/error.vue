@@ -61,7 +61,7 @@ export default {
 </script>
 
 <style lang="sass">
-  @import ./assets/css/vars
+  @import "assets/css/vars"
 
   .error-content
     padding-top: 3rem

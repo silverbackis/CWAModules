@@ -66,7 +66,7 @@
 </script>
 
 <style lang="sass" scoped>
-  @import ../assets/css/_vars
+  @import "../assets/css/_vars"
 
   .card
     width: 300px

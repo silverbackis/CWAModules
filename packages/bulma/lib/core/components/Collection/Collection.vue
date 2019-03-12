@@ -181,7 +181,7 @@ export default {
 </script>
 
 <style lang="sass">
-  @import ~bulma/sass/utilities/mixins
+  @import "../../../../../../node_modules/bulma/sass/utilities/mixins"
   .collection-columns
     hr
       margin: .3rem 0 1.5rem 0
