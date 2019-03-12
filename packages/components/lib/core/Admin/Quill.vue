@@ -1,7 +1,7 @@
 <template>
   <div class="content quill-editor"
        v-quill:quill="editorOptions"
-       :content="dataModel"
+       v-model="dataModel"
        @ready="editorReady"
        ref="quillEditor"
   ></div>
