@@ -9,7 +9,7 @@ export default class BWServer {
   }
 
   loginSuccess ({ session }, res, loginRes) {
-    this.logging && console.log(loginRes)
+    this.logging && console.log(loginRes.data)
 
     // Reference: Auth0: https://auth0.com/docs/tokens/refresh-token/current#restrictions
     // "A Single Page Application (normally implementing Implicit Grant) should not under any circumstances get a refresh token. The reason for that is the sensitivity of this piece of information."
@@ -119,7 +119,7 @@ export default class BWServer {
           headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
           refreshTokenRequest: true
         })
-      this.logging && console.error('jwtRefresh response', response)
+      this.logging && console.log('jwtRefresh response', response.data)
       const data = response.data
       session.authToken = data.token
       session.refreshToken = data.refresh_token

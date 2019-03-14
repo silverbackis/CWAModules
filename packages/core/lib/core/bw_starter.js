@@ -6,8 +6,8 @@ import { name as entitiesModuleName } from './storage/entities'
 
 const logging = process.env.NODE_ENV === 'development'
 // a user must still be authenticated when we try to refresh their token to avoid a 403 on the refresh request
-// 12 hours before the JWT token expires we will refresh it
-const TOKEN_EXPIRE_BUFFER_SECS = 43300
+// 30 minutes before the JWT token expires we will refresh it
+const TOKEN_EXPIRE_BUFFER_SECS = 1700 // 43300
 const TOKEN_KEY = 'token'
 const DEFAULT_LAYOUT = '/layouts/default'
 
@@ -50,10 +50,10 @@ export default class BWStarter {
     // --------
     const handleRefreshError = async (refreshError) => {
       logging && console.warn('refreshError', refreshError)
-      this.$storage.setState(TOKEN_KEY, null)
+      // this.$storage.setState(TOKEN_KEY, null)
       try {
         // If we use axios to post to 127.0.0.1:80 server-side we get a connection error
-        await BWServer.logout(req, res, false)
+        // await BWServer.logout(req, res, false)
       } catch (e) {
         logging && console.error('Error logging out after failing to refresh JWT token', e)
       }
@@ -63,15 +63,18 @@ export default class BWStarter {
     }
 
     const serverRefresh = async (config) => {
+      logging && console.log('Server authorisation refresh...')
       try {
         let result = await BWServer.jwtRefresh(req, res, false)
         this.$storage.setState(TOKEN_KEY, result)
+        logging && console.log('Server authorisation refresh SUCCESS!')
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
     }
 
     const clientRefresh = async (config) => {
+      logging && console.log('Client authorisation refresh...')
       try {
         let { data } = await this.$axios.post(
           '/refresh_token',
@@ -79,6 +82,7 @@ export default class BWStarter {
           { baseURL: null, refreshTokenRequest: true }
         )
         this.$storage.setState(TOKEN_KEY, data.token)
+        logging && console.log('Client authorisation refresh SUCCESS!')
       } catch (refreshError) {
         return handleRefreshError(refreshError, config)
       }
@@ -102,6 +106,7 @@ export default class BWStarter {
     // --------
     // Intercept requests with expired token
     // --------
+    let refreshingPromise = null
     this.$axios.interceptors.request.use(async (config) => {
       const noBaseUrl = (config.baseURL === null || config.baseURL === '')
       let isApiRequest = false
@@ -112,15 +117,26 @@ export default class BWStarter {
       if (!isApiRequest) {
         return config
       }
-
-      // Add API request headers
-      const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null
-      if (
-        this.user &&
-        authDiff < TOKEN_EXPIRE_BUFFER_SECS &&
-        !config.refreshTokenRequest
-      ) {
-        process.server ? await serverRefresh(config) : await clientRefresh(config)
+      if (refreshingPromise) {
+        logging && console.log('Secondary request awaiting authorisation refresh to complete...')
+        await refreshingPromise
+        logging && console.log('Secondary request continuing...')
+      } else {
+        // Add API request headers
+        const authDiff = this.user ? this.user.exp - (Date.now() / 1000) : null
+        if (
+          this.user &&
+            authDiff < TOKEN_EXPIRE_BUFFER_SECS &&
+            !config.refreshTokenRequest
+        ) {
+          logging && console.log('Refreshing authorisation...')
+          refreshingPromise = new Promise(async (resolve) => {
+            process.server ? await serverRefresh(config) : await clientRefresh(config)
+            refreshingPromise = null
+            resolve()
+          })
+          await refreshingPromise
+        }
       }
       return addHeaders(config)
     })
