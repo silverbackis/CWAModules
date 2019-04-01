@@ -3,6 +3,7 @@ import { name as ADMIN_MODULE } from './storage/admin'
 import { BWServer, Utilities } from './server'
 import { name as contentModuleName } from './storage/content'
 import { name as entitiesModuleName } from './storage/entities'
+import _omit from 'lodash/omit'
 
 const logging = process.env.NODE_ENV === 'development'
 // a user must still be authenticated when we try to refresh their token to avoid a 403 on the refresh request
@@ -231,7 +232,8 @@ export default class BWStarter {
     return this.$storage.dispatch(debounce ? 'debouncedSave' : 'save', null, ADMIN_MODULE)
   }
 
-  initRoute ({ route, content, redirectedFrom, id }) {
+  initRoute ({ route, staticPage, dynamicContent, redirectedFrom, id }) {
+    let content = staticPage || dynamicContent.dynamicPage
     let contentData = [ stripContent(content) ]
     let promises = [ this.storeAndFetchLayout(content.layout, true) ]
     while (content.parent) {
@@ -239,7 +241,12 @@ export default class BWStarter {
       promises.push(this.storeAndFetchLayout(content.parent.layout, false))
       content = content.parent
     }
-    this.$storage.commit('setRoute', [ { route, data: contentData, redirectedFrom, id } ], contentModuleName)
+    const dynamicData = _omit(dynamicContent, ['dynamicPage'])
+    if (dynamicData) {
+      this.$storage.commit('setEntity', [ { id: dynamicData[ '@id' ], data: dynamicData } ], entitiesModuleName)
+    }
+    this.$storage.commit('setRoute', [ { route, data: contentData, dynamicData: dynamicData ? dynamicData['@id'] : null, redirectedFrom, id } ], contentModuleName)
+
     // --------
     // Request all components / layouts and add to a promises array
     // --------

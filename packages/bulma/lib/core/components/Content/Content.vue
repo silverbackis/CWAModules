@@ -10,7 +10,7 @@
         />
         <span v-else v-html="component.title" />
       </h3>
-      <div v-if="$bwstarter.isAdmin">
+      <div v-if="$bwstarter.isAdmin" class="content">
         <admin-quill-editor :model="realComponentData.content"
                       :componentId="endpoint"
                       componentField="content"

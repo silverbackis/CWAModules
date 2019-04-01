@@ -38,7 +38,7 @@ export default {
       })
     },
     endpoint () {
-      return (this.dynamicData && this.dynamicData.dynamic) ? this.dynamicData[ '@id' ] : this.component[ '@id' ]
+      return this.dynamicData ? this.dynamicData[ '@id' ] : this.component[ '@id' ]
     },
     realComponentData () {
       let tempComponent = Object.assign({}, this.component)

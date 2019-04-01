@@ -17,10 +17,10 @@
         <img :src="transparentImage" class="square-space"/>
       </component>
       <div class="card-content">
-        <h4 class="title is-4 is-spaced">
+        <h4 class="title is-spaced">
           {{ component.title }}
         </h4>
-        <h5 v-if="component.subtitle" class="subtitle is-6">{{ component.subtitle }}</h5>
+        <h5 v-if="component.subtitle" class="subtitle">{{ component.subtitle }}</h5>
 
         <div class="columns is-gapless is-mobile card-bottom-columns">
           <div class="column">

@@ -7,7 +7,7 @@
                :component="getEntity(component)"
                :nested="nested"
                :depth="depth"
-               :dynamic-data="dynamicDataObj"
+               :dynamic-data="dynamicData"
     />
   </div>
 </template>
@@ -39,9 +39,6 @@
     computed: {
       _components () {
         return this.pageData.componentLocations.map(loc => this.getEntity(loc).component)
-      },
-      dynamicDataObj () {
-        return this.dynamicData || _.omit(this.pageData, [ '@type', 'componentLocations', 'parent', 'layout' ])
       }
     }
   }

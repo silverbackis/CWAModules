@@ -12,14 +12,14 @@
             </label>
             <div
               class="published-checkbox-wrapper"
-              v-if="rootPageData && ('published' in rootPageData)"
+              v-if="publishData && ('published' in publishData)"
               @mouseover.prevent="showPublishedTooltip = true"
               @mouseout.prevent="showPublishedTooltip = false"
             >
-              <div v-if="rootPageData.published && showPublishedTooltip" class="tag is-info">* This status is based on your computer's current time, however availability is determined by the server's time which may differ.</div>
+              <div v-if="publishData.published && showPublishedTooltip" class="tag is-info">* This status is based on your computer's current time, however availability is determined by the server's time which may differ.</div>
               <admin-checkbox
-                :component-id="rootPageData['@id']"
-                :model="rootPageData.published"
+                :component-id="publishData['@id']"
+                :model="publishData.published"
                 :checked-label="publishedLabel"
                 component-field="published"
                 label="Draft"
@@ -109,12 +109,12 @@
                 />
               </div>
             </div>
-            <div class="field" v-if="rootPageData && ('publishedDate' in rootPageData)">
+            <div class="field" v-if="publishData && ('publishedDate' in publishData)">
               <label class="label">Publish Date</label>
               <div class="control">
                 <admin-date
-                  :component-id="rootPageData['@id']"
-                  :model="rootPageData.publishedDate"
+                  :component-id="publishData['@id']"
+                  :model="publishData.publishedDate"
                   component-field="publishedDate"
                   placeholder="Enter the date this page was published"
                   class="input"
@@ -285,6 +285,9 @@ export default {
     },
     rootPageData () {
       return this.$bwstarter.$storage.get('getContentAtDepth', [ 0, this.$route.path ], contentModuleName)
+    },
+    publishData () {
+      return this.$bwstarter.$storage.get('getDynamicData', [ this.$route.path ], contentModuleName) || this.rootPageData
     },
     publishedLabel () {
       const publishedText = 'Published *'

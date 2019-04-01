@@ -24,11 +24,14 @@ export default {
     pageData () {
       return this.$bwstarter.$storage.get('getContentAtDepth', [ this.depth, this.loadedRoute ], contentModuleName)
     },
+    dynamicData () {
+      return this.$bwstarter.$storage.get('getDynamicData', [ this.loadedRoute ], contentModuleName)
+    },
     pageClass () {
       return this.$route.params[ `page${this.depth}` ] || this.$route.name
     },
     title () {
-      return this.pageData.title
+      return this.dynamicData ? () => (this.dynamicData.title || this.pageData.title) : this.pageData.title
     },
     metaDescription () {
       return this.pageData.metaDescription

@@ -1,10 +1,5 @@
 <template>
-  <div class="content quill-editor"
-       v-quill:quill="editorOptions"
-       v-model="dataModel"
-       @ready="editorReady"
-       ref="quillEditor"
-  ></div>
+  <div v-html="quillModel"></div>
 </template>
 
 <script>
@@ -21,6 +16,8 @@
     },
     data () {
       return {
+        editor: null,
+        theme: 'snow',
         editorOptions: {
           modules: {
             toolbar: this.editorToolbar || [
@@ -34,20 +31,32 @@
             ]
           }
         },
-        initialised: false
+        quillModel: null
       }
     },
-    methods: {
-      editorReady () {
-        if (this.initialised) {
-          return
-        }
-        this.initialised = true
-        // Initialize again, the innerHTML used to fetch HTML may remove whitespace between tags
+    created () {
+      this.quillModel = this.dataModel ? this.dataModel.trim() : this.dataModel
+    },
+    async mounted () {
+      const Quill = await import('quill')
+
+      this.editor = new Quill.default(this.$el, {
+        editorOptions: this.editorOptions,
+        theme: this.theme
+      })
+      this.editor.enable(false)
+
+      this.$nextTick(() => {
         this.$bwstarter.initAdminInput(this.adminInputData({
-          model: this.$refs.quillEditor.querySelector('.ql-editor').innerHTML
+          model: this.editor.root.innerHTML
         }))
-      }
+
+        // We will add the update event here
+        this.editor.on('text-change', () => {
+          this.dataModel = this.editor.root.innerHTML
+        })
+        this.editor.enable(true)
+      })
     }
   }
 </script>

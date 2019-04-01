@@ -11,7 +11,8 @@
     "dependencies": {
         "@cwamodules/core": "^0.4.9",
         "@cwamodules/server": "^0.4.8",
-        "flatpickr": "^4.5.4"
+        "flatpickr": "^4.5.4",
+        "quill": "^1.3.6"
     },
     "scripts": {
         "lint": "eslint lib ",

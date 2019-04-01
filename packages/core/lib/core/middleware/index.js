@@ -65,7 +65,7 @@ Middleware.routeLoader = async function ({ store: { state, commit, dispatch }, r
     }
   }
   // Sometimes the route can be returned but content is null due to the doctrine SQL Filters - database filters on content
-  if (!routeData.content) {
+  if (!routeData.staticPage && !routeData.dynamicContent) {
     error({ statusCode: 404, message: 'Page Not Found', url: 'No content available' })
     return
   }

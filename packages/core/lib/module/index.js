@@ -35,9 +35,5 @@ function copyPlugins (options) {
       src: resolve(pluginsRoot, file),
       fileName: join('bwstarter/core/' + dir, file)
     })
-    this.options.plugins.push({
-      src: resolve(this.options.buildDir, dst),
-      ssr: file !== 'quill.js'
-    })
   }
 }
