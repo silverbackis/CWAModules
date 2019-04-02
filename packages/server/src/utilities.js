@@ -28,8 +28,8 @@ export default class Utilities {
 
   cookiesToHeaders (cookies) {
     return {
-      'X-XSRF-TOKEN': cookies[ this.env.XSRF_COOKIE ] || '',
-      'Cookie': 'PHPSESSID=' + cookies[ 'PHPSESSID' ] || ''
+      'X-XSRF-TOKEN': cookies ? cookies[ this.env.XSRF_COOKIE ] || '' : '',
+      'Cookie': 'PHPSESSID=' + (cookies ? cookies[ 'PHPSESSID' ] || '' : '')
     }
   }
 
