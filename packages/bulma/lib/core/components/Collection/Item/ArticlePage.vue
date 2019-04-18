@@ -24,6 +24,7 @@
 
         <div class="columns is-gapless is-mobile card-bottom-columns">
           <div class="column">
+            {{ component.routes }}
             <app-link v-if="toRoute"
                       :to="toRoute"
                       class="button is-primary is-rounded is-outlined"
@@ -52,86 +53,87 @@
 </template>
 
 <script>
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
-  import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
-  import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
-  import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
+import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
+import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
-  export default {
-    mixins: [ ComponentMixin, ImageDataMixin ],
-    components: {
-      ImageLoader,
-      AppLink
+export default {
+  mixins: [ ComponentMixin, ImageDataMixin ],
+  components: {
+    ImageLoader,
+    AppLink
+  },
+  props: {
+    type: {
+      type: String,
+      required: false
     },
-    props: {
-      type: {
-        type: String,
-        required: false
-      },
-      showImage: {
-        type: Boolean,
-        default: true
-      },
-      disabledAdmin: {
-        type: Boolean,
-        default: false
-      }
+    showImage: {
+      type: Boolean,
+      default: true
     },
-    data () {
+    disabledAdmin: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+    }
+  },
+  computed: {
+    linkComponent () {
+      return this.toRoute ? 'app-link' : 'div'
+    },
+    toRoute () {
+      // the object is changing to a string during route changing - have not traced why yet.
+      if (this.component.routes.length) return this.component.routes[ 0 ].route || this.component.routes[ 0 ]
+      return null
+    },
+    cardClass () {
       return {
-        transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+        'article-card column': true,
+        'is-10-touch is-4-desktop': this.type !== 'column',
+        'is-12 has-text-centered-mobile': this.type === 'column'
       }
     },
-    computed: {
-      linkComponent () {
-        return this.toRoute ? 'app-link' : 'div'
-      },
-      toRoute () {
-        if (this.component.routes.length) return this.component.routes[ 0 ].route
-        return null
-      },
-      cardClass () {
-        return {
-          'article-card column': true,
-          'is-10-touch is-4-desktop': this.type !== 'column',
-          'is-12 has-text-centered-mobile': this.type === 'column'
-        }
-      },
-      publishedLabel () {
-        const publishedText = 'published'
-        if (!this.component.publishedDate) {
-          return publishedText
-        }
-        const publishedDate = new Date(this.component.publishedDate)
-        if (this.now >= publishedDate) {
-          return publishedText
-        }
-        return 'coming soon'
+    publishedLabel () {
+      const publishedText = 'published'
+      if (!this.component.publishedDate) {
+        return publishedText
       }
-    },
-    methods: {
-      deleteItem () {
-        const doDelete = () => {
-          return this.$axios.delete(this.component['@id'], { progress: false })
-            .then(() => {
-              this.$emit('deleted')
-            })
-            .catch((error) => {
-              console.error('error deleting gallery item', error)
-            })
-        }
-        this.$dialog.confirm({
-          title: 'Are you sure?',
-          body: 'This will permanently delete this article.'
-        })
-          .then(async (dialog) => {
-            await doDelete()
-            dialog.close()
+      const publishedDate = new Date(this.component.publishedDate)
+      if (this.now >= publishedDate) {
+        return publishedText
+      }
+      return 'coming soon'
+    }
+  },
+  methods: {
+    deleteItem () {
+      const doDelete = () => {
+        return this.$axios.delete(this.component['@id'], { progress: false })
+          .then(() => {
+            this.$emit('deleted')
           })
-          .catch(() => { console.log('Cancelled delete.') })
+          .catch((error) => {
+            console.error('error deleting gallery item', error)
+          })
       }
+      this.$dialog.confirm({
+        title: 'Are you sure?',
+        body: 'This will permanently delete this article.'
+      })
+        .then(async (dialog) => {
+          await doDelete()
+          dialog.close()
+        })
+        .catch(() => { console.log('Cancelled delete.') })
     }
   }
+}
 </script>
 
 <style lang="sass">
