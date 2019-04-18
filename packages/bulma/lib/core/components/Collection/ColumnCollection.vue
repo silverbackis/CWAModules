@@ -1,5 +1,5 @@
 <template>
-  <div class="section column-collection">
+  <component-wrapper :nested="nested" class="column-collection">
     <slot name="title">
       <template v-if="component.title">
         <h4 class="subtitle has-text-primary has-text-weight-normal is-marginless">{{ component.title }}</h4>
@@ -16,14 +16,16 @@
                  type="column"
       />
     </div>
-  </div>
+  </component-wrapper>
 </template>
 
 <script>
   import { mapGetters } from 'vuex'
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+  import ComponentWrapper from '../ComponentWrapper'
 
   export default {
+    components: { ComponentWrapper },
     mixins: [ ComponentMixin ],
     data () {
       return {
@@ -53,8 +55,7 @@
   @import "../../assets/css/vars"
 
   .column-collection
-    background: $grey-lightest
-    padding: 1.5rem
+    padding: 1.5rem 0
     hr
       margin: .3rem 0 1.5rem 0
 </style>

@@ -9,7 +9,7 @@
                             :dynamicData="dynamicData"
           />
         </div>
-        <div class="column is-narrow">
+        <div class="column is-narrow is-right">
           <bulma-components :pageData="componentGroups[1]"
                             :depth="depth"
                             :nested="true"
@@ -32,3 +32,10 @@
     }
   }
 </script>
+
+<style lang="sass">
+  @import "~bulma/sass/utilities/mixins"
+  +tablet
+    .column.is-right .bulma-components
+      padding-left: 1rem
+</style>

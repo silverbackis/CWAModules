@@ -24,7 +24,6 @@
 
         <div class="columns is-gapless is-mobile card-bottom-columns">
           <div class="column">
-            {{ component.routes }}
             <app-link v-if="toRoute"
                       :to="toRoute"
                       class="button is-primary is-rounded is-outlined"
@@ -96,7 +95,7 @@ export default {
       return {
         'article-card column': true,
         'is-10-touch is-4-desktop': this.type !== 'column',
-        'is-12 has-text-centered-mobile': this.type === 'column'
+        'is-12': this.type === 'column'
       }
     },
     publishedLabel () {
@@ -171,9 +170,10 @@ export default {
           overflow: hidden
           text-overflow: ellipsis
     &.is-12
+      text-align: center
       .card
-        max-width: 250px
-        +desktop
+        text-align: left
+        +tablet
           max-width: 350px
   /*.card-image*/
     /*height: 100px*/
