@@ -1,26 +1,30 @@
 {
-    "name": "@cwamodules/core",
-    "version": "0.5.1",
-    "description": "",
-    "licence": "MIT",
-    "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
-    "main": "lib/module/index.js",
-    "publishConfig": {
-        "access": "public"
-    },
-    "dependencies": {
-        "@cwamodules/server": "^0.5.1",
-        "@nuxtjs/axios": "^5.3.1",
-        "jwt-decode": "^2.2.0",
-        "lodash": "^4.17.11",
-        "set-cookie-parser": "^2.1.1",
-        "vue-cookie": "^1.1.4"
-    },
-    "scripts": {
-        "lint": "eslint lib ",
-        "lint-fix": "eslint --fix lib"
-    },
-    "eslintIgnore": [
-        "lib/module/plugin.template.js"
-    ]
+  "name": "@cwamodules/core",
+  "version": "0.5.1",
+  "description": "",
+  "licence": "MIT",
+  "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
+  "main": "lib/module/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@cwamodules/server": "^0.5.1",
+    "@nuxtjs/axios": "^5.3.1",
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.11",
+    "set-cookie-parser": "^2.1.1",
+    "vue-cookie": "^1.1.4",
+    "snyk": "^1.161.1"
+  },
+  "scripts": {
+    "lint": "eslint lib ",
+    "lint-fix": "eslint --fix lib",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "eslintIgnore": [
+    "lib/module/plugin.template.js"
+  ],
+  "snyk": true
 }
