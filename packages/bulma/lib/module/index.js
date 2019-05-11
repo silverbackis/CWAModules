@@ -83,10 +83,10 @@ export default async function (moduleOptions) {
       .catch(() => { resolve(false) })
   })
   const options = merge(
-    { photoswipeInstalled },
     defaults,
     moduleOptions,
-    this.options.bwstarter
+    this.options.bwstarter,
+    { photoswipeInstalled }
   )
   copyCore.call(this, options)
   initPages.call(this, options)

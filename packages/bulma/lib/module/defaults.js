@@ -30,7 +30,7 @@ export default {
         const BreakException = {}
         try {
           matchedKeys.forEach((key) => {
-            if (componentEnabledVoter({ enabledComponents, disabledComponents, components, componentEnabledVoter }, { key })) {
+            if (componentEnabledVoter({ enabledComponents, disabledComponents, components, componentEnabledVoter, photoswipeInstalled }, { key })) {
               throw BreakException
             }
           })
