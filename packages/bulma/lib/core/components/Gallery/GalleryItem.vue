@@ -2,17 +2,17 @@
   <li itemscope
       itemtype="https://schema.org/ImageGallery"
       class="gallery-item"
-      v-if="component['file:image'] || $bwstarter.isAdmin"
+      v-if="image() || $bwstarter.isAdmin"
   >
     <div class="gallery-thumb">
       <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
         <a :class="{'gallery-link': true, 'is-preview': !!preview, 'no-image': noImage}"
-           :href="noImage ? '#' : getApiUrl(component['file:publicPath'])"
+           :href="noImage ? '#' : getApiUrl(component.fileData.publicPath)"
            itemprop="contentUrl"
-           @click.prevent="component['file:image'] ? $photoswipe.open(index, items, $el) : null"
+           @click.prevent="image() ? $photoswipe.open(index, items, $el) : null"
         >
           <image-loader class="image gallery-image"
-                        :image="image"
+                        :image="image()"
                         :placeholder="placeholder"
                         :cover="true"
                         :alt="component.title"
@@ -97,156 +97,156 @@
 </template>
 
 <script>
-  import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
-  import { mapGetters } from 'vuex'
-  import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
+import { mapGetters } from 'vuex'
+import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
+import UploadMixin from '~/.nuxt/bwstarter/bulma/components/Admin/File/UploadMixin'
 
-  export default {
-    mixins: [ ComponentMixin ],
-    data () {
+export default {
+  mixins: [ UploadMixin ],
+  data () {
+    return {
+      file: null,
+      preview: null,
+      uploadPercentage: 0,
+      uploading: false,
+      uploadError: null,
+      transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+    }
+  },
+  props: {
+    items: {
+      type: Array,
+      required: true
+    },
+    $photoswipe: {
+      type: Object
+    },
+    location: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    }
+  },
+  components: {
+    ImageLoader,
+    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
+    BulmaProgress: () => import('../../BulmaProgress')
+  },
+  computed: {
+    ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
+    imageFile () {
+      return this.component.fileData.imageData || this.preview
+    },
+    // image () {
+    //   if (this.preview) {
+    //     return this.preview
+    //   }
+    //   if (this.component.fileData.imagineData) {
+    //     return this.component.fileData.imagineData.thumbnail
+    //   }
+    //   return {
+    //     publicPath: this.transparentImage,
+    //     width: 1,
+    //     height: 1
+    //   }
+    // },
+    placeholder () {
+      if (this.preview) {
+        return this.preview
+      }
+      if (this.component.fileData.imagineData) {
+        return this.component.fileData.imagineData.placeholderSquare
+      }
       return {
-        file: null,
-        preview: null,
-        uploadPercentage: 0,
-        uploading: false,
-        uploadError: null,
-        transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+        publicPath: this.transparentImage,
+        width: 1,
+        height: 1
       }
     },
-    props: {
-      items: {
-        type: Array,
-        required: true
-      },
-      $photoswipe: {
-        type: Object
-      },
-      location: {
-        type: Object,
-        required: true
-      },
-      index: {
-        type: Number,
-        required: true
-      }
-    },
-    components: {
-      ImageLoader,
-      AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
-      BulmaProgress: () => import('../../BulmaProgress')
-    },
-    computed: {
-      ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-      imageFile () {
-        return this.component[ 'file:image' ] || this.preview
-      },
-      image () {
-        if (this.preview) {
-          return this.preview
-        }
-        if (this.component[ 'file:imagine' ]) {
-          return this.component[ 'file:imagine' ].thumbnail
-        }
-        return {
-          publicPath: this.transparentImage,
-          width: 1,
-          height: 1
-        }
-      },
-      placeholder () {
-        if (this.preview) {
-          return this.preview
-        }
-        if (this.component[ 'file:imagine' ]) {
-          return this.component[ 'file:imagine' ].placeholderSquare
-        }
-        return {
-          publicPath: this.transparentImage,
-          width: 1,
-          height: 1
-        }
-      },
-      noImage () {
-        return !this.preview && !this.component['file:image']
-      }
-    },
-    methods: {
-      handleFileUpload () {
-        this.file = this.$refs.file.files[ 0 ]
-        if (this.file && /\.(jpe?g|png|gif)$/i.test(this.file.name)) {
-          let reader = new FileReader()
-          reader.addEventListener('load', function (file) {
-            const image = new Image()
-            image.src = file.target.result
-            image.onload = () => {
-              this.preview = {
-                publicPath: image.src,
-                width: image.width,
-                height: image.height
-              }
+    noImage () {
+      return !this.preview && !this.component.filePath
+    }
+  },
+  methods: {
+    handleFileUpload () {
+      this.file = this.$refs.file.files[ 0 ]
+      if (this.file && /\.(jpe?g|png|gif)$/i.test(this.file.name)) {
+        let reader = new FileReader()
+        reader.addEventListener('load', function (file) {
+          const image = new Image()
+          image.src = file.target.result
+          image.onload = () => {
+            this.preview = {
+              publicPath: image.src,
+              width: image.width,
+              height: image.height
             }
-          }.bind(this), false)
-          reader.readAsDataURL(this.file)
-        } else {
-          this.preview = null
-        }
-        this.submitUpload()
-      },
-      cancelUpload () {
-        this.preview = null
-      },
-      submitUpload () {
-        this.uploadError = null
-        this.uploading = true
-        this.uploadPercentage = 0
-        const formData = new FormData()
-        formData.append('file', this.file)
-        this.$axios.post('/files/filePath/' + this.component[ '@id' ],
-          formData,
-          {
-            progress: false,
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            },
-            onUploadProgress: function (progressEvent) {
-              this.uploadPercentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            }.bind(this)
           }
-        )
-          .then(({ data }) => {
-            this.uploading = false
-            this.preview = null
-            this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
+        }.bind(this), false)
+        reader.readAsDataURL(this.file)
+      } else {
+        this.preview = null
+      }
+      this.submitUpload()
+    },
+    cancelUpload () {
+      this.preview = null
+    },
+    submitUpload () {
+      this.uploadError = null
+      this.uploading = true
+      this.uploadPercentage = 0
+      const formData = new FormData()
+      formData.append('file', this.file)
+      this.$axios.post('/files/filePath/' + this.component[ '@id' ],
+        formData,
+        {
+          progress: false,
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          },
+          onUploadProgress: function (progressEvent) {
+            this.uploadPercentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          }.bind(this)
+        }
+      )
+        .then(({ data }) => {
+          this.uploading = false
+          this.preview = null
+          this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
+        })
+        .catch((error) => {
+          console.warn(error)
+          this.uploading = false
+          this.uploadError = 'Server responded with status code ' + error.statusCode
+        })
+    },
+    deleteItem () {
+      const doDelete = () => {
+        return this.$axios.delete(this.component['@id'], { progress: false })
+          .then(() => {
+            this.$emit('deleted')
           })
           .catch((error) => {
-            console.warn(error)
-            this.uploading = false
-            this.uploadError = 'Server responded with status code ' + error.statusCode
+            console.error('error deleting gallery item', error)
           })
-      },
-      deleteItem () {
-        const doDelete = () => {
-          return this.$axios.delete(this.component['@id'], { progress: false })
-            .then(() => {
-              this.$emit('deleted')
-            })
-            .catch((error) => {
-              console.error('error deleting gallery item', error)
-            })
-        }
-        this.$dialog.confirm({
-          title: 'Are you sure?',
-          body: 'This will permanently delete this image from your gallery.'
-        })
-          .then(async (dialog) => {
-            await doDelete()
-            dialog.close()
-          })
-          .catch(() => { console.log('Cancelled delete.') })
       }
+      this.$dialog.confirm({
+        title: 'Are you sure?',
+        body: 'This will permanently delete this image from your gallery.'
+      })
+        .then(async (dialog) => {
+          await doDelete()
+          dialog.close()
+        })
+        .catch(() => { console.log('Cancelled delete.') })
     }
   }
+}
 </script>
 
 <style lang="sass">
@@ -279,11 +279,11 @@
           margin-top: -1rem
           font-size: 1.5rem
           color: $white
-      /*position: absolute*/
-      /*top: 0*/
-      /*left: 0*/
-      /*width: 100%*/
-      /*height: 100%*/
+    /*position: absolute*/
+    /*top: 0*/
+    /*left: 0*/
+    /*width: 100%*/
+    /*height: 100%*/
     .edit-button
       position: absolute
       bottom: 10px

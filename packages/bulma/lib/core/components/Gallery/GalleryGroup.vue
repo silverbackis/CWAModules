@@ -96,7 +96,7 @@
       psItems () {
         return this.sortedLocations.map(({ component }) => {
           const entityComponent = this.getEntity(component)
-          const image = entityComponent[ 'file:image' ]
+          const image = entityComponent.fileData.imageData
           if (!image) {
             return null
           }
