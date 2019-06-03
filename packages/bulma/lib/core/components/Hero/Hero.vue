@@ -89,7 +89,7 @@
       },
       tabs () {
         const groups = this.componentGroups || []
-        if (!groups.length || !groups[ 0 ].componentLocations.length) {
+        if (!groups.length || !groups[ 0 ].componentLocations || !groups[ 0 ].componentLocations.length) {
           return
         }
         return this.getEntity(this.getEntity(groups[ 0 ].componentLocations[ 0 ]).component)

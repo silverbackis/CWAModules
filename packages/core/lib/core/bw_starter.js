@@ -109,6 +109,11 @@ export default class BWStarter {
     // --------
     let refreshingPromise = null
     this.$axios.interceptors.request.use(async (config) => {
+      const urlRegEx = new RegExp('^https?:\/\/');
+      const isFullURL = urlRegEx.test(config.url)
+      if (isFullURL) {
+        config.baseURL = null
+      }
       const noBaseUrl = (config.baseURL === null || config.baseURL === '')
       let isApiRequest = false
       if (!noBaseUrl) {
