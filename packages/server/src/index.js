@@ -67,7 +67,7 @@ export default class BWServer {
       postPath,
       data,
       {
-        headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
+        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
