@@ -1,5 +1,9 @@
 <template>
-  <input v-if="isNumber"
+  <textarea v-if="isTextarea"
+            v-model="dataModel"
+            v-bind="inputProps"
+  />
+  <input v-else-if="isNumber"
          v-model.number="dataModel"
          type="number"
          v-bind="inputProps"
@@ -15,7 +19,13 @@
   import _Input from './_Input'
 
   export default {
-    mixins: [ _Input ]
+    mixins: [ _Input ],
+    props: {
+      isTextarea: {
+        type: Boolean,
+        default: false
+      }
+    }
   }
 </script>
 

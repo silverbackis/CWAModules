@@ -29,11 +29,17 @@ export default {
     },
     childLocationsGrouped () {
       return this.componentGroups.map(({ componentLocations }) => {
+        if (!componentLocations) {
+          return []
+        }
         return componentLocations
       })
     },
     childComponents () {
       return this.childLocationsGrouped.map((locations) => {
+        if (!locations) {
+          return []
+        }
         return locations.map(loc => this.getEntity(this.getEntity(loc).component))
       })
     },

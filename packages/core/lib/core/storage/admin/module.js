@@ -138,10 +138,18 @@ export const actions = {
       // create a cancel token for the request
       const cancel = CancelToken.source()
       commit('setSubmitting', { endpointKey, value: cancel })
-
       this.$axios
         .put(endpointKey, patchEndpoints[ endpointKey ], { cancelToken: cancel.token, progress: false })
         .then(({ data }) => {
+          if (data.route) {
+            data.route = data.route['@id']
+          }
+
+          if (data.componentGroups) {
+            data.componentGroups = data.componentGroups.map(group => {
+              return group['@id']
+            })
+          }
           commit('updateComponent', data)
           commit('deleteSubmitting', endpointKey)
           const component = this.$bwstarter.$storage.get('getEntity', [ endpointKey ], ENTITIES_MODULE)

@@ -1,7 +1,8 @@
 <template>
-  <component-wrapper :className="['section', 'feature-list', className]"
-                     :extendClass="false"
-                     :nested="nested"
+  <component-wrapper
+    :class-name="['section', 'feature-list', className, {'is-admin': $bwstarter.isAdmin, 'is-loading': reloading}]"
+    :extendClass="false"
+    :nested="nested"
   >
     <div class="container has-text-centered">
       <h3 class="subtitle features-title" v-if="component.title" v-html="component.title" />
@@ -10,41 +11,57 @@
           <div v-for="(features) in featureChunks()"
                class="column is-narrow">
             <ul class="fa-ul">
-              <li v-for="(feature) in features" :class="injectDynamicData(feature.className)">
-                <span class="fa-li">
-                  <font-awesome-icon icon="check-circle" class="check-icon" />
-                </span>
-                <app-link v-if="feature.url" :to="feature.url">
-                  <strong>{{ injectDynamicData(feature.title) }}</strong>
-                </app-link>
-                <app-link v-else-if="feature.route" :to="feature.route.route">
-                  <strong>{{ injectDynamicData(feature.title) }}</strong>
-                </app-link>
-                <span v-else>
-                  {{ injectDynamicData(feature.title) }}
-                </span>
-              </li>
+              <feature-text-list-item
+                v-for="(feature) in features"
+                :key="feature['@id']"
+                :component="feature"
+                :class="injectDynamicData(feature.className)"
+                @edit="setEditComponent"
+              />
+              <feature-text-list-admin
+                v-if="$bwstarter.isAdmin"
+                @add="addNew"
+                @reload="reload"
+              />
             </ul>
           </div>
         </div>
       </div>
     </div>
+    <feature-text-list-modal
+      :component-id="editComponent ? editComponent['@id'] : null"
+      @close="closeEditModal"
+      @deleted="reload"
+    />
   </component-wrapper>
 </template>
 
 <script>
   import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
   import _ from 'lodash'
-  import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
+  import FeatureTextListItem from './FeatureTextListItem'
+  import FeatureTextListModal from './FeatureTextListModal'
+  import FeatureTextListAdmin from './FeatureTextListAdmin'
 
   export default {
     mixins: [ ComponentMixin ],
     components: {
-      AppLink
+      FeatureTextListItem,
+      FeatureTextListModal,
+      FeatureTextListAdmin
+    },
+    data () {
+      return {
+        editComponent: null,
+        reloading: false
+      }
     },
     computed: {
       className () {
         return this.injectDynamicData(this.component.className) || ''
+      },
+      componentGroup () {
+        return this.component.componentGroups[0]
       }
     },
     methods: {
@@ -53,6 +70,43 @@
           return []
         }
         return _.chunk(this.childComponents[ 0 ], Math.ceil(this.childComponents[ 0 ].length / (this.component.columns || 1)))
+      },
+      setEditComponent (editComponent) {
+        this.editComponent = editComponent
+      },
+      closeEditModal () {
+        this.editComponent = null
+      },
+      reload () {
+        if (!this.reloading) {
+          this.reloading = true
+          this.$bwstarter.fetchContent(this.componentGroup)
+            .then((componentLocations) => {
+              this.initAdminInputLocations(componentLocations, true)
+              this.reloading = false
+            })
+            .catch((error) => {
+              this.reloading = false
+              console.error('updateContentComponents Error', error)
+            })
+        }
+      },
+      addNew () {
+        if (!this.reloading) {
+          this.reloading = true
+          this.$axios.post('/feature_text_list_items', {
+            title: 'New Feature',
+            parentComponentGroup: this.componentGroup
+          }, { progress: false })
+            .then(() => {
+              this.reloading = false
+              this.reload()
+            })
+            .catch((error) => {
+              this.reloading = false
+              console.error(error)
+            })
+        }
       }
     }
   }
@@ -60,8 +114,10 @@
 
 <style lang="sass">
   @import "~bulma/sass/utilities/mixins"
-  +mobile
-    .feature-list
+  .feature-list
+    &.is-loading
+      opacity: .5
+    +mobile
       .column
         padding-top: 0
         padding-bottom: 0
