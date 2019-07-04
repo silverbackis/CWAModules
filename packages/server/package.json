@@ -1,28 +1,32 @@
 {
-    "name": "@cwamodules/server",
-    "licence": "MIT",
-    "version": "0.5.5",
-    "description": "Express server routes and common utilities for server and BW Starter front-end application",
-    "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
-    "main": "dist/index.js",
-    "publishConfig": {
-        "access": "public"
-    },
-    "scripts": {
-        "build": "webpack-cli --config ./webpack.config.js"
-    },
-    "dependencies": {
-        "axios": "^0.19.0",
-        "eslint-plugin-import": "^2.10.0",
-        "set-cookie-parser": "^2.1.1"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.1.2",
-        "@babel/polyfill": "^7.0.0",
-        "@babel/preset-env": "^7.1.0",
-        "babel-loader": "^8.0.4",
-        "uglifyjs-webpack-plugin": "^1.2.5",
-        "webpack": "^4.20.2",
-        "webpack-cli": "^3.2.3"
-    }
+  "name": "@cwamodules/server",
+  "licence": "MIT",
+  "version": "0.5.5",
+  "description": "Express server routes and common utilities for server and BW Starter front-end application",
+  "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "webpack-cli --config ./webpack.config.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "eslint-plugin-import": "^2.10.0",
+    "set-cookie-parser": "^2.1.1",
+    "snyk": "^1.189.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-loader": "^8.0.4",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.2.3"
+  },
+  "snyk": true
 }
