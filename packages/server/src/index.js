@@ -53,7 +53,7 @@ export default class BWServer {
       })
     }
   }
-
+s
   post (req, res, data, successFn = null, errorFn = null, extraHeaders = {}) {
     // Only allow post requests to API
     let _action = req.body._action

@@ -94,7 +94,7 @@ export default class BWStarter {
     // --------
     const addHeaders = (config) => {
       const token = process.server ? (req.session ? req.session.authToken : null) : this.$storage.getState('token')
-      if (token) {
+      if (token && config.withCredentials) {
         config.headers.Authorization = 'Bearer ' + token
       }
       if (process.server) {
@@ -109,6 +109,7 @@ export default class BWStarter {
     // --------
     let refreshingPromise = null
     this.$axios.interceptors.request.use(async (config) => {
+
       const urlRegEx = new RegExp('^https?:\/\/');
       const isFullURL = urlRegEx.test(config.url)
       if (isFullURL) {
@@ -123,6 +124,12 @@ export default class BWStarter {
       if (!isApiRequest) {
         return config
       }
+
+      const defaultConfig = {
+        withCredentials: true
+      }
+      config = Object.assign({}, defaultConfig, config)
+
       if (refreshingPromise) {
         logging && console.log('Secondary request awaiting authorisation refresh to complete...')
         await refreshingPromise
