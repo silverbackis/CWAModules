@@ -1,19 +1,12 @@
-import https from 'https'
 import axios from 'axios'
-import sslRootCAS from 'ssl-root-cas'
 import Utilities from './utilities'
 
-const rootCas = sslRootCAS.create()
-const httpsAgent = new https.Agent({
-  ca: rootCas,
-  rejectUnauthorized: false
-})
-
 export default class BWServer {
-  constructor (env) {
+  constructor (env, httpsAgent = null) {
     this.env = env
     this.utilities = new Utilities(this.env)
     this.logging = env.NODE_ENV === 'development'
+    this.httpsAgent = httpsAgent
   }
 
   loginSuccess ({ session }, res, loginRes) {
@@ -76,7 +69,7 @@ export default class BWServer {
       data,
       {
         headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
-        httpsAgent
+        httpsAgent: this.httpsAgent
       }
     )
       .then((loginRes) => {
@@ -127,7 +120,7 @@ export default class BWServer {
         {
           headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
           refreshTokenRequest: true,
-          httpsAgent
+          httpsAgent: this.httpsAgent
         })
       this.logging && console.log('jwtRefresh response', response.data)
       const data = response.data
