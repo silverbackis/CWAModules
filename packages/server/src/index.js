@@ -1,8 +1,13 @@
+import https from 'https'
 import axios from 'axios'
-import Utilities from './utilities'
 import sslRootCAS from 'ssl-root-cas'
+import Utilities from './utilities'
+
 const rootCas = sslRootCAS.create()
-require('https').globalAgent.options.ca = rootCas
+const httpsAgent = new https.Agent({
+  ca: rootCas,
+  rejectUnauthorized: false
+})
 
 export default class BWServer {
   constructor (env) {
@@ -65,12 +70,13 @@ export default class BWServer {
     // concat host and path
     const postPath = this.env.API_URL + _action
 
-    this.logging && console.log('login posting to: ' + postPath)
+    this.logging && console.log('posting to: ' + postPath)
     return axios.post(
       postPath,
       data,
       {
-        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
+        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
+        httpsAgent
       }
     )
       .then((loginRes) => {
@@ -120,7 +126,8 @@ export default class BWServer {
         },
         {
           headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
-          refreshTokenRequest: true
+          refreshTokenRequest: true,
+          httpsAgent
         })
       this.logging && console.log('jwtRefresh response', response.data)
       const data = response.data
