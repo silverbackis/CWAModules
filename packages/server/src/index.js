@@ -1,5 +1,10 @@
 import axios from 'axios'
 import Utilities from './utilities'
+import sslRootCAS from 'ssl-root-cas'
+import https from 'https'
+const agent = new https.Agent({
+  ca: sslRootCAS.create()
+})
 
 export default class BWServer {
   constructor (env) {
@@ -53,7 +58,7 @@ export default class BWServer {
       })
     }
   }
-s
+
   post (req, res, data, successFn = null, errorFn = null, extraHeaders = {}) {
     // Only allow post requests to API
     let _action = req.body._action
@@ -67,7 +72,8 @@ s
       postPath,
       data,
       {
-        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
+        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
+        httpsAgent: agent
       }
     )
       .then((loginRes) => {

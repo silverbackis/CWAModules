@@ -31,6 +31,9 @@ module.exports = [
     },
     resolve: {
       mainFields: [ 'module', 'main' ]
+    },
+    node: {
+      fs: 'empty'
     }
   }
 ]
