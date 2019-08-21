@@ -1,10 +1,8 @@
 import axios from 'axios'
 import Utilities from './utilities'
 import sslRootCAS from 'ssl-root-cas'
-import https from 'https'
-const agent = new https.Agent({
-  ca: sslRootCAS.create()
-})
+const rootCas = sslRootCAS.create()
+require('https').globalAgent.options.ca = rootCas
 
 export default class BWServer {
   constructor (env) {
@@ -72,8 +70,7 @@ export default class BWServer {
       postPath,
       data,
       {
-        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
-        httpsAgent: agent
+        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
