@@ -2,11 +2,10 @@ import axios from 'axios'
 import Utilities from './utilities'
 
 export default class BWServer {
-  constructor (env, httpsAgent = null) {
+  constructor (env) {
     this.env = env
     this.utilities = new Utilities(this.env)
     this.logging = env.NODE_ENV === 'development'
-    this.httpsAgent = httpsAgent
   }
 
   loginSuccess ({ session }, res, loginRes) {
@@ -68,8 +67,7 @@ export default class BWServer {
       postPath,
       data,
       {
-        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
-        httpsAgent: this.httpsAgent
+        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
@@ -119,8 +117,7 @@ export default class BWServer {
         },
         {
           headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
-          refreshTokenRequest: true,
-          httpsAgent: this.httpsAgent
+          refreshTokenRequest: true
         })
       this.logging && console.log('jwtRefresh response', response.data)
       const data = response.data
