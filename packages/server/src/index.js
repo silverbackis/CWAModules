@@ -2,13 +2,13 @@ import axios from 'axios'
 import Utilities from './utilities'
 
 export default class BWServer {
-  constructor (env) {
+  constructor (env, logging) {
     this.env = env
     this.utilities = new Utilities(this.env)
-    this.logging = env.NODE_ENV === 'development'
+    this.logging = logging === undefined ? env.NODE_ENV === 'development' : logging
   }
 
-  loginSuccess ({ session }, res, loginRes) {
+  postSuccess ({ session }, res, loginRes) {
     this.logging && console.log(loginRes.data)
 
     // Reference: Auth0: https://auth0.com/docs/tokens/refresh-token/current#restrictions
@@ -24,7 +24,7 @@ export default class BWServer {
     res.status(200).json({ token: session.authToken })
   }
 
-  loginError (res, err) {
+  postError (res, err) {
     if (!res) {
       this.logging && console.error(err)
       return err
@@ -44,7 +44,7 @@ export default class BWServer {
         const isException = (response.data.error && (exception = response.data.error.exception))
         res.status(response.status).json({
           message:
-            (isException ? exception[ 0 ].message : response.data.message)
+            (isException ? exception[ 0 ].message : (response.data.message || response.data))
         })
         return
       }
@@ -63,18 +63,27 @@ export default class BWServer {
     const postPath = this.env.API_URL + _action
 
     this.logging && console.log('posting to: ' + postPath)
+
+    const headersPassThru = ['accept', 'accept-encoding', 'accept-language', 'cache-control', 'content-type', 'dnt', 'origin', 'pragma', 'referer']
+    let initHeaders = {}
+    for (const hpu of headersPassThru) {
+      if (req.headers[hpu]) {
+        initHeaders[hpu] = req.headers[hpu]
+      }
+    }
+
     return axios.post(
       postPath,
       data,
       {
-        headers: Object.assign(req.headers, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
+        headers: Object.assign(initHeaders, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
       }
     )
       .then((loginRes) => {
-        this.loginSuccess(req, res, loginRes)
+        this.postSuccess(req, res, loginRes)
       })
       .catch((err) => {
-        this.loginError(res, err)
+        this.postError(res, err)
       })
   }
 
@@ -83,7 +92,7 @@ export default class BWServer {
       username: req.body.username,
       password: req.body.password
     }
-    this.post(req, res, data, this.loginSuccess, this.loginError, extraHeaders)
+    this.post(req, res, data, this.postSuccess, this.postError, extraHeaders)
   }
 
   logout (req, res, setResponse = true) {
