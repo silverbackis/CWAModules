@@ -75,6 +75,9 @@ export const getters = {
   },
   getInputSubmitData: (state) => ({ formId, inputName }) => {
     let model = getNestedInput(state, formId, inputName)
+    if (!model) {
+      return {}
+    }
     let value = model.vars.value
     if (value === undefined) {
       return {}
@@ -98,11 +101,15 @@ export const actions = {
     }
   },
   applyFormResultValidation ({ commit }, { formId, formData, isSubmit, simulatedInputNames = [] }) {
-    const setValidation = (child) => {
+    const setValidation = (child, parent) => {
       if (child.vars.valid === undefined) {
         return
       }
-      if (simulatedInputNames.indexOf(child.vars.full_name) === -1) {
+      if (parent && parent.vars.full_name === child.vars.full_name.replace('[]', '')) {
+        return
+      }
+      const childNameExists = simulatedInputNames.indexOf(child.vars.full_name) === -1
+      if (childNameExists) {
         commit('setInputData', {
           formId,
           inputName: child.vars.full_name,
@@ -130,10 +137,10 @@ export const actions = {
         })
       }
     }
-    const doValidation = (item) => {
-      setValidation(item)
+    const doValidation = (item, parent) => {
+      setValidation(item, parent)
       for (const child of item.children) {
-        doValidation(child)
+        doValidation(child, item)
       }
     }
     doValidation(formData)
