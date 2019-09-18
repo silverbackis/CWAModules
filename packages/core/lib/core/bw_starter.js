@@ -360,7 +360,7 @@ const getEntitiesFromLocations = function (locations) {
   locations.forEach((_) => {
     const location = Object.assign({}, _)
     const component = Object.assign({}, location.component)
-    const isComponentReference = typeof component === 'string'
+    const isComponentReference = typeof location.component === 'string'
     if (location[ '@id' ]) {
       entities[ location[ '@id' ] ] = Object.assign({}, location, { component: isComponentReference ? component : component[ '@id' ] })
     }
@@ -369,7 +369,6 @@ const getEntitiesFromLocations = function (locations) {
       return
     }
     if (!component[ '@id' ]) {
-      console.log(typeof component)
       console.error('ID not found for component - it is likely the entity was not returned as an API resource and needs to be configured for an IRI', component[ '@id' ], component)
     }
     entities[ component[ '@id' ] ] = component
