@@ -28,11 +28,12 @@ function isObjectEmpty (obj) {
   return true
 }
 
-
 export default class BWStarter {
   constructor (ctx, options) {
     this.error = ctx.error
+    this.redirect = ctx.redirect
     this.$axios = ctx.$axios
+    this.loginRedirect = options.loginRedirect
     options.initialState = {
       error: null,
       apiUrl: process.env.API_URL_BROWSER + '/',
@@ -117,7 +118,7 @@ export default class BWStarter {
     // --------
     let refreshingPromise = null
     this.$axios.interceptors.request.use(async (config) => {
-      const urlRegEx = new RegExp('^https?:\/\/')
+      const urlRegEx = new RegExp('^https?://')
       const isFullURL = urlRegEx.test(config.url)
       if (isFullURL) {
         config.baseURL = null
@@ -197,6 +198,10 @@ export default class BWStarter {
 
   setResponseErrorPage (error) {
     if (error.response && error.response.status) {
+      if (error.response.status === 401 && this.loginRedirect) {
+        this.redirect(this.loginRedirect)
+        return
+      }
       this.error({ statusCode: error.response.status, message: error.response.statusText, url: error.response.config.url })
     } else {
       this.error({ statusCode: error.statusCode || 500, message: 'Unexpected server error', url: error.message })
