@@ -21,6 +21,14 @@ const stripContent = (obj) => {
   return obj
 }
 
+function isObjectEmpty (obj) {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) { return false }
+  }
+  return true
+}
+
+
 export default class BWStarter {
   constructor (ctx, options) {
     this.error = ctx.error
@@ -109,8 +117,7 @@ export default class BWStarter {
     // --------
     let refreshingPromise = null
     this.$axios.interceptors.request.use(async (config) => {
-
-      const urlRegEx = new RegExp('^https?:\/\/');
+      const urlRegEx = new RegExp('^https?:\/\/')
       const isFullURL = urlRegEx.test(config.url)
       if (isFullURL) {
         config.baseURL = null
@@ -368,8 +375,11 @@ const getEntitiesFromLocations = function (locations) {
       logging && console.log('component found as string. it is probably already registered', component)
       return
     }
+    if (isObjectEmpty(component)) {
+      return
+    }
     if (!component[ '@id' ]) {
-      console.error('ID not found for component - it is likely the entity was not returned as an API resource and needs to be configured for an IRI', component[ '@id' ], component)
+      console.error('ID not found for component - it is possible the entity was not returned as an API resource and needs to be configured for an IRI', component[ '@id' ], component)
     }
     entities[ component[ '@id' ] ] = component
 

@@ -212,8 +212,6 @@ export default {
         left: 0
         width: 100%
         height: 100%
-        // border: 2px dashed rgba($grey-lightest, .75)
-        // background: linear-gradient(45deg, rgba($black, .05), rgba($grey-lightest, .15))
         min-width: 30px
         min-height: 30px
       .image-small
@@ -249,7 +247,6 @@ export default {
           max-width: 100%
           max-height: 100%
           .image
-            // display: inline-block
             max-width: 100%
             max-height: 100%
     &.cover
@@ -266,11 +263,13 @@ export default {
             height: 100%
             width: auto
             left: 50%
+            top: 50%
             .image
-              margin-left: -50%
-              height: 100%
-              width: auto
+              min-height: 100%
               max-width: none
+              max-height: none
+              height: auto
+              transform: translate(-50%, -50%)
     /*&.landscape*/
       /*.image-placeholder*/
         /*height: 100%*/

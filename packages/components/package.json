@@ -11,7 +11,7 @@
     "dependencies": {
         "@cwamodules/core": "^0.5.15",
         "@cwamodules/server": "^0.5.13",
-        "flatpickr": "^4.5.4",
+        "flatpickr": "^4.6.3",
         "quill": "^1.3.6"
     },
     "scripts": {
