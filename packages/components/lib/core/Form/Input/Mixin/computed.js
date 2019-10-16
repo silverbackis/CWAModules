@@ -6,40 +6,43 @@ export default {
     ...mapGetters({
       getInputSubmitData: 'bwstarter/_forms/getInputSubmitData'
     }),
-    isRepeated () {
-      return this.parents.length && this.parents[0].vars.block_prefixes[1] === 'repeated'
+    isRepeated() {
+      return (
+        this.parents.length &&
+        this.parents[0].vars.block_prefixes[1] === 'repeated'
+      )
     },
-    inputSubmitData () {
+    inputSubmitData() {
       return this.getInputSubmitData(this.extendInputId())
     },
-    form () {
+    form() {
       return this.$bwstarter.$storage.state[FORMS_MODULE][this.formId]
     },
-    action () {
+    action() {
       return this.form.vars.action
     },
-    attr () {
+    attr() {
       return Object.assign({}, this.vars.attr, {
         required: this.vars.required || false,
         disabled: this.vars.disabled || this.form.submitting
       })
     },
-    hasErrors () {
+    hasErrors() {
       return !this.valid && this.displayErrors && !this.validating // && !!this.errors.length
     },
-    validClass () {
+    validClass() {
       return {
         'is-success': this.valid && !this.validating,
         'is-danger': this.hasErrors
       }
     },
-    classes () {
-      let classes = []
+    classes() {
+      const classes = []
       if (this.inputClass !== '') {
         classes.push(this.inputClass)
       }
       // could have classes assigned from API side (this will be a string)
-      let apiClasses = this.vars.attr ? this.vars.attr.class : ''
+      const apiClasses = this.vars.attr ? this.vars.attr.class : ''
       if (undefined !== apiClasses) {
         classes.push(apiClasses)
       }
@@ -49,33 +52,35 @@ export default {
       classes.push(this.validClass)
       return classes
     },
-    isCheckRadio () {
+    isCheckRadio() {
       return this.vars.checked !== undefined || this.child
     },
     inputModel: {
-      get () {
+      get() {
         return this.vars.value
       },
-      set (value) {
-        this.$bwstarter.$storage.commit('setInputData', this.extendInputId({
-          data: {
-            value
-          }
-        }), FORMS_MODULE)
+      set(value) {
+        this.$bwstarter.$storage.commit(
+          'setInputData',
+          this.extendInputId({
+            data: {
+              value
+            }
+          }),
+          FORMS_MODULE
+        )
         this.beginValidation()
       }
     },
     validating: {
-      get () {
+      get() {
         return this.input.validating
       },
-      set (validating) {
-        this.setInputValidating(
-          this.extendInputId({ validating })
-        )
+      set(validating) {
+        this.setInputValidating(this.extendInputId({ validating }))
       }
     },
-    commonProps () {
+    commonProps() {
       return Object.assign(this.attr, {
         id: this.inputId,
         name: this.inputName,
@@ -87,37 +92,34 @@ export default {
      * last validation values but are outputted as child inputs/components
      */
     debounceValidate: {
-      get () {
+      get() {
         return this.input ? this.input.debounceValidate : {}
       },
-      set (debounce) {
-        this.setInputDebounceValidate(
-          this.extendInputId({ debounce })
-        )
+      set(debounce) {
+        this.setInputDebounceValidate(this.extendInputId({ debounce }))
       }
     },
     cancelToken: {
-      get () {
+      get() {
         return this.input ? this.input.cancelToken : null
       },
-      set (token) {
-        this.setInputCancelToken(
-          this.extendInputId({ token })
-        )
+      set(token) {
+        this.setInputCancelToken(this.extendInputId({ token }))
       }
     },
     lastValidationValue: {
-      get () {
+      get() {
         return this.input ? this.input.lastValidationValue : null
       },
-      set (value) {
-        this.setInputLastValidationValue(
-          this.extendInputId({ value })
-        )
+      set(value) {
+        this.setInputLastValidationValue(this.extendInputId({ value }))
       }
     },
-    validationEnabled () {
-      return this.form.vars.realtime_validate !== false && [null, '', '#'].indexOf(this.action) === -1
+    validationEnabled() {
+      return (
+        this.form.vars.realtime_validate !== false &&
+        [null, '', '#'].indexOf(this.action) === -1
+      )
     }
   }
 }

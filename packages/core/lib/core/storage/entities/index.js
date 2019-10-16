@@ -1,15 +1,15 @@
 import Vue from 'vue'
 
-export const name = [ '_entities' ]
+export const name = ['_entities']
 
 export const store = {
   state: () => ({}),
   getters: {
-    getEntity: state => (id) => {
-      return state[ id ] || false
+    getEntity: state => id => {
+      return state[id] || false
     },
-    getEntities: (state, getters) => (entities) => {
-      let arr = []
+    getEntities: (state, getters) => entities => {
+      const arr = []
       for (const entity of entities) {
         arr.push(getters.getEntity(entity))
       }
@@ -17,9 +17,9 @@ export const store = {
     }
   },
   mutations: {
-    setEntity (state, { id, data }) {
+    setEntity(state, { id, data }) {
       if (data.componentLocations) {
-        data.componentLocations = data.componentLocations.map((location) => {
+        data.componentLocations = data.componentLocations.map(location => {
           if (typeof location === 'string') {
             return location
           }
@@ -28,7 +28,7 @@ export const store = {
       }
       Vue.set(state, id, data)
     },
-    setEntityProperty (state, { id, property, data }) {
+    setEntityProperty(state, { id, property, data }) {
       Vue.set(state[id], property, data)
     }
   }

@@ -1,23 +1,24 @@
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
-  parserOptions: {
-    sourceType: 'module'
-  },
   env: {
     browser: true,
     node: true
   },
-  extends: 'standard',
-  plugins: ['html', 'vue'],
+  parserOptions: {
+    parser: 'babel-eslint'
+  },
+  extends: [
+    '@nuxtjs',
+    'plugin:nuxt/recommended',
+    'plugin:prettier/recommended',
+    'prettier',
+    'prettier/vue'
+  ],
+  plugins: [
+    'prettier'
+  ],
+  // add your custom rules here
   rules: {
-    // Allow paren-less arrow functions
-    'arrow-parens': 0,
-    // Allow async-await
-    'generator-star-spacing': 0,
-    // Do not allow console.logs etc...
-    // 'no-console': 2,
-    // Allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
+    'nuxt/no-cjs-in-config': 'off'
   }
-};
+}

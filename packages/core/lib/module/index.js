@@ -5,13 +5,13 @@ const rreaddir = require('./rreaddir')
 
 const libRoot = resolve(__dirname, '..')
 
-module.exports = function (moduleOptions) {
+module.exports = function(moduleOptions) {
   const options = merge({}, defaults, moduleOptions, this.options.bwstarter)
   copyPlugins.call(this, options)
   copyCore.call(this)
 }
 
-function copyCore () {
+function copyCore() {
   const coreRoot = resolve(libRoot, 'core')
   for (const file of rreaddir(coreRoot)) {
     this.addTemplate({
@@ -21,7 +21,7 @@ function copyCore () {
   }
 }
 
-function copyPlugins (options) {
+function copyPlugins(options) {
   this.addPlugin({
     src: resolve(__dirname, 'plugin.template.js'),
     fileName: join('bwstarter/core', 'plugin.js'),
@@ -31,7 +31,7 @@ function copyPlugins (options) {
   const dir = 'plugins'
   const pluginsRoot = resolve(libRoot, dir)
   for (const file of rreaddir(pluginsRoot)) {
-    let { dst } = this.addTemplate({
+    const { dst } = this.addTemplate({
       src: resolve(pluginsRoot, file),
       fileName: join('bwstarter/core/' + dir, file)
     })

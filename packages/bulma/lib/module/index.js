@@ -5,9 +5,9 @@ import defaults from './defaults'
 
 const libRoot = resolve(__dirname, '..')
 
-function copyCore (options) {
+function copyCore(options) {
   const coreRoot = resolve(libRoot, 'core')
-  let files = rreaddir(coreRoot)
+  const files = rreaddir(coreRoot)
   for (const file of files) {
     if (file.startsWith('layouts/')) {
       this.addLayout({
@@ -22,15 +22,19 @@ function copyCore (options) {
         })
       }
       if (file === 'error.vue' && !this.options.ErrorPage) {
-        this.options.ErrorPage = join(this.options.buildDir, 'bwstarter/bulma', file)
+        this.options.ErrorPage = join(
+          this.options.buildDir,
+          'bwstarter/bulma',
+          file
+        )
       }
     }
   }
 }
 
-function initPages (options) {
+function initPages(options) {
   this.extendRoutes((routes, resolve) => {
-    let loginExists = routes.some((route) => {
+    const loginExists = routes.some(route => {
       return route.name === 'login'
     })
     if (!loginExists) {
@@ -43,15 +47,15 @@ function initPages (options) {
 
     let pages
     let lastPage
-    [ ...Array(options.pagesDepth) ].forEach((_, i) => {
-      let page = {
+    ;[...Array(options.pagesDepth)].forEach((_, i) => {
+      const page = {
         path: ':page' + i + '?',
         component: resolve('~/.nuxt/bwstarter/bulma/pages/_base'),
         name: 'page' + i
       }
       if (lastPage) {
         page.name = lastPage.name + '-' + page.name
-        lastPage.children = [ page ]
+        lastPage.children = [page]
       } else {
         page.path = '/' + page.path
         pages = page
@@ -62,7 +66,7 @@ function initPages (options) {
   })
 }
 
-function copyPlugin (options) {
+function copyPlugin(options) {
   this.addPlugin({
     src: resolve(__dirname, 'components.template.js'),
     fileName: join('bwstarter/bulma', 'components.js'),
@@ -76,18 +80,19 @@ function copyPlugin (options) {
   })
 }
 
-export default async function (moduleOptions) {
-  const photoswipeInstalled = await new Promise((resolve) => {
+export default async function(moduleOptions) {
+  const photoswipeInstalled = await new Promise(resolve => {
     import('photoswipe')
-      .then(() => { resolve(true) })
-      .catch(() => { resolve(false) })
+      .then(() => {
+        resolve(true)
+      })
+      .catch(() => {
+        resolve(false)
+      })
   })
-  const options = merge(
-    defaults,
-    moduleOptions,
-    this.options.bwstarter,
-    { photoswipeInstalled }
-  )
+  const options = merge(defaults, moduleOptions, this.options.bwstarter, {
+    photoswipeInstalled
+  })
   copyCore.call(this, options)
   initPages.call(this, options)
   copyPlugin.call(this, options)

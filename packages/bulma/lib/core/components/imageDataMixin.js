@@ -9,7 +9,7 @@ export default {
     }
   },
   methods: {
-    getImageData (imagineKey, requiresImagine) {
+    getImageData(imagineKey, requiresImagine) {
       if (!imagineKey) {
         imagineKey = this.imagineKey
       }
@@ -28,11 +28,11 @@ export default {
       }
       return fileData
     },
-    injectImageData (imageObject) {
+    injectImageData(imageObject) {
       imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
       return imageObject
     },
-    image (imagineKey, requiresImagine) {
+    image(imagineKey, requiresImagine) {
       const imageData = this.getImageData(imagineKey, requiresImagine)
       if (!imageData) {
         return null

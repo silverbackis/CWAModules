@@ -19,15 +19,15 @@ export default {
     }
   },
   computed: {
-    containerClass () {
-      return !this.nested ? [ 'container' ] : []
+    containerClass() {
+      return !this.nested ? ['container'] : []
     },
-    componentGroups () {
-      return this.component.componentGroups.map((groupId) => {
+    componentGroups() {
+      return this.component.componentGroups.map(groupId => {
         return this.getEntity(groupId)
       })
     },
-    childLocationsGrouped () {
+    childLocationsGrouped() {
       return this.componentGroups.map(({ componentLocations }) => {
         if (!componentLocations) {
           return []
@@ -35,30 +35,33 @@ export default {
         return componentLocations
       })
     },
-    childComponents () {
-      return this.childLocationsGrouped.map((locations) => {
+    childComponents() {
+      return this.childLocationsGrouped.map(locations => {
         if (!locations) {
           return []
         }
-        return locations.map(loc => this.getEntity(this.getEntity(loc).component))
+        return locations.map(loc =>
+          this.getEntity(this.getEntity(loc).component)
+        )
       })
     },
-    endpoint () {
-      return this.dynamicData ? this.dynamicData[ '@id' ] : this.component[ '@id' ]
+    endpoint() {
+      return this.dynamicData ? this.dynamicData['@id'] : this.component['@id']
     },
-    realComponentData () {
-      let tempComponent = Object.assign({}, this.component)
-      for (let [ key, value ] of Object.entries(this.component)) {
+    realComponentData() {
+      const tempComponent = Object.assign({}, this.component)
+      for (const [key, value] of Object.entries(this.component)) {
         if (this.dynamicData) {
           if (value === null && this.dynamicData[key]) {
-            tempComponent[ key ] = this.dynamicData[key]
+            tempComponent[key] = this.dynamicData[key]
           } else if (this.isString(value)) {
             const expr = new RegExp(/{{(\s+)?(\S{1,})(\s+)?}}/g)
             let matches
             while ((matches = expr.exec(value)) !== null) {
-              const injectVar = matches && matches.length >= 3 ? matches[ 2 ] : null
+              const injectVar =
+                matches && matches.length >= 3 ? matches[2] : null
               if (injectVar && injectVar in this.dynamicData) {
-                tempComponent[ key ] = this.dynamicData[ injectVar ]
+                tempComponent[key] = this.dynamicData[injectVar]
               }
             }
           }
@@ -68,28 +71,31 @@ export default {
     }
   },
   methods: {
-    isString (value) {
+    isString(value) {
       return typeof value === 'string' || value instanceof String
     },
-    getDynamicVars (string) {
+    getDynamicVars(string) {
       if (!string || !this.isString(string)) {
         return string
       }
       const re = new RegExp(/{{\s+?(\S{1,})\s+?}}/g)
-      let matches = []
+      const matches = []
       let match
       while ((match = re.exec(string)) !== null) {
         matches.push(match[1])
       }
       return matches.length ? matches : null
     },
-    injectDynamicData (string) {
+    injectDynamicData(string) {
       if (!string || !this.isString(string)) {
         return string
       }
-      return string.replace(/{{(\s+)?(\S{1,})(\s+)?}}/g, (str, space, dynamicVar) => {
-        return this.dynamicData[ dynamicVar ] || str
-      })
+      return string.replace(
+        /{{(\s+)?(\S{1,})(\s+)?}}/g,
+        (str, space, dynamicVar) => {
+          return this.dynamicData[dynamicVar] || str
+        }
+      )
     }
   }
 }

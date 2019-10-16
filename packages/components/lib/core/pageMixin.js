@@ -2,12 +2,12 @@ import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/conten
 
 export default {
   middleware: 'routeLoader',
-  data () {
+  data() {
     return {
       loadedRoute: this.$route.path
     }
   },
-  head () {
+  head() {
     return this.headData
   },
   props: {
@@ -21,28 +21,38 @@ export default {
     }
   },
   computed: {
-    pageData () {
-      return this.$bwstarter.$storage.get('getContentAtDepth', [ this.depth, this.loadedRoute ], contentModuleName)
+    pageData() {
+      return this.$bwstarter.$storage.get(
+        'getContentAtDepth',
+        [this.depth, this.loadedRoute],
+        contentModuleName
+      )
     },
-    dynamicData () {
-      return this.$bwstarter.$storage.get('getDynamicData', [ this.loadedRoute ], contentModuleName)
+    dynamicData() {
+      return this.$bwstarter.$storage.get(
+        'getDynamicData',
+        [this.loadedRoute],
+        contentModuleName
+      )
     },
-    pageClass () {
-      return this.$route.params[ `page${this.depth}` ] || this.$route.name
+    pageClass() {
+      return this.$route.params[`page${this.depth}`] || this.$route.name
     },
-    title () {
-      return this.dynamicData ? () => (this.dynamicData.title || this.pageData.title) : this.pageData.title
+    title() {
+      return this.dynamicData
+        ? () => this.dynamicData.title || this.pageData.title
+        : this.pageData.title
     },
-    metaDescription () {
+    metaDescription() {
       return this.pageData.metaDescription
     },
-    depth () {
+    depth() {
       return this.$vnode.data.nuxtChildDepth
     },
-    childKey () {
-      return this.$route.params[ 'page' + (this.depth + 1) ]
+    childKey() {
+      return this.$route.params['page' + (this.depth + 1)]
     },
-    realPageData () {
+    realPageData() {
       if (
         this.componentGroup &&
         this.componentGroup.componentLocations &&
@@ -52,7 +62,7 @@ export default {
       }
       return this.pageData
     },
-    headData () {
+    headData() {
       const defaultObj = {
         bodyAttrs: {
           class: this.pageClass
@@ -61,15 +71,16 @@ export default {
       if (!this.pageData) {
         return defaultObj
       }
-      return Object.assign({
-        title: this.title,
-        meta: [
-          { name: 'description', content: this.metaDescription }
-        ]
-      }, defaultObj)
+      return Object.assign(
+        {
+          title: this.title,
+          meta: [{ name: 'description', content: this.metaDescription }]
+        },
+        defaultObj
+      )
     }
   },
-  transition () {
+  transition() {
     return {
       name: 'page',
       mode: 'out-in'

@@ -3,8 +3,8 @@ import methods from './methods'
 import lifecycle from './lifecycle'
 
 export default {
-  mixins: [ computed, methods, lifecycle ],
-  data () {
+  mixins: [computed, methods, lifecycle],
+  data() {
     return {
       validationCalls: 0
     }

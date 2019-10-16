@@ -3,10 +3,12 @@ import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
 export default {
   mixins: [ImageDataMixin],
   components: {
-    UploadButton: () => import('~/.nuxt/bwstarter/bulma/components/Admin/File/UploadButton'),
-    UploadProgress: () => import('~/.nuxt/bwstarter/bulma/components/Admin/File/UploadProgress')
+    UploadButton: () =>
+      import('~/.nuxt/bwstarter/bulma/components/Admin/File/UploadButton'),
+    UploadProgress: () =>
+      import('~/.nuxt/bwstarter/bulma/components/Admin/File/UploadProgress')
   },
-  data () {
+  data() {
     return {
       uploading: false,
       uploadPercentage: 0,
@@ -15,13 +17,13 @@ export default {
     }
   },
   computed: {
-    uploaderImage () {
+    uploaderImage() {
       if (this.preview) {
         return this.preview
       }
       return this.image()
     },
-    uploaderPlaceholder () {
+    uploaderPlaceholder() {
       if (this.preview) {
         return this.preview
       }

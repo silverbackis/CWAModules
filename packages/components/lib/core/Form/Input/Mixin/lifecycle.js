@@ -1,8 +1,5 @@
 export default {
-  mounted () {
-  },
-  created () {
-  },
-  beforeDestroy () {
-  }
+  mounted() {},
+  created() {},
+  beforeDestroy() {}
 }

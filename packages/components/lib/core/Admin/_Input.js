@@ -1,5 +1,5 @@
 export default {
-  data () {
+  data() {
     return {
       debounce: null
     }
@@ -27,14 +27,16 @@ export default {
   },
   computed: {
     dataModel: {
-      get () {
+      get() {
         return this.$bwstarter.getAdminInputModel(this.adminInputData())
       },
-      set (model) {
+      set(model) {
         const isFocussed = this.$el === document.activeElement
-        this.$bwstarter.setAdminInputModel(this.adminInputData({
-          model
-        }))
+        this.$bwstarter.setAdminInputModel(
+          this.adminInputData({
+            model
+          })
+        )
         this.$nextTick(() => {
           if (isFocussed && this.$el !== document.activeElement) {
             this.$el.focus()
@@ -42,7 +44,7 @@ export default {
         })
       }
     },
-    inputProps () {
+    inputProps() {
       return {
         placeholder: this.placeholder,
         class: 'cms-text-input'
@@ -50,7 +52,7 @@ export default {
     }
   },
   methods: {
-    adminInputData (data = {}) {
+    adminInputData(data = {}) {
       return Object.assign(
         {
           componentId: this.componentId,
@@ -60,12 +62,14 @@ export default {
       )
     }
   },
-  created () {
-    this.$bwstarter.initAdminInput(this.adminInputData({
-      model: this.model
-    }))
+  created() {
+    this.$bwstarter.initAdminInput(
+      this.adminInputData({
+        model: this.model
+      })
+    )
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$bwstarter.destroyAdminInput(this.adminInputData())
   }
 }

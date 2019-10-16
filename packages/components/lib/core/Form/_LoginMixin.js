@@ -1,16 +1,16 @@
-import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 import { mapGetters, mapState, mapMutations } from 'vuex'
+import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 import { Utilities } from '~/.nuxt/bwstarter/core/server'
 import FormTag from '~/.nuxt/bwstarter/components/Form/Form'
 import FormInput from '~/.nuxt/bwstarter/components/Form/FormInput'
 
 export default {
-  mixins: [ FormMixin ],
+  mixins: [FormMixin],
   components: {
     FormTag,
     FormInput
   },
-  data () {
+  data() {
     return {
       loginSuccessRedirect: '/'
     }
@@ -20,7 +20,7 @@ export default {
       getApiUrl: 'bwstarter/getApiUrl'
     }),
     ...mapState({ token: state => state.bwstarter.token }),
-    formErrors () {
+    formErrors() {
       return this.storeForm ? this.storeForm.vars.errors : []
     }
   },
@@ -29,31 +29,38 @@ export default {
       setAuthToken: 'setAuthToken',
       addNotification: 'notifications/addNotification'
     }),
-    formSuccess (data) {
+    formSuccess(data) {
       if (data.token) {
         this.$bwstarter.$storage.setState('token', data.token)
         this.$router.replace(this.loginSuccessRedirect)
       }
     }
   },
-  async asyncData ({ store: { dispatch, getters }, app: { $axios, $bwstarter }, res }) {
-    let response = await $bwstarter.fetchAndStoreLayout(null, true)
+  async asyncData({
+    store: { dispatch, getters },
+    app: { $axios, $bwstarter },
+    res
+  }) {
+    const response = await $bwstarter.fetchAndStoreLayout(null, true)
 
     if (process.server) {
       Utilities.setResponseCookies(res, response)
     }
 
     try {
-      let { data: { form } } = await $axios.get('login_form')
+      const {
+        data: { form }
+      } = await $axios.get('login_form')
       form.vars.action = '/login'
       return {
         form
       }
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error('Could not load form', err)
     }
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.destroyForm(this.formId)
   }
 }

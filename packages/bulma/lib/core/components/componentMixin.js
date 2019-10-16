@@ -1,5 +1,5 @@
-import ComponentMixin from '~/.nuxt/bwstarter/components/componentMixin'
 import ComponentWrapper from './ComponentWrapper'
+import ComponentMixin from '~/.nuxt/bwstarter/components/componentMixin'
 
 Object.assign(ComponentMixin.components, { ComponentWrapper })
 

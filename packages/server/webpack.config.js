@@ -4,10 +4,10 @@ module.exports = [
   {
     mode: 'production',
     entry: {
-      index: ['@babel/polyfill', path.resolve(__dirname + '/src/index.js')]
+      index: ['@babel/polyfill', path.resolve(__dirname, '/src/index.js')]
     },
     output: {
-      path: path.resolve(__dirname + '/dist/'),
+      path: path.resolve(__dirname, '/dist/'),
       filename: '[name].js',
       sourceMapFilename: '[name].map',
       libraryTarget: 'commonjs2'
@@ -18,10 +18,10 @@ module.exports = [
           test: /\.js$/,
           loader: 'babel-loader',
           options: {
-            presets: [ '@babel/preset-env' ]
+            presets: ['@babel/preset-env']
           },
           include: __dirname,
-          exclude: [ /node_modules/ ]
+          exclude: [/node_modules/]
         }
       ]
     },
@@ -30,7 +30,7 @@ module.exports = [
       'set-cookie-parser': 'set-cookie-parser'
     },
     resolve: {
-      mainFields: [ 'module', 'main' ]
+      mainFields: ['module', 'main']
     },
     node: {
       fs: 'empty'

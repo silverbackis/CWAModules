@@ -2,13 +2,15 @@ import axios from 'axios'
 import Utilities from './utilities'
 
 export default class BWServer {
-  constructor (env, logging) {
+  constructor(env, logging) {
     this.env = env
     this.utilities = new Utilities(this.env)
-    this.logging = logging === undefined ? env.NODE_ENV === 'development' : logging
+    this.logging =
+      logging === undefined ? env.NODE_ENV === 'development' : logging
   }
 
-  postSuccess ({ session }, res, loginRes) {
+  postSuccess({ session }, res, loginRes) {
+    // eslint-disable-next-line no-console
     this.logging && console.log(loginRes.data)
 
     // Reference: Auth0: https://auth0.com/docs/tokens/refresh-token/current#restrictions
@@ -24,27 +26,36 @@ export default class BWServer {
     res.status(200).json({ token: session.authToken })
   }
 
-  postError (res, err) {
+  postError(res, err) {
     if (!res) {
+      // eslint-disable-next-line no-console
       this.logging && console.error(err)
       return err
     }
     if (!err.response) {
+      // eslint-disable-next-line no-console
       this.logging && console.error(err.message)
       res.status(500).json({ message: err.message })
     } else {
       const response = err.response
+      // eslint-disable-next-line no-console
       this.logging && console.error(response)
-      if (response.status === 401 || response.status === 400 || response.data['@type'] === 'hydra:Error') {
+      if (
+        response.status === 401 ||
+        response.status === 400 ||
+        response.data['@type'] === 'hydra:Error'
+      ) {
         res.status(response.status).json(response.data)
         return
       }
       if (response.data) {
         let exception
-        const isException = (response.data.error && (exception = response.data.error.exception))
+        const isException =
+          response.data.error && (exception = response.data.error.exception)
         res.status(response.status).json({
-          message:
-            (isException ? exception[ 0 ].message : (response.data.message || response.data))
+          message: isException
+            ? exception[0].message
+            : response.data.message || response.data
         })
         return
       }
@@ -54,7 +65,7 @@ export default class BWServer {
     }
   }
 
-  post (req, res, data, successFn = null, errorFn = null, extraHeaders = {}) {
+  post(req, res, data, successFn = null, errorFn = null, extraHeaders = {}) {
     // Only allow post requests to API
     let _action = req.body._action
     // make sure _action is prefixed with a slash
@@ -62,32 +73,44 @@ export default class BWServer {
     // concat host and path
     const postPath = this.env.API_URL + _action
 
+    // eslint-disable-next-line no-console
     this.logging && console.log('posting to: ' + postPath)
 
-    const headersPassThru = ['accept', 'accept-encoding', 'accept-language', 'cache-control', 'content-type', 'dnt', 'origin', 'pragma', 'referer']
-    let initHeaders = {}
+    const headersPassThru = [
+      'accept',
+      'accept-encoding',
+      'accept-language',
+      'cache-control',
+      'content-type',
+      'dnt',
+      'origin',
+      'pragma',
+      'referer'
+    ]
+    const initHeaders = {}
     for (const hpu of headersPassThru) {
       if (req.headers[hpu]) {
         initHeaders[hpu] = req.headers[hpu]
       }
     }
 
-    return axios.post(
-      postPath,
-      data,
-      {
-        headers: Object.assign(initHeaders, extraHeaders, this.utilities.cookiesToHeaders(req.cookies))
-      }
-    )
-      .then((loginRes) => {
+    return axios
+      .post(postPath, data, {
+        headers: Object.assign(
+          initHeaders,
+          extraHeaders,
+          this.utilities.cookiesToHeaders(req.cookies)
+        )
+      })
+      .then(loginRes => {
         this.postSuccess(req, res, loginRes)
       })
-      .catch((err) => {
+      .catch(err => {
         this.postError(res, err)
       })
   }
 
-  login (req, res, extraHeaders = {}) {
+  login(req, res, extraHeaders = {}) {
     const data = {
       username: req.body.username,
       password: req.body.password
@@ -95,39 +118,44 @@ export default class BWServer {
     this.post(req, res, data, this.postSuccess, this.postError, extraHeaders)
   }
 
-  logout (req, res, setResponse = true) {
+  logout(req, res, setResponse = true) {
     if (req.session) {
       req.session.authToken = null
       req.session.destroy()
     }
     this.utilities.clearJwtCookie(res)
     if (setResponse) {
-      res
-        .status(200)
-        .json({ success: true })
+      res.status(200).json({ success: true })
     }
   }
 
-  async jwtRefresh (req, res, sendResult = true, extraHeaders = {}) {
-    let session = req.session
+  async jwtRefresh(req, res, sendResult = true, extraHeaders = {}) {
+    const session = req.session
     let message
     if (!session.refreshToken) {
       this.utilities.clearJwtCookie(res)
       message = 'Invalid session - no refresh token available'
+      // eslint-disable-next-line no-console
       this.logging && console.log(message)
       res.status(400).json({ message })
     }
-    const ACTION = this.env.API_URL + (this.env.TOKEN_REFRESH_PATH || '/token/refresh')
+    const ACTION =
+      this.env.API_URL + (this.env.TOKEN_REFRESH_PATH || '/token/refresh')
     try {
-      let response = await axios.post(
+      const response = await axios.post(
         ACTION,
         {
           refresh_token: session.refreshToken
         },
         {
-          headers: Object.assign(extraHeaders, this.utilities.cookiesToHeaders(req.cookies)),
+          headers: Object.assign(
+            extraHeaders,
+            this.utilities.cookiesToHeaders(req.cookies)
+          ),
           refreshTokenRequest: true
-        })
+        }
+      )
+      // eslint-disable-next-line no-console
       this.logging && console.log('jwtRefresh response', response.data)
       const data = response.data
       session.authToken = data.token
@@ -142,6 +170,7 @@ export default class BWServer {
       if (!sendResult) {
         throw new Error(err)
       }
+      // eslint-disable-next-line no-console
       this.logging && console.error('RefreshToken Error', err)
 
       res.status(500)
@@ -154,8 +183,11 @@ export default class BWServer {
         return
       }
 
-      let isException = (err.response.data.error && err.response.data.error.exception)
-      let error = isException ? err.response.data.error.exception[ 0 ].message : (err.response.data.message || 'unknown error')
+      const isException =
+        err.response.data.error && err.response.data.error.exception
+      const error = isException
+        ? err.response.data.error.exception[0].message
+        : err.response.data.message || 'unknown error'
       return res.json({
         message: 'Refresh token rejected',
         error

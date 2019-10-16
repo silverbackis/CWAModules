@@ -16,13 +16,13 @@ export default {
     },
     parents: {
       type: Array,
-      default () {
+      default() {
         return []
       }
     }
   },
   methods: {
-    extendInputId (data, inputName = null) {
+    extendInputId(data, inputName = null) {
       if (!data) {
         data = {}
       }
@@ -36,40 +36,54 @@ export default {
     }
   },
   computed: {
-    input () {
-      return this.$bwstarter.$storage.get('getInput', [ this.formId, this.inputName ], FORMS_MODULE)
+    input() {
+      return this.$bwstarter.$storage.get(
+        'getInput',
+        [this.formId, this.inputName],
+        FORMS_MODULE
+      )
     },
-    vars () {
+    vars() {
       return this.input ? this.input.vars : {}
     },
-    firstRepeatInput () {
+    firstRepeatInput() {
       if (!this.parents.length) {
         return this.input
       }
       const firstInputName = this.parents[0].children[0].vars.full_name
-      return this.$bwstarter.$storage.get('getInput', [ this.formId, firstInputName ], FORMS_MODULE)
+      return this.$bwstarter.$storage.get(
+        'getInput',
+        [this.formId, firstInputName],
+        FORMS_MODULE
+      )
     },
-    inputId () {
+    inputId() {
       return this.vars.id
     },
-    errors () {
+    errors() {
       return this.vars.errors || []
     },
-    valid () {
-      return this.vars.valid === true && this.firstRepeatInput.vars.valid === true
+    valid() {
+      return (
+        this.vars.valid === true && this.firstRepeatInput.vars.valid === true
+      )
     },
-    validating () {
+    validating() {
       return this.input ? this.input.validating : false
     },
-    label () {
+    label() {
       return this.vars.label
     },
     displayErrors: {
-      get () {
-        return this.input ? !!(this.input.displayErrors) : false //  && this.errors.length
+      get() {
+        return this.input ? !!this.input.displayErrors : false //  && this.errors.length
       },
-      set (displayErrors) {
-        this.$bwstarter.$storage.commit('setInputData', this.extendInputId({ data: { displayErrors } }), FORMS_MODULE)
+      set(displayErrors) {
+        this.$bwstarter.$storage.commit(
+          'setInputData',
+          this.extendInputId({ data: { displayErrors } }),
+          FORMS_MODULE
+        )
       }
     }
   }

@@ -1,4 +1,4 @@
-export default function (ctx, img, x, y, w, h, offsetX, offsetY) {
+export default function(ctx, img, x, y, w, h, offsetX, offsetY) {
   if (arguments.length === 2) {
     x = y = 0
     w = ctx.canvas.width
@@ -15,9 +15,9 @@ export default function (ctx, img, x, y, w, h, offsetX, offsetY) {
   if (offsetX > 1) offsetX = 1
   if (offsetY > 1) offsetY = 1
 
-  let iw = img.width
-  let ih = img.height
-  let r = Math.min(w / iw, h / ih)
+  const iw = img.width
+  const ih = img.height
+  const r = Math.min(w / iw, h / ih)
   let nw = iw * r
   let nh = ih * r
   let cx
