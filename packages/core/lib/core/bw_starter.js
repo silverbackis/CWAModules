@@ -513,6 +513,7 @@ const getEntitiesFromLocations = function(locations) {
         component['@id'],
         component
       )
+      return
     }
     entities[component['@id']] = component
 

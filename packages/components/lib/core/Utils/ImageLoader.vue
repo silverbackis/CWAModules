@@ -131,17 +131,17 @@ export default {
       return this.imagePath
     }
   },
-  // watch: {
-  //   image() {
-  //     this.initImage()
-  //   },
-  //   placeholder() {
-  //     this.initImage()
-  //   }
-  // },
-  // mounted() {
-  //   this.initImage()
-  // },
+  watch: {
+    image() {
+      this.initImage()
+    },
+    placeholder() {
+      this.initImage()
+    }
+  },
+  mounted() {
+    this.initImage()
+  },
   methods: {
     setupPlaceholder() {
       if (this.placeholderPath) {
