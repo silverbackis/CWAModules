@@ -1,6 +1,6 @@
 {
   "name": "@cwamodules/bulma",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "",
   "licence": "MIT",
   "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
@@ -9,9 +9,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@cwamodules/components": "^0.6.1",
-    "@cwamodules/core": "^0.6.1",
-    "@cwamodules/server": "^0.6.1",
+    "@cwamodules/components": "^0.6.2",
+    "@cwamodules/core": "^0.6.2",
+    "@cwamodules/server": "^0.6.2",
     "bulma": "^0.7.1",
     "vuedraggable": "^2",
     "vuejs-dialog": "^1.3.0"
