@@ -47,7 +47,7 @@ export default {
         return ['small', 'medium', 'large'].indexOf(value) !== false
       }
     },
-    style: {
+    "_style": {
       type: String,
       default: null,
       validator: function(value) {

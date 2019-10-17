@@ -53,10 +53,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import CollectionPagination from './CollectionPagination'
 import CollectionAdmin from './CollectionAdmin'
+import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
   components: {
