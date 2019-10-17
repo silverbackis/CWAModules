@@ -7,15 +7,15 @@
             <label
               class="checkbox is-custom checkbox-autosave has-padding is-toggle"
             >
-              <input type="checkbox" v-model="autoSaveLocal" class="custom" />
+              <input v-model="autoSaveLocal" type="checkbox" class="custom" />
               <span class="custom-control-label">
                 Auto<span class="is-hidden-mobile">-Save</span>
                 {{ autoSaveLocal ? 'On' : 'Off' }}
               </span>
             </label>
             <div
-              class="published-checkbox-wrapper"
               v-if="publishData && 'published' in publishData"
+              class="published-checkbox-wrapper"
               @mouseover.prevent="showPublishedTooltip = true"
               @mouseout.prevent="showPublishedTooltip = false"
             >
@@ -39,15 +39,15 @@
           </div>
         </div>
         <div class="level-right">
-          <div class="has-padding" v-if="!isModified">
+          <div v-if="!isModified" class="has-padding">
             <span class="is-hidden-touch">All changes saved</span>
             <span class="is-hidden-desktop">Saved</span>
           </div>
           <div v-else class="level-item is-marginless">
             <button
-              @click="$bwstarter.save()"
               class="button button-save is-small is-success is-uppercase is-radiusless"
               :disabled="isSubmitting == 1"
+              @click="$bwstarter.save()"
             >
               <span class="icon">
                 <font-awesome-icon icon="save" />
@@ -62,8 +62,8 @@
           </div>
           <div class="level-item">
             <button
-              @click="showEditPage = true"
               class="button is-small is-dark is-uppercase is-radiusless"
+              @click="showEditPage = true"
             >
               <span class="icon">
                 <font-awesome-icon icon="edit" />
@@ -128,8 +128,8 @@
               </div>
             </div>
             <div
-              class="field"
               v-if="publishData && 'publishedDate' in publishData"
+              class="field"
             >
               <label class="label">Publish Date</label>
               <div class="control">
@@ -152,9 +152,9 @@
             <div class="field">
               <div class="control">
                 <a
-                  @click="regenerateRoute"
                   :class="['button', 'is-primary']"
                   :disabled="regenerating"
+                  @click="regenerateRoute"
                 >
                   <span class="icon">
                     <font-awesome-icon icon="sync" />
@@ -229,8 +229,8 @@
               >
                 {{ route.route }}
                 <a
-                  @click="deleteRoute(route)"
                   class="panel-icon has-text-danger"
+                  @click="deleteRoute(route)"
                 >
                   <font-awesome-icon icon="trash-alt" />
                 </a>
@@ -281,9 +281,9 @@
 </template>
 
 <script>
+import _omit from 'lodash/omit'
 import { name as ADMIN_MODULE } from '~/.nuxt/bwstarter/core/storage/admin'
 import { name as contentModuleName } from '~/.nuxt/bwstarter/core/storage/content'
-import _omit from 'lodash/omit'
 
 export default {
   components: {
@@ -404,6 +404,19 @@ export default {
       this.routePath = newVal
     }
   },
+  mounted() {
+    this.autoSaveLocal = this.autoSave
+    setInterval(() => (this.now = new Date()), 5000)
+    if (this.autoSaveCookie) {
+      const curCookie = this.$cookie.get(this.cookieName)
+      if (curCookie !== null) {
+        this.$cookie.set(this.cookieName, curCookie, {
+          expires: this.cookieExpires
+        })
+        this.autoSaveLocal = curCookie === 'true'
+      }
+    }
+  },
   methods: {
     errorFromResponse(error) {
       if (error.response && error.response.data) {
@@ -430,6 +443,7 @@ export default {
         this.routePath = route.route
         this.replaceRoute()
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         this.regenerateRouteError = this.errorFromResponse(error)
       }
@@ -448,6 +462,7 @@ export default {
         )
         this.replaceRoute()
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         this.saveRouteError = this.errorFromResponse(error)
       }
@@ -466,6 +481,7 @@ export default {
       try {
         await this.$axios.delete(decodeURI(route['@id']), { progress: false })
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         this.routeListError = this.errorFromResponse(error)
       }
@@ -489,13 +505,14 @@ export default {
         this.newRedirectModel = null
         await this.reloadRoute()
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         this.addRouteError = this.errorFromResponse(error)
       }
       this.addingRedirect = false
     },
     getRedirectedFrom(routeEntity) {
-      let childRoutes = []
+      const childRoutes = []
       if (!routeEntity) {
         return childRoutes
       }
@@ -516,23 +533,11 @@ export default {
         )
         this.$bwstarter.initRoute(data)
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(error)
         this.routeListError = this.errorFromResponse(error)
       }
       this.reloadingRedirects = false
-    }
-  },
-  mounted() {
-    this.autoSaveLocal = this.autoSave
-    setInterval(() => (this.now = new Date()), 5000)
-    if (this.autoSaveCookie) {
-      let curCookie = this.$cookie.get(this.cookieName)
-      if (curCookie !== null) {
-        this.$cookie.set(this.cookieName, curCookie, {
-          expires: this.cookieExpires
-        })
-        this.autoSaveLocal = curCookie === 'true'
-      }
     }
   }
 }

@@ -1,11 +1,11 @@
 <template>
-  <li class="feature-text-list-item" v-if="component">
+  <li v-if="component" class="feature-text-list-item">
     <div v-if="$bwstarter.isAdmin" class="field has-addons">
       <div class="control is-expanded has-icons-left">
         <admin-text-input
           :model="component.title"
-          :componentId="endpoint"
-          componentField="title"
+          :component-id="endpoint"
+          component-field="title"
           placeholder="Enter feature"
           class="input cms-text-input"
         />
@@ -40,10 +40,10 @@
 import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 export default {
-  mixins: [ComponentMixin],
   components: {
     AppLink
-  }
+  },
+  mixins: [ComponentMixin]
 }
 </script>
 

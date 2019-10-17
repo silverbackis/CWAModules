@@ -5,7 +5,7 @@
     :api-action="apiAction"
     :extra-data="extraData"
   >
-    <slot name="errors" v-if="formErrors.length">
+    <slot v-if="formErrors.length" name="errors">
       <div>
         <ul class="content">
           <li v-for="(error, index) in formErrors" :key="index">
@@ -15,18 +15,18 @@
       </div>
     </slot>
 
-    <slot name="form" v-if="!formValid || !showSuccess">
+    <slot v-if="!formValid || !showSuccess" name="form">
       <form-input
         v-for="input in form.children"
         :key="input.vars.full_name"
         :input="input"
-        :formId="formId"
+        :form-id="formId"
         :wrapped="true"
       />
       <slot name="form-append"></slot>
     </slot>
 
-    <slot name="success" v-else>
+    <slot v-else name="success">
       <div class="content form-result">
         <h1 class="has-text-success has-text-weight-bold">Thank you</h1>
         <p>
@@ -50,6 +50,10 @@ import FormInput from '~/.nuxt/bwstarter/components/Form/FormInput'
 import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 
 export default {
+  components: {
+    FormTag,
+    FormInput
+  },
   mixins: [ComponentMixin, FormMixin],
   props: {
     extraData: {
@@ -70,10 +74,6 @@ export default {
     formValid() {
       return this.storeForm ? this.storeForm.vars.valid : false
     }
-  },
-  components: {
-    FormTag,
-    FormInput
   }
 }
 </script>

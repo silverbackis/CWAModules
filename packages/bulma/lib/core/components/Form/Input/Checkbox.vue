@@ -2,14 +2,14 @@
   <wrapper
     v-bind="wrapperData"
     :label="''"
-    :useIcons="false"
+    :use-icons="false"
     class="is-checkbox"
   >
     <form-input
-      :formId="formId"
-      :inputName="inputName"
-      :inputType="inputType"
-      inputClass=""
+      :form-id="formId"
+      :input-name="inputName"
+      :input-type="inputType"
+      input-class=""
     />
   </wrapper>
 </template>
@@ -19,9 +19,9 @@ import InputMixin from './_Mixin'
 import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Checkbox'
 
 export default {
-  mixins: [InputMixin],
   components: {
     FormInput
-  }
+  },
+  mixins: [InputMixin]
 }
 </script>

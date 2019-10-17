@@ -11,10 +11,10 @@ import ChoiceSelect from './Choice/ChoiceSelect'
 import ChoiceExpanded from './Choice/ChoiceExpanded'
 
 export default {
-  mixins: [InputCommonMixin],
   components: {
     ChoiceSelect,
     ChoiceExpanded
-  }
+  },
+  mixins: [InputCommonMixin]
 }
 </script>

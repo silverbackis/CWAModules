@@ -7,18 +7,18 @@
       <div class="columns is-tablet">
         <div class="column">
           <bulma-components
-            :pageData="componentGroups[0]"
+            :page-data="componentGroups[0]"
             :depth="depth"
             :nested="true"
-            :dynamicData="dynamicData"
+            :dynamic-data="dynamicData"
           />
         </div>
         <div class="column is-narrow is-right">
           <bulma-components
-            :pageData="componentGroups[1]"
+            :page-data="componentGroups[1]"
             :depth="depth"
             :nested="true"
-            :dynamicData="dynamicData"
+            :dynamic-data="dynamicData"
           />
         </div>
       </div>
@@ -27,14 +27,14 @@
 </template>
 
 <script>
-import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 import BulmaComponents from '../Components'
+import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
 export default {
-  mixins: [NuxtChildMixin],
   components: {
     BulmaComponents
-  }
+  },
+  mixins: [NuxtChildMixin]
 }
 </script>
 

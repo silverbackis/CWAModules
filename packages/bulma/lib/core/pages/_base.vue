@@ -21,9 +21,9 @@ import BulmaComponents from '../components/Components'
 import pageMixin from '../../components/pageMixin'
 
 export default {
-  mixins: [pageMixin],
   components: {
     BulmaComponents
-  }
+  },
+  mixins: [pageMixin]
 }
 </script>

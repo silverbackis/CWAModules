@@ -1,9 +1,9 @@
 <template>
-  <wrapper v-bind="wrapperData" :useIcons="true" class="is-simple">
+  <wrapper v-bind="wrapperData" :use-icons="true" class="is-simple">
     <form-input
-      :formId="formId"
-      :inputName="inputName"
-      :inputType="inputType"
+      :form-id="formId"
+      :input-name="inputName"
+      :input-type="inputType"
       :parents="parents"
     />
   </wrapper>
@@ -14,9 +14,9 @@ import InputMixin from './_Mixin'
 import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Simple'
 
 export default {
-  mixins: [InputMixin],
   components: {
     FormInput
-  }
+  },
+  mixins: [InputMixin]
 }
 </script>

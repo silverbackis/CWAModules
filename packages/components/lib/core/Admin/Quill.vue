@@ -40,6 +40,7 @@ export default {
   async mounted() {
     const Quill = await import('quill')
 
+    // eslint-disable-next-line new-cap
     this.editor = new Quill.default(this.$el, {
       editorOptions: this.editorOptions,
       theme: this.theme

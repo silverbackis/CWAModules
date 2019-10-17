@@ -2,7 +2,7 @@
   <section class="page-section">
     <div class="columns is-centered">
       <div class="column is-narrow">
-        <div class="card" v-if="!!token">
+        <div v-if="!!token" class="card">
           <div class="card-header">
             <h1 class="card-header-title">Redirecting...</h1>
           </div>
@@ -10,7 +10,7 @@
             <p>You are logged in. Please wait while we redirect you.</p>
           </div>
         </div>
-        <div class="card" v-else>
+        <div v-else class="card">
           <div class="card-header is-dark">
             <h1 class="card-header-title has-text-white">Login</h1>
           </div>
@@ -25,16 +25,16 @@
             <form-tag
               v-if="form"
               :form="form"
-              :successFn="formSuccess"
-              :apiAction="false"
+              :success-fn="formSuccess"
+              :api-action="false"
             >
               <form-input
                 v-for="input in form.children"
                 :key="input.vars.unique_block_prefix"
                 :input="input"
-                :formId="formId"
+                :form-id="formId"
                 :wrapped="true"
-                :disableValidation="true"
+                :disable-validation="true"
               />
             </form-tag>
             <span class="help is-success">

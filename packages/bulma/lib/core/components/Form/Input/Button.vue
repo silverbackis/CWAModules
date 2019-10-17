@@ -2,16 +2,16 @@
   <wrapper
     v-if="inputType !== 'hidden'"
     v-bind="wrapperData"
-    :useIcons="false"
+    :use-icons="false"
     label=""
     :errors="[]"
     class="is-button"
   >
     <form-input
-      :formId="formId"
-      :inputName="inputName"
-      :inputType="inputType"
-      inputClass="button"
+      :form-id="formId"
+      :input-name="inputName"
+      :input-type="inputType"
+      input-class="button"
     />
   </wrapper>
 </template>
@@ -21,9 +21,9 @@ import InputMixin from './_Mixin'
 import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Button'
 
 export default {
-  mixins: [InputMixin],
   components: {
     FormInput
-  }
+  },
+  mixins: [InputMixin]
 }
 </script>

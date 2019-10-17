@@ -1,5 +1,5 @@
 <template>
-  <component v-if="isExternal" v-bind="linkProps">
+  <component :is="domTag" v-if="isExternal" v-bind="linkProps">
     <slot></slot>
   </component>
   <nuxt-link v-else v-bind="linkProps">
@@ -16,7 +16,8 @@ export default {
     },
     tag: {
       type: String,
-      required: false
+      required: false,
+      default: null
     }
   },
   computed: {

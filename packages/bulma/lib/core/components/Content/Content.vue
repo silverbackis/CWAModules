@@ -5,12 +5,12 @@
     :class="component.className"
   >
     <div :class="containerClass">
-      <h3 class="subtitle" v-if="$bwstarter.isAdmin || component.title">
+      <h3 v-if="$bwstarter.isAdmin || component.title" class="subtitle">
         <admin-text-input
           v-if="$bwstarter.isAdmin"
           :model="component.title"
-          :componentId="endpoint"
-          componentField="title"
+          :component-id="endpoint"
+          component-field="title"
           placeholder="Enter page title here"
         />
         <span v-else v-html="component.title" />
@@ -18,13 +18,13 @@
       <div v-if="$bwstarter.isAdmin" class="content">
         <admin-quill-editor
           :model="realComponentData.content"
-          :componentId="endpoint"
-          componentField="content"
+          :component-id="endpoint"
+          component-field="content"
         />
       </div>
       <component
-        v-else
         :is="transformed"
+        v-else
         v-bind="$props"
         class="content"
       ></component>
@@ -37,20 +37,6 @@ import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
   mixins: [ComponentMixin],
-  methods: {
-    convertAnchor(anchor) {
-      // console.log(anchor, anchor.attributes, anchor.innerHTML)
-      const newLink = document.createElement('app-link')
-      newLink.setAttribute('to', anchor.href)
-      for (let attr of anchor.attributes) {
-        if (attr.name !== 'href') {
-          newLink.setAttribute(attr.name, anchor[attr.name])
-        }
-      }
-      newLink.innerHTML = anchor.innerHTML
-      return newLink
-    }
-  },
   computed: {
     transformed() {
       // Inject dynamic data
@@ -71,6 +57,20 @@ export default {
           AppLink: () => import('~/.nuxt/bwstarter/components/Utils/AppLink')
         }
       }
+    }
+  },
+  methods: {
+    convertAnchor(anchor) {
+      // console.log(anchor, anchor.attributes, anchor.innerHTML)
+      const newLink = document.createElement('app-link')
+      newLink.setAttribute('to', anchor.href)
+      for (const attr of anchor.attributes) {
+        if (attr.name !== 'href') {
+          newLink.setAttribute(attr.name, anchor[attr.name])
+        }
+      }
+      newLink.innerHTML = anchor.innerHTML
+      return newLink
     }
   }
 }

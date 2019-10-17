@@ -1,25 +1,26 @@
 <template>
   <div :class="{ field: !input.hidden && inputType !== 'hidden' }">
     <component
-      v-if="input.vars.expanded || (!input.children || !input.children.length)"
       :is="inputComponent"
+      v-if="input.vars.expanded || (!input.children || !input.children.length)"
       :form-id="formId"
       :input-name="inputName"
       :wrapped="wrapped"
       :input-type="inputType"
       :parents="parents"
     />
-    <form-input
-      v-if="!input.vars.expanded"
-      v-for="(child, index) of input.children"
-      :key="index"
-      :input="child"
-      :wrapped="wrapped"
-      :form-id="formId"
-      :disable-validation="disableValidation"
-      :css-framework="cssFramework"
-      :parents="[input, ...parents]"
-    />
+    <template v-if="!input.vars.expanded">
+      <form-input
+        v-for="(child, index) of input.children"
+        :key="index"
+        :input="child"
+        :wrapped="wrapped"
+        :form-id="formId"
+        :disable-validation="disableValidation"
+        :css-framework="cssFramework"
+        :parents="[input, ...parents]"
+      />
+    </template>
   </div>
 </template>
 
@@ -27,7 +28,7 @@
 import { name as FORMS_MODULE } from '~/.nuxt/bwstarter/core/storage/form'
 
 export default {
-  name: 'form-input',
+  name: 'FormInput',
   props: {
     input: {
       type: Object,
@@ -76,6 +77,16 @@ export default {
       return this.input.vars.full_name
     }
   },
+  created() {
+    const args = {
+      formId: this.formId,
+      inputVars: this.input.vars,
+      children: this.input.children,
+      disableValidation: this.disableValidation
+    }
+    this.$bwstarter.$storage.commit('initInput', args, FORMS_MODULE)
+    this.resolveInputComponent()
+  },
   methods: {
     isInputType(InputType) {
       return this.availableComponents.indexOf(InputType) !== -1
@@ -90,7 +101,7 @@ export default {
     },
     resolveInputComponent() {
       let inputComponentType = this.availableComponents[0]
-      for (let bp of this.input.vars.block_prefixes) {
+      for (const bp of this.input.vars.block_prefixes) {
         if (this.isInputType(bp)) {
           inputComponentType = bp
         }
@@ -106,16 +117,6 @@ export default {
           '.vue')
       })
     }
-  },
-  created() {
-    let args = {
-      formId: this.formId,
-      inputVars: this.input.vars,
-      children: this.input.children,
-      disableValidation: this.disableValidation
-    }
-    this.$bwstarter.$storage.commit('initInput', args, FORMS_MODULE)
-    this.resolveInputComponent()
   }
 }
 </script>

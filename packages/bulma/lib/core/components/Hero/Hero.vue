@@ -1,8 +1,8 @@
 <template>
   <div v-if="component">
     <component-wrapper
-      :className="className"
-      :extendClass="false"
+      :class-name="className"
+      :extend-class="false"
       :nested="nested"
     >
       <div class="hero-body">
@@ -13,8 +13,8 @@
                 <admin-text-input
                   v-if="$bwstarter.isAdmin"
                   :model="realComponentData.title"
-                  :componentId="endpoint"
-                  componentField="title"
+                  :component-id="endpoint"
+                  component-field="title"
                   placeholder="Enter page title here"
                 />
                 <span v-else>{{ realComponentData.title }}</span>
@@ -26,8 +26,8 @@
                 <admin-text-input
                   v-if="$bwstarter.isAdmin"
                   :model="realComponentData.subtitle"
-                  :componentId="endpoint"
-                  componentField="subtitle"
+                  :component-id="endpoint"
+                  component-field="subtitle"
                   placeholder="Enter optional subtitle here"
                 />
                 <span v-else>{{ realComponentData.subtitle }}</span>
@@ -50,7 +50,7 @@
           <bulma-tabs
             _style="boxed"
             :component="tabs"
-            :includeNuxtChild="false"
+            :include-nuxt-child="false"
             :nested="true"
             :depth="depth"
           />
@@ -60,7 +60,7 @@
     <nuxt-child
       v-if="tabs"
       :key="childKey"
-      :componentGroup="tabs.childComponentGroup"
+      :component-group="tabs.childComponentGroup"
       :nested="false"
     />
   </div>
@@ -71,15 +71,20 @@ import { mapGetters } from 'vuex'
 import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
 export default {
+  components: {
+    BulmaTabs: () =>
+      import('~/.nuxt/bwstarter/bulma/components/Nav/Tabs/Tabs.vue'),
+    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
+    ImageLoader: () => import('~/.nuxt/bwstarter/components/Utils/ImageLoader')
+  },
   mixins: [NuxtChildMixin],
-  props: ['cid'],
   computed: {
     ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
     hasImage() {
       return this.component && this.component.publicPath
     },
     className() {
-      let className = ['hero']
+      const className = ['hero']
       if (this.component.className) {
         className.push(this.component.className)
       } else {
@@ -107,18 +112,12 @@ export default {
       if (!this.component) {
         return {}
       }
-      let imagePath = this.injectDynamicData(this.component.publicPath)
+      const imagePath = this.injectDynamicData(this.component.publicPath)
       if (imagePath !== this.component.publicPath) {
         return this.dynamicData
       }
       return this.component
     }
-  },
-  components: {
-    BulmaTabs: () =>
-      import('~/.nuxt/bwstarter/bulma/components/Nav/Tabs/Tabs.vue'),
-    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
-    ImageLoader: () => import('~/.nuxt/bwstarter/components/Utils/ImageLoader')
   }
 }
 </script>

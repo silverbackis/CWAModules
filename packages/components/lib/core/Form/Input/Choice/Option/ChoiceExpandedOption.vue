@@ -2,16 +2,16 @@
   <label v-if="input" :class="labelClass" :for="child.vars.id">
     <input
       v-if="!input.vars.multiple"
+      :id="child.vars.id"
       v-model="inputModel"
       v-bind="localProps"
-      :id="child.vars.id"
       :value="child.vars.value"
     />
     <input
       v-else
+      :id="child.vars.id"
       v-model="inputModel"
       v-bind="localProps"
-      :id="child.vars.id"
       :value="child.vars.value"
     />
     <span :class="labelTextClass" v-html="child.vars.label"></span>
@@ -50,7 +50,7 @@ export default {
       }
     },
     localProps() {
-      let localProps = Object.assign(
+      const localProps = Object.assign(
         {
           type: this.input.vars.multiple ? 'checkbox' : 'radio'
         },

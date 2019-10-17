@@ -6,7 +6,7 @@
       :class="containerClass"
     >
       <gallery-group
-        :componentGroup="group"
+        :component-group="group"
         :$photoswipe="$photoswipe"
       ></gallery-group>
     </div>
@@ -15,18 +15,27 @@
 
 <script>
 import Vue from 'vue'
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import PhotoSwipeComponent from './PhotoSwipe'
 import GalleryGroup from './GalleryGroup'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
-  mixins: [ComponentMixin],
   components: {
     GalleryGroup
   },
+  mixins: [ComponentMixin],
   data() {
     return {
       $photoswipe: null
+    }
+  },
+  created() {
+    this.initPhotoswipe()
+  },
+  beforeDestroy() {
+    if (this.$photoswipe) {
+      document.body.removeChild(this.$photoswipe.$el)
+      this.$photoswipe = null
     }
   },
   methods: {
@@ -38,19 +47,11 @@ export default {
       } else {
         // Create dummy functions for SSR to avoid errors
         const f = () => {
+          // eslint-disable-next-line no-console
           console.log('$photoswipe not initialised yet (SSR)')
         }
         this.$photoswipe = { open: f, close: f }
       }
-    }
-  },
-  created() {
-    this.initPhotoswipe()
-  },
-  beforeDestroy() {
-    if (this.$photoswipe) {
-      document.body.removeChild(this.$photoswipe.$el)
-      this.$photoswipe = null
     }
   }
 }

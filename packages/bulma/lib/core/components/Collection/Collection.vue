@@ -25,8 +25,7 @@
           >
             <component
               :is="itemComponent"
-              v-for="item in component.collection['hydra:member']"
-              v-if="getEntity(item)"
+              v-for="item in collectionItems"
               :key="item['@id']"
               :component="getEntity(item)"
               :disabled-admin="disabledAdmin"
@@ -190,6 +189,11 @@ export default {
         data[key] = hydraView ? parseURL(hydraView[`hydra:${key}`]) : null
       }
       return data
+    },
+    collectionItems() {
+      return this.component.collection['hydra:member'].filter(
+        item => !!this.getEntity(item)
+      )
     }
   },
   created() {
@@ -243,6 +247,7 @@ export default {
           })
           .catch(error => {
             this.reloading = false
+            // eslint-disable-next-line no-console
             console.error('updateContentComponents Error', error)
           })
       }
@@ -259,6 +264,7 @@ export default {
           })
           .catch(error => {
             this.adding = false
+            // eslint-disable-next-line no-console
             console.error(error)
           })
       }

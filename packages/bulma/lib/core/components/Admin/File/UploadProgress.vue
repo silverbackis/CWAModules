@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-outer has-text-centered" v-if="uploading || error">
+  <div v-if="uploading || error" class="progress-outer has-text-centered">
     <bulma-progress
       :class="['is-small', error ? 'is-danger' : 'is-success']"
       :value="percent"

@@ -1,11 +1,11 @@
 <template>
   <tab-page-wrapper
     :nested="nested"
-    :includeNuxtChild="includeNuxtChild"
+    :include-nuxt-child="includeNuxtChild"
     :depth="depth"
     :component="component"
   >
-    <nav class="tabs" :class="this.classModifiers">
+    <nav class="tabs" :class="classModifiers">
       <ul>
         <bulma-tab-item
           v-for="(component, index) in _items"
@@ -18,16 +18,16 @@
 </template>
 
 <script>
-import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 import BulmaTabItem from './TabsItem'
 import TabPageWrapper from './TabPageWrapper'
+import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
 export default {
-  mixins: [NuxtChildMixin],
   components: {
     BulmaTabItem,
     TabPageWrapper
   },
+  mixins: [NuxtChildMixin],
   props: {
     includeNuxtChild: {
       type: Boolean,
@@ -47,7 +47,7 @@ export default {
         return ['small', 'medium', 'large'].indexOf(value) !== false
       }
     },
-    _style: {
+    style: {
       type: String,
       default: null,
       validator: function(value) {
@@ -85,7 +85,7 @@ export default {
       if (typeof values === 'string') {
         values = [values]
       }
-      let classes = []
+      const classes = []
       values.map(value => {
         if (value) {
           classes.push('is-' + value)

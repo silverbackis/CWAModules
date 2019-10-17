@@ -1,9 +1,9 @@
 <template>
   <li
+    v-if="image() || $bwstarter.isAdmin"
     itemscope
     itemtype="https://schema.org/ImageGallery"
     class="gallery-item"
-    v-if="image() || $bwstarter.isAdmin"
   >
     <div class="gallery-thumb">
       <figure
@@ -29,8 +29,8 @@
             :alt="component.title"
           />
           <div
-            class="progress-outer has-text-centered"
             v-if="uploading || uploadError"
+            class="progress-outer has-text-centered"
           >
             <bulma-progress
               :class="['is-small', uploadError ? 'is-danger' : 'is-success']"
@@ -58,13 +58,13 @@
         >
           <label class="file-label">
             <input
+              ref="file"
               class="file-input"
               type="file"
               name="image"
               accept="image/*"
-              @change="handleFileUpload()"
-              ref="file"
               :disabled="uploading"
+              @change="handleFileUpload()"
             />
             <div class="file-cta">
               <span class="file-icon">
@@ -108,8 +108,8 @@
           <div class="control">
             <admin-text-input
               :model="injectDynamicData(component.caption)"
-              :componentId="endpoint"
-              componentField="caption"
+              :component-id="endpoint"
+              component-field="caption"
               placeholder="Enter caption"
               class="input"
             />
@@ -140,31 +140,27 @@
 </template>
 
 <script>
-import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
 import { mapGetters } from 'vuex'
+import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
 import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import UploadMixin from '~/.nuxt/bwstarter/bulma/components/Admin/File/UploadMixin'
 
 export default {
-  mixins: [UploadMixin],
-  data() {
-    return {
-      file: null,
-      preview: null,
-      uploadPercentage: 0,
-      uploading: false,
-      uploadError: null,
-      transparentImage:
-        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
-    }
+  components: {
+    ImageLoader,
+    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
+    BulmaProgress: () => import('../../BulmaProgress')
   },
+  mixins: [UploadMixin],
   props: {
     items: {
       type: Array,
       required: true
     },
-    $photoswipe: {
-      type: Object
+    photoswipe: {
+      type: Object,
+      required: false,
+      default: null
     },
     location: {
       type: Object,
@@ -175,10 +171,16 @@ export default {
       required: true
     }
   },
-  components: {
-    ImageLoader,
-    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text'),
-    BulmaProgress: () => import('../../BulmaProgress')
+  data() {
+    return {
+      file: null,
+      preview: null,
+      uploadPercentage: 0,
+      uploading: false,
+      uploadError: null,
+      transparentImage:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+    }
   },
   computed: {
     ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
@@ -219,7 +221,7 @@ export default {
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
       if (this.file && /\.(jpe?g|png|gif)$/i.test(this.file.name)) {
-        let reader = new FileReader()
+        const reader = new FileReader()
         reader.addEventListener(
           'load',
           function(file) {
@@ -272,7 +274,8 @@ export default {
           )
         })
         .catch(error => {
-          console.warn(error)
+          // eslint-disable-next-line no-console
+          console.error(error)
           this.uploading = false
           this.uploadError =
             'Server responded with status code ' + error.statusCode
@@ -286,6 +289,7 @@ export default {
             this.$emit('deleted')
           })
           .catch(error => {
+            // eslint-disable-next-line no-console
             console.error('error deleting gallery item', error)
           })
       }
@@ -299,7 +303,7 @@ export default {
           dialog.close()
         })
         .catch(() => {
-          console.log('Cancelled delete.')
+          // Cancelled delete
         })
     }
   }

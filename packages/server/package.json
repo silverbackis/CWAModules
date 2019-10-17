@@ -9,7 +9,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "webpack-cli --config ./webpack.config.js"
+    "build": "webpack-cli --config ./webpack.config.js",
+    "lint-fix": "eslint -c ../../.eslintrc.js --fix ./src"
   },
   "dependencies": {
     "axios": "^0.19.0",

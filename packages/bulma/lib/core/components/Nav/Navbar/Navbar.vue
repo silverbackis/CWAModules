@@ -2,9 +2,9 @@
   <component-wrapper
     ref="nav"
     dom-tag="nav"
-    :extendClass="false"
+    :extend-class="false"
     :class-name="['navbar', 'is-fixed-top', component.className]"
-    :style="{ transform: 'translateY(' + this.navY + 'px)' }"
+    :style="{ transform: 'translateY(' + navY + 'px)' }"
   >
     <div class="navbar-brand">
       <slot name="logo">
@@ -18,8 +18,8 @@
       </slot>
       <div
         class="navbar-burger burger"
-        @click="isActive = !isActive"
         :class="{ 'is-active': isActive }"
+        @click="isActive = !isActive"
       >
         <span></span>
         <span></span>
@@ -31,12 +31,13 @@
         v-if="$slots['navbar-start'] || (!itemsAtEnd && childComponents.length)"
         class="navbar-start"
       >
-        <bulma-navbar-item
-          v-if="!itemsAtEnd && childComponents.length"
-          v-for="(component, index) in childComponents[0]"
-          :component="component"
-          :key="index"
-        />
+        <template v-if="!itemsAtEnd && childComponents.length">
+          <bulma-navbar-item
+            v-for="(component, index) in childComponents[0]"
+            :key="index"
+            :component="component"
+          />
+        </template>
         <slot name="navbar-start"> </slot>
       </div>
 
@@ -44,12 +45,13 @@
         v-if="$slots['navbar-end'] || (itemsAtEnd && childComponents.length)"
         class="navbar-end"
       >
-        <bulma-navbar-item
-          v-if="itemsAtEnd && childComponents.length"
-          v-for="(component, index) in childComponents[0]"
-          :component="component"
-          :key="index"
-        />
+        <template v-if="itemsAtEnd && childComponents.length">
+          <bulma-navbar-item
+            v-for="(component, index) in childComponents[0]"
+            :key="index"
+            :component="component"
+          />
+        </template>
         <slot name="navbar-end"> </slot>
       </div>
     </div>
@@ -62,16 +64,16 @@ import BulmaNavbarItem from './NavbarItem'
 import componentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
+  components: {
+    BulmaNavbarItem
+  },
+  mixins: [componentMixin],
   props: {
     itemsAtEnd: {
       type: Boolean,
       default: false
     }
   },
-  components: {
-    BulmaNavbarItem
-  },
-  mixins: [componentMixin],
   data() {
     return {
       isActive: false,
@@ -95,6 +97,12 @@ export default {
       this.isActive = false
     }
   },
+  mounted() {
+    window.addEventListener('scroll', this.updateWindowY)
+  },
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.updateWindowY)
+  },
   methods: {
     updateWindowY() {
       this.windowY = Math.max(window.scrollY, 0)
@@ -107,7 +115,7 @@ export default {
       }
     },
     updateNavY() {
-      let diff = this.windowY - this.lastWindowY
+      const diff = this.windowY - this.lastWindowY
       this.lastWindowY = this.windowY
       // iOS does not always trigger a scroll event (e.g. when bouncing)
       // so we stop ticking when we see there has been no movement
@@ -122,12 +130,6 @@ export default {
             0
           )
     }
-  },
-  mounted() {
-    window.addEventListener('scroll', this.updateWindowY)
-  },
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.updateWindowY)
   }
 }
 </script>

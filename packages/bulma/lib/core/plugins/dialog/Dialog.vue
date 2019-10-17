@@ -2,7 +2,7 @@
   <div class="modal is-active">
     <div class="modal-background" @click="close"></div>
     <div class="modal-card">
-      <header class="modal-card-head" v-if="messageHasTitle">
+      <header v-if="messageHasTitle" class="modal-card-head">
         <h2
           v-if="options.html"
           class="modal-card-title"
@@ -21,8 +21,8 @@
         <button
           class="button is-danger"
           :class="{ 'is-loading': loading }"
-          @click="submitDialogForm"
           :disabled="okBtnDisabled"
+          @click="submitDialogForm"
         >
           OK
         </button>

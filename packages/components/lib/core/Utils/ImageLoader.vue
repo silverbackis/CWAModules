@@ -32,8 +32,8 @@
         />
       </transition-group>
       <canvas
-        ref="canvas_dom"
         v-show="loadedRes === 'low'"
+        ref="canvas_dom"
         :key="'canvas'"
         class="image-small"
       />

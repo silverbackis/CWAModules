@@ -1,9 +1,9 @@
 <template>
   <select
     v-if="input"
+    v-model="inputModel"
     v-bind="commonProps"
     :multiple="input.vars.multiple"
-    v-model="inputModel"
     @change="displayErrors = true"
   >
     <select-option
@@ -20,10 +20,10 @@ import InputMixin from '../Mixin/index'
 import SelectOption from './Option/ChoiceSelectOption'
 
 export default {
-  mixins: [InputCommonMixin, InputMixin],
   components: {
     SelectOption
-  }
+  },
+  mixins: [InputCommonMixin, InputMixin]
 }
 </script>
 

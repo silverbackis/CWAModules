@@ -16,14 +16,14 @@ import InputCommonMixin from '../_CommonMixin'
 import ChoiceExpandedOption from './Option/ChoiceExpandedOption'
 
 export default {
+  components: {
+    ChoiceExpandedOption
+  },
   mixins: [InputCommonMixin],
   data() {
     return {
       is: 'radio'
     }
-  },
-  components: {
-    ChoiceExpandedOption
   },
   created() {
     this.displayErrors = true

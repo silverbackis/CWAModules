@@ -6,6 +6,11 @@
 
 <script>
 export default {
-  props: ['option']
+  props: {
+    options: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>

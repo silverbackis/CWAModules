@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import _Input from './_Input'
 import flatpickr from 'flatpickr'
+import _Input from './_Input'
 export default {
   mixins: [_Input],
   props: {

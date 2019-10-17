@@ -4,13 +4,13 @@
   >
     <label class="file-label">
       <input
+        ref="file"
         class="file-input"
         type="file"
         name="image"
         accept="image/*"
-        @change="handleFileUpload()"
-        ref="file"
         :disabled="uploading"
+        @change="handleFileUpload()"
       />
       <div class="file-cta">
         <span class="file-icon">
@@ -65,7 +65,7 @@ export default {
     handleFileUpload() {
       this.file = this.$refs.file.files[0]
       if (this.file && /\.(jpe?g|png|gif|svg)$/i.test(this.file.name)) {
-        let reader = new FileReader()
+        const reader = new FileReader()
         reader.addEventListener(
           'load',
           function(file) {
@@ -131,12 +131,14 @@ export default {
               statusText = responseData
             } else {
               statusText = response.statusText
+              // eslint-disable-next-line no-console
               console.error(response.data)
             }
             status = `(${response.status}) ${statusText}`
           } else if (error.statusCode) {
             status = `(${error.statusCode}) Unknown error`
           } else {
+            // eslint-disable-next-line no-console
             console.error(error)
           }
           this.uploading = false

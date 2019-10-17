@@ -29,7 +29,7 @@
               You may need to log out and in again
             </p>
             <p>
-              <a @click.prevent="logout" class="button is-dark">Logout</a>
+              <a class="button is-dark" @click.prevent="logout">Logout</a>
             </p>
           </div>
         </div>
@@ -46,8 +46,13 @@
 import { Utilities } from '~/.nuxt/bwstarter/core/server/index'
 
 export default {
-  name: 'nuxt-error',
-  props: ['error'],
+  name: 'NuxtError',
+  props: {
+    error: {
+      type: Object,
+      required: true
+    }
+  },
   head() {
     return {
       title: this.error.message
@@ -59,7 +64,7 @@ export default {
     res
   }) {
     try {
-      let response = await $bwstarter.fetchAndStoreLayout(null, true)
+      const response = await $bwstarter.fetchAndStoreLayout(null, true)
       if (process.server) {
         Utilities.setResponseCookies(res, response)
       }

@@ -14,8 +14,8 @@
       <admin-text-input
         v-if="$bwstarter.isAdmin"
         :model="realComponentData.description"
-        :componentId="endpoint"
-        componentField="description"
+        :component-id="endpoint"
+        component-field="description"
         placeholder="Enter feature description here"
         class="input"
       />
@@ -31,17 +31,11 @@ import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
 export default {
-  mixins: [ComponentMixin, ImageDataMixin],
   components: {
     ImageLoader,
     AppLink
   },
-  methods: {
-    injectImageData(imageObject) {
-      imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
-      return imageObject
-    }
-  },
+  mixins: [ComponentMixin, ImageDataMixin],
   computed: {
     dynamicComponent() {
       return this.toRoute ? 'app-link' : 'div'
@@ -54,6 +48,12 @@ export default {
         this.component.url ||
         (this.component.route ? this.component.route.route : null)
       )
+    }
+  },
+  methods: {
+    injectImageData(imageObject) {
+      imageObject.publicPath = this.injectDynamicData(imageObject.publicPath)
+      return imageObject
     }
   }
 }

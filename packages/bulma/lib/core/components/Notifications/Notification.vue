@@ -6,14 +6,26 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
-  props: ['notification', 'index'],
+  props: {
+    notification: {
+      type: Object,
+      required: true
+    },
+    index: {
+      type: Number,
+      required: true
+    }
+  },
   data() {
     return {
       removing: false
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.hideNotification()
+    }, 4000)
   },
   methods: {
     hideNotification() {
@@ -23,11 +35,6 @@ export default {
         this.$bwstarter.removeNotification(this.index)
       }
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.hideNotification()
-    }, 4000)
   }
 }
 </script>

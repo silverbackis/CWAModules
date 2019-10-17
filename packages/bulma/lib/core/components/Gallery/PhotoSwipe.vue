@@ -82,7 +82,7 @@ export default {
           tapToClose: true
         }
       }
-      let baseOps = {
+      const baseOps = {
         index: index,
         getThumbBoundsFn() {
           const thumbnail = $el.getElementsByTagName('img')[0]

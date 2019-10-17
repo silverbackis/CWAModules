@@ -11,15 +11,16 @@
       </template>
     </slot>
     <div
+      v-for="item in collectionItems"
+      :key="item['@id']"
       class="columns is-mobile is-centered"
       :class="containerClass"
-      v-for="item in component.collection['hydra:member']"
     >
       <component
         :is="itemComponent"
         v-if="getEntity(item)"
-        :component="getEntity(item)"
         :key="item['@id']"
+        :component="getEntity(item)"
         type="column"
       />
     </div>
@@ -28,8 +29,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import ComponentWrapper from '../ComponentWrapper'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
   components: { ComponentWrapper },
@@ -42,18 +43,23 @@ export default {
   computed: {
     ...mapGetters({
       getContentById: 'bwstarter/getContentById'
-    })
-  },
-  methods: {
-    resolveItemComponent() {
-      let resourceParts = this.component.resource.split('\\')
-      this.itemComponent = () => ({
-        component: import('./Item/' + resourceParts[resourceParts.length - 1])
-      })
+    }),
+    collectionItems() {
+      return this.component.collection['hydra:member'].filter(
+        item => !!this.getEntity(item)
+      )
     }
   },
   created() {
     this.resolveItemComponent()
+  },
+  methods: {
+    resolveItemComponent() {
+      const resourceParts = this.component.resource.split('\\')
+      this.itemComponent = () => ({
+        component: import('./Item/' + resourceParts[resourceParts.length - 1])
+      })
+    }
   }
 }
 </script>

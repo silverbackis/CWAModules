@@ -11,7 +11,7 @@
     <nuxt-child
       v-if="includeNuxtChild"
       :key="childKey"
-      :componentGroup="component.childComponentGroup"
+      :component-group="component.childComponentGroup"
     />
   </div>
 </template>

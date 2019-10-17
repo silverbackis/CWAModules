@@ -72,18 +72,18 @@
 </template>
 
 <script>
+import Notifications from '../components/Notifications/Notifications'
 import LayoutMixin from '~/.nuxt/bwstarter/components/layoutMixin'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
-import Notifications from '../components/Notifications/Notifications'
 
 export default {
-  mixins: [LayoutMixin],
   components: {
     BulmaNavbar: () => import('../components/Nav/Navbar/Navbar.vue'),
     AdminBar: () => import('../components/Admin/AdminBar'),
     AppLink,
     Notifications
   },
+  mixins: [LayoutMixin],
   computed: {
     navbarClass() {
       return this.token ? 'is-dark' : ''

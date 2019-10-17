@@ -29,7 +29,8 @@ export default {
     },
     successFn: {
       type: Function,
-      required: false
+      required: false,
+      default: null
     },
     apiAction: {
       type: Boolean,
@@ -47,19 +48,6 @@ export default {
       return this.storeForm ? this.storeForm.cancelToken : null
     }
   },
-  methods: {
-    ...mapActions({
-      init: 'bwstarter/_forms/init',
-      submitForm: 'bwstarter/_forms/submitForm'
-    }),
-    async submit() {
-      this.submitForm({
-        formId: this.formId,
-        apiAction: this.apiAction,
-        successFn: this.successFn
-      })
-    }
-  },
   created() {
     this.$bwstarter.$storage.commit(
       'initForm',
@@ -73,6 +61,19 @@ export default {
     }
     if (this.isValid) {
       this.destroyForm(this.formId)
+    }
+  },
+  methods: {
+    ...mapActions({
+      init: 'bwstarter/_forms/init',
+      submitForm: 'bwstarter/_forms/submitForm'
+    }),
+    async submit() {
+      await this.submitForm({
+        formId: this.formId,
+        apiAction: this.apiAction,
+        successFn: this.successFn
+      })
     }
   }
 }

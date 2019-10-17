@@ -6,15 +6,15 @@
           <aside class="menu">
             <bulma-menu-item-group
               v-for="(itemGroup, index) in navItemsGrouped"
-              :navItems="itemGroup"
               :key="index"
+              :nav-items="itemGroup"
             />
           </aside>
         </div>
         <div class="column">
           <nuxt-child
             :key="childKey"
-            :componentGroup="getEntity(component.childComponentGroup['@id'])"
+            :component-group="getEntity(component.childComponentGroup['@id'])"
             :nested="true"
           />
         </div>
@@ -24,20 +24,20 @@
 </template>
 
 <script>
-import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 import BulmaMenuItemGroup from './MenuItemGroup'
+import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
 export default {
-  mixins: [NuxtChildMixin],
   components: {
     BulmaMenuItemGroup
   },
+  mixins: [NuxtChildMixin],
   computed: {
     navItems() {
       return this.childComponents[0]
     },
     navItemsGrouped() {
-      let groups = []
+      const groups = []
       let currentGroup = []
       let previousItem
       this.navItems.forEach(navItem => {

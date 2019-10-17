@@ -21,9 +21,9 @@
         <div v-if="$bwstarter.isAdmin">
           <admin-quill-editor
             :model="realComponentData.description"
-            :componentId="endpoint"
+            :component-id="endpoint"
             :editor-toolbar="['bold', 'italic', 'underline']"
-            componentField="description"
+            component-field="description"
             placeholder="Enter feature description here"
             class="input"
           />
@@ -51,12 +51,12 @@ import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
 export default {
-  mixins: [ComponentMixin, ImageDataMixin],
   components: {
     ImageLoader,
     AppLink,
     AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
   },
+  mixins: [ComponentMixin, ImageDataMixin],
   computed: {
     dynamicComponent() {
       return this.toRoute ? 'app-link' : 'div'

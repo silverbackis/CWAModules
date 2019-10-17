@@ -21,13 +21,13 @@
       <span :class="component.className">{{ component.label }}</span>
     </nuxt-link>
     <div
+      v-for="(group, groupIndex) in childComponents"
+      :key="'nbigroup-' + groupIndex"
       class="navbar-dropdown"
-      v-for="(group, index) in childComponents"
-      :key="index"
     >
       <bulma-navbar-item
         v-for="(childComponent, index) in group"
-        :key="index"
+        :key="'nbicc-' + index"
         :component="childComponent"
       />
     </div>

@@ -1,24 +1,24 @@
 <template>
-  <div class="field form-wrapper" v-if="!hidden">
+  <div v-if="!hidden" class="field form-wrapper">
     <label
-      class="label"
-      v-html="label"
       v-if="label && label !== ''"
+      class="label"
       :for="inputId"
+      v-html="label"
     ></label>
     <div :class="controlClass">
       <div :class="wrapperClass">
         <slot></slot>
       </div>
       <span
-        v-if="useIcons && !this.validating && iconClass"
+        v-if="useIcons && !validating && iconClass"
         :class="iconWrapperClass"
       >
         <font-awesome-icon :icon="iconClass" />
       </span>
     </div>
     <div
-      v-if="displayErrors && errors.length && !this.validating"
+      v-if="displayErrors && errors.length && !validating"
       class="help is-danger"
     >
       <ul>
@@ -44,7 +44,8 @@ export default {
     },
     label: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
     validating: {
       type: Boolean,

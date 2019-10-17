@@ -16,6 +16,6 @@
   },
   "scripts": {
     "lint": "eslint lib ",
-    "lint-fix": "eslint --fix lib"
+    "lint-fix": "eslint -c ../../.eslintrc.js --fix ./lib"
   }
 }

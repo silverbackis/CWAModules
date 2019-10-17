@@ -17,8 +17,8 @@
     "vue-cookie": "^1.1.4"
   },
   "scripts": {
-    "lint": "eslint lib ",
-    "lint-fix": "eslint --fix lib"
+    "lint": "eslint lib",
+    "lint-fix": "eslint -c ../../.eslintrc.js --fix ./lib"
   },
   "eslintIgnore": [
     "lib/module/plugin.template.js"

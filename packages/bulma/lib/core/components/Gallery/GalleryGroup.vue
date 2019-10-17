@@ -1,8 +1,9 @@
 <template>
   <div :class="{ 'gallery-group': true, 'is-loading': reloading }">
     <component
-      v-bind="containerProps"
+      :is="containerProps.is"
       v-model="sortableLocations"
+      v-bind="containerProps"
       class="columns is-multiline"
     >
       <gallery-item
@@ -28,8 +29,8 @@
       </button>
       <div class="reload-link-row has-text-centered">
         <a
-          @click.prevent="reloadCollection"
           class="reload-link has-text-grey-light"
+          @click.prevent="reloadCollection"
           >reload gallery</a
         >
       </div>
@@ -39,29 +40,29 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import GalleryItem from './GalleryItem'
 import _sortBy from 'lodash/sortBy'
 import _findIndex from 'lodash/findIndex'
+import GalleryItem from './GalleryItem'
 
 export default {
-  data() {
-    return {
-      reloading: false
-    }
+  components: {
+    draggable: () => import('vuedraggable'),
+    GalleryItem
   },
   props: {
     componentGroup: {
       required: true,
       type: Object
     },
-    $photoswipe: {
+    photoswipe: {
       required: true,
       type: Object
     }
   },
-  components: {
-    draggable: () => import('vuedraggable'),
-    GalleryItem
+  data() {
+    return {
+      reloading: false
+    }
   },
   computed: {
     ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
@@ -97,7 +98,7 @@ export default {
     },
     adminLocationEntities() {
       // Update the sort value of locationEntities with the value in temp storage for admin inputs / draggable
-      let sortableLocations = []
+      const sortableLocations = []
       for (const location of this.locations) {
         const sortValue = this.$bwstarter.getAdminInputModel(
           this.adminInputData(location)
@@ -141,6 +142,9 @@ export default {
         is: 'ul'
       }
     }
+  },
+  created() {
+    this.initAdminInputLocations(this.locations)
   },
   methods: {
     adminInputData(location, data = {}) {
@@ -189,6 +193,7 @@ export default {
           })
           .catch(error => {
             this.reloading = false
+            // eslint-disable-next-line no-console
             console.error('updateContentComponents Error', error)
           })
       }
@@ -219,13 +224,11 @@ export default {
           })
           .catch(error => {
             this.reloading = false
+            // eslint-disable-next-line no-console
             console.error(error)
           })
       }
     }
-  },
-  created() {
-    this.initAdminInputLocations(this.locations)
   },
   beforeDestory() {
     for (const location of this.locations) {

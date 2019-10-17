@@ -6,18 +6,22 @@
       className,
       { 'is-admin': $bwstarter.isAdmin, 'is-loading': reloading }
     ]"
-    :extendClass="false"
+    :extend-class="false"
     :nested="nested"
   >
     <div class="container has-text-centered">
       <h3
-        class="subtitle features-title"
         v-if="component.title"
+        class="subtitle features-title"
         v-html="component.title"
       />
       <div class="is-inline-block-mobile">
         <div class="columns is-centered has-text-left">
-          <div v-for="features in featureChunks()" class="column is-narrow">
+          <div
+            v-for="(features, index) in featureChunks()"
+            :key="'fc-' + index"
+            class="column is-narrow"
+          >
             <ul class="fa-ul">
               <feature-text-list-item
                 v-for="feature in features"
@@ -45,19 +49,19 @@
 </template>
 
 <script>
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import _ from 'lodash'
 import FeatureTextListItem from './FeatureTextListItem'
 import FeatureTextListModal from './FeatureTextListModal'
 import FeatureTextListAdmin from './FeatureTextListAdmin'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
-  mixins: [ComponentMixin],
   components: {
     FeatureTextListItem,
     FeatureTextListModal,
     FeatureTextListAdmin
   },
+  mixins: [ComponentMixin],
   data() {
     return {
       editComponent: null,
@@ -101,6 +105,7 @@ export default {
           })
           .catch(error => {
             this.reloading = false
+            // eslint-disable-next-line no-console
             console.error('updateContentComponents Error', error)
           })
       }
@@ -123,6 +128,7 @@ export default {
           })
           .catch(error => {
             this.reloading = false
+            // eslint-disable-next-line no-console
             console.error(error)
           })
       }

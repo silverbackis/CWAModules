@@ -1,32 +1,32 @@
 <template>
   <component-wrapper :nested="nested">
     <div
-      v-for="(components, index) in this.childComponents"
-      :key="index"
+      v-for="(components, index) in childComponents"
+      :key="'feature-stacked-cc-' + index"
       :class="containerClass"
     >
       <feature-stacked-item
         v-for="(feature, count) in components"
+        :key="feature"
         :component="feature"
         :class="columnsClass(count)"
-        :key="count"
       />
     </div>
   </component-wrapper>
 </template>
 
 <script>
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 import FeatureStackedItem from './FeatureStackedItem'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
-  mixins: [ComponentMixin],
   components: {
     FeatureStackedItem
   },
+  mixins: [ComponentMixin],
   methods: {
     columnsClass(count) {
-      let useCount = this.component.reverse ? count : count + 1
+      const useCount = this.component.reverse ? count : count + 1
       return {
         'feature-media': true,
         columns: true,

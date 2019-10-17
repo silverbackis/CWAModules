@@ -2,8 +2,8 @@
   <div :class="cardClass">
     <div class="card is-inline-block">
       <component
-        v-if="showImage && getImageData()"
         :is="linkComponent"
+        v-if="showImage && getImageData()"
         class="card-image"
         :to="toRoute"
       >
@@ -70,15 +70,16 @@ import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 
 export default {
-  mixins: [ComponentMixin, ImageDataMixin],
   components: {
     ImageLoader,
     AppLink
   },
+  mixins: [ComponentMixin, ImageDataMixin],
   props: {
     type: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
     showImage: {
       type: Boolean,
@@ -133,6 +134,7 @@ export default {
             this.$emit('deleted')
           })
           .catch(error => {
+            // eslint-disable-next-line no-console
             console.error('error deleting gallery item', error)
           })
       }
@@ -146,7 +148,7 @@ export default {
           dialog.close()
         })
         .catch(() => {
-          console.log('Cancelled delete.')
+          // cancelled delete
         })
     }
   }

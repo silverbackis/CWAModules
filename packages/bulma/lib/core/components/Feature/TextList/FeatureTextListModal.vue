@@ -73,7 +73,8 @@ export default {
   props: {
     componentId: {
       type: String,
-      required: false
+      required: false,
+      default: null
     },
     deleting: {
       type: Boolean,
@@ -106,6 +107,9 @@ export default {
       this.initRouteInput()
     }
   },
+  mounted() {
+    this.initRouteInput()
+  },
   methods: {
     adminInputData(data = {}) {
       return Object.assign(
@@ -137,6 +141,7 @@ export default {
           )
           this.routeResult = true
         } catch (err) {
+          // eslint-disable-next-line no-console
           console.error(err)
           this.routeResult = false
         }
@@ -154,6 +159,7 @@ export default {
             this.$emit('close')
           })
           .catch(error => {
+            // eslint-disable-next-line no-console
             console.error('error deleting component', error)
           })
       }
@@ -167,7 +173,7 @@ export default {
           dialog.close()
         })
         .catch(() => {
-          console.log('Cancelled delete.')
+          // cancelled delete
         })
     },
     initRouteInput() {
@@ -179,9 +185,6 @@ export default {
         )
       }
     }
-  },
-  mounted() {
-    this.initRouteInput()
   }
 }
 </script>

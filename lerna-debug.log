@@ -1,164 +1,55 @@
-0 silly input [ 'publish' ]
-1 silly flags { _: [ 'publish' ], 'reject-cycles': false, rejectCycles: false }
-2 verbose rootPath /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules
+0 silly input [ 'lint-fix' ]
+1 silly flags {
+1 silly flags   _: [ 'run' ],
+1 silly flags   'reject-cycles': false,
+1 silly flags   rejectCycles: false,
+1 silly flags   script: 'lint-fix',
+1 silly flags   args: []
+1 silly flags }
+2 verbose rootPath /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules
 3 info version 2.11.0
-4 silly isInitialized
-5 silly isInitialized true
-6 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/VERSION
-7 silly initialize attempt
-8 info current version 0.2.14
-9 silly isDetachedHead
-10 silly getCurrentBranch
-11 verbose getCurrentBranch master
-12 verbose isDetachedHead false
-13 silly getCurrentBranch
-14 verbose getCurrentBranch master
-15 silly getUpdates
-16 info Checking for updated packages...
-17 silly hasTags
-18 verbose hasTags true
-19 silly getLastTag
-20 verbose getLastTag v0.2.14
-21 info Comparing with v0.2.14.
-22 silly diffSinceIn v0.2.14 packages/bulma
-23 silly diff packages/bulma/lib/core/components/Form/Input/_Wrapper.vue
-24 silly diffSinceIn v0.2.14 packages/components
-25 silly diff packages/components/lib/core/Form/Form.vue
-25 silly diff packages/components/lib/core/Form/FormInput.vue
-25 silly diff packages/components/lib/core/Form/Input/Mixin/computed.js
-25 silly diff packages/components/lib/core/Form/Input/Mixin/methods.js
-25 silly diff packages/components/lib/core/Form/Input/_CommonMixin.js
-26 silly diffSinceIn v0.2.14 packages/core
-27 silly diff packages/core/lib/core/storage/form/index.js
-27 silly diff packages/core/lib/core/storage/form/module.js
-27 silly diff packages/core/lib/core/storage/index.js
-28 silly diffSinceIn v0.2.14 packages/server
-29 silly diff packages/server/dist/index.js
-29 silly diff packages/server/src/index.js
-30 verbose updated @cwamodules/bulma
-31 verbose updated @cwamodules/components
-32 verbose updated @cwamodules/core
-33 verbose updated @cwamodules/server
-34 info Checking for prereleased packages...
-35 silly collectDependents
-36 silly isPackageDependentOf @cwamodules/bulma @cwamodules/bulma
-37 silly isPackageDependentOf @cwamodules/components @cwamodules/bulma
-38 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
-39 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
-40 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
-41 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
-42 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
-43 silly isPackageDependentOf @cwamodules/bulma @cwamodules/components
-44 verbose dependent @cwamodules/bulma depends on @cwamodules/components
-45 silly isPackageDependentOf @cwamodules/bulma @cwamodules/core
-46 verbose dependent @cwamodules/bulma depends on @cwamodules/core
-47 silly isPackageDependentOf @cwamodules/bulma @cwamodules/server
-48 verbose dependent @cwamodules/bulma depends on @cwamodules/server
-49 silly isPackageDependentOf @cwamodules/components @cwamodules/bulma
-50 silly isPackageDependentOf @cwamodules/components @cwamodules/components
-51 silly isPackageDependentOf @cwamodules/core @cwamodules/components
-52 silly isPackageDependentOf @cwamodules/server @cwamodules/components
-53 silly isPackageDependentOf @cwamodules/server @cwamodules/components
-54 silly isPackageDependentOf @cwamodules/components @cwamodules/core
-55 verbose dependent @cwamodules/components depends on @cwamodules/core
-56 silly isPackageDependentOf @cwamodules/components @cwamodules/server
-57 verbose dependent @cwamodules/components depends on @cwamodules/server
-58 silly isPackageDependentOf @cwamodules/core @cwamodules/bulma
-59 silly isPackageDependentOf @cwamodules/core @cwamodules/components
-60 silly isPackageDependentOf @cwamodules/core @cwamodules/core
-61 silly isPackageDependentOf @cwamodules/server @cwamodules/core
-62 silly isPackageDependentOf @cwamodules/core @cwamodules/server
-63 verbose dependent @cwamodules/core depends on @cwamodules/server
-64 silly isPackageDependentOf @cwamodules/server @cwamodules/bulma
-65 silly isPackageDependentOf @cwamodules/server @cwamodules/components
-66 silly isPackageDependentOf @cwamodules/server @cwamodules/core
-67 silly isPackageDependentOf @cwamodules/server @cwamodules/server
-68 silly collectUpdates
-69 verbose has filtered update @cwamodules/bulma
-70 verbose has filtered update @cwamodules/components
-71 verbose has filtered update @cwamodules/core
-72 verbose has filtered update @cwamodules/server
-73 silly initialize success
-74 silly execute attempt
-75 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/lerna.json
-76 silly runScriptSync preversion undefined
-77 silly runScriptSync preversion @cwamodules/bulma
-78 silly runScriptSync version @cwamodules/bulma
-79 silly runScriptSync preversion @cwamodules/components
-80 silly runScriptSync version @cwamodules/components
-81 silly runScriptSync preversion @cwamodules/core
-82 silly runScriptSync version @cwamodules/core
-83 silly runScriptSync preversion @cwamodules/server
-84 silly runScriptSync version @cwamodules/server
-85 silly runScriptSync version undefined
-86 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/package.json
-87 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/package.json
-88 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/package.json
-89 silly addFile /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/package.json
-90 silly commit v0.2.15
-91 verbose commit [ 'commit', '--no-verify', '-m', 'v0.2.15' ]
-92 silly addTag v0.2.15
-93 silly runScriptSync postversion @cwamodules/bulma
-94 silly runScriptSync postversion @cwamodules/components
-95 silly runScriptSync postversion @cwamodules/core
-96 silly runScriptSync postversion @cwamodules/server
-97 silly runScriptSync postversion undefined
-98 info publish Publishing packages to npm...
-99 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/scripts/prepublish.js
-100 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/bulma/scripts/prepublish.js
-101 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/scripts/prepublish.js
-102 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/components/scripts/prepublish.js
-103 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/scripts/prepublish.js
-104 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/core/scripts/prepublish.js
-105 silly existsSync /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/scripts/prepublish.js
-106 verbose execScript No prepublish script found at /Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server/scripts/prepublish.js
-107 verbose publishing @cwamodules/server
-108 silly publishTaggedInDir latest server
-109 silly getExecOpts { cwd:
-109 silly getExecOpts    '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
-110 error publish Retrying failed publish: @cwamodules/server
-111 verbose publish error undefined
-112 verbose publishing @cwamodules/server
-113 silly publishTaggedInDir latest server
-114 silly getExecOpts { cwd:
-114 silly getExecOpts    '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
-115 error publish Retrying failed publish: @cwamodules/server
-116 verbose publish error undefined
-117 verbose publishing @cwamodules/server
-118 silly publishTaggedInDir latest server
-119 silly getExecOpts { cwd:
-119 silly getExecOpts    '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
-120 error publish Retrying failed publish: @cwamodules/server
-121 verbose publish error undefined
-122 verbose publishing @cwamodules/server
-123 silly publishTaggedInDir latest server
-124 silly getExecOpts { cwd:
-124 silly getExecOpts    '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
-125 error publish Retrying failed publish: @cwamodules/server
-126 verbose publish error undefined
-127 verbose publishing @cwamodules/server
-128 silly publishTaggedInDir latest server
-129 silly getExecOpts { cwd:
-129 silly getExecOpts    '/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/packages/server' }
-130 error publish Ran out of retries while publishing @cwamodules/server Error: Command failed: yarn publish --tag latest --new-version 0.2.15
-130 error publish warning package.json: No license field
-130 error publish warning package.json: No license field
-130 error publish error No token found and can't prompt for login when running with --non-interactive.
-130 error publish [1/4] Bumping version...
-130 error publish info Current version: 0.2.15
-130 error publish [2/4] Logging in...
-130 error publish info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
-130 error publish
-130 error publish     at Promise.all.then.arr (/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/node_modules/execa/index.js:236:11)
-130 error publish     at process.internalTickCallback (internal/process/next_tick.js:77:7)
-131 error execute callback with error
-132 error Error: Command failed: yarn publish --tag latest --new-version 0.2.15
-132 error warning package.json: No license field
-132 error warning package.json: No license field
-132 error error No token found and can't prompt for login when running with --non-interactive.
-132 error [1/4] Bumping version...
-132 error info Current version: 0.2.15
-132 error [2/4] Logging in...
-132 error info Visit https://yarnpkg.com/en/docs/cli/publish for documentation about this command.
-132 error
-132 error     at Promise.all.then.arr (/Volumes/LaCie/GitHub/_ComponentsWebApp/CWAModules/node_modules/execa/index.js:236:11)
+4 silly existsSync /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/VERSION
+5 silly initialize attempt
+6 silly initialize success
+7 silly execute attempt
+8 silly runScriptInDir lint-fix [] server
+9 silly getExecOpts {
+9 silly getExecOpts   cwd: '/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/packages/server'
+9 silly getExecOpts }
+10 silly runScriptInDir lint-fix [] core
+11 silly getExecOpts {
+11 silly getExecOpts   cwd: '/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/packages/core'
+11 silly getExecOpts }
+12 error lint-fix Errored while running script in '@cwamodules/core'
+13 error execute callback with error
+14 error Error: Command failed: yarn run lint-fix
+14 error warning package.json: No license field
+14 error [error] lib/module/plugin.template.js: SyntaxError: Unexpected token (4:25)
+14 error [error]   2 | import './middleware'
+14 error [error]   3 |
+14 error [error] > 4 | export const options = <%= JSON.stringify(options) %>
+14 error [error]     |                         ^
+14 error [error]   5 |
+14 error [error]   6 | export default function (ctx, inject) {
+14 error [error]   7 | // Create a new instance
+14 error error Command failed with exit code 2.
+14 error $ eslint -c ../../.eslintrc.js --fix ./lib && prettier --write './lib/**'
+14 error lib/core/bw_starter.js 183ms
+14 error lib/core/middleware/index.js 28ms
+14 error lib/core/server/index.js 7ms
+14 error lib/core/storage/admin/index.js 6ms
+14 error lib/core/storage/admin/module.js 60ms
+14 error lib/core/storage/content/index.js 29ms
+14 error lib/core/storage/entities/index.js 10ms
+14 error lib/core/storage/form/index.js 8ms
+14 error lib/core/storage/form/module.js 88ms
+14 error lib/core/storage/index.js 32ms
+14 error lib/module/defaults.js 5ms
+14 error lib/module/index.js 11ms
+14 error
+14 error lib/module/rreaddir.js 8ms
+14 error lib/plugins/mixin.js 7ms
+14 error lib/plugins/vue-cookie.js 5ms
+14 error info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+14 error
+14 error     at /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/node_modules/lerna/node_modules/execa/index.js:236:11

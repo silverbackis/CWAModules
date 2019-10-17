@@ -1,9 +1,9 @@
 <template>
   <transition-group
+    v-show="show"
     name="slide-right"
     tag="ul"
     class="notifications-box"
-    v-show="show"
     @beforeEnter="transBeforeEnter"
     @afterLeave="transAfterLeave"
   >
@@ -28,6 +28,11 @@ export default {
       show: false
     }
   },
+  computed: {
+    notifications() {
+      return this.$bwstarter.$storage.getState('notifications')
+    }
+  },
   methods: {
     transBeforeEnter(el) {
       if (!this.show) {
@@ -38,11 +43,6 @@ export default {
       if (!this.notifications.length) {
         this.show = false
       }
-    }
-  },
-  computed: {
-    notifications() {
-      return this.$bwstarter.$storage.getState('notifications')
     }
   }
 }
