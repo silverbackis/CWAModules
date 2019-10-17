@@ -1,7 +1,5 @@
 <template>
-  <component-wrapper :nested="nested"
-                     :className="['form-section']"
-  >
+  <component-wrapper :nested="nested" :className="['form-section']">
     <div :class="[...containerClass, 'form-container']">
       <div class="card">
         <div class="card-content">
@@ -26,22 +24,22 @@
 </template>
 
 <script>
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
-  import FormInner from './FormInner'
-  import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import FormInner from './FormInner'
+import FormMixin from '~/.nuxt/bwstarter/components/Form/_Mixin'
 
-  export default {
-    mixins: [ ComponentMixin, FormMixin ],
-    props: {
-      extraData: {
-        type: Object,
-        default () {
-          return {}
-        }
+export default {
+  mixins: [ComponentMixin, FormMixin],
+  props: {
+    extraData: {
+      type: Object,
+      default() {
+        return {}
       }
-    },
-    components: {
-      FormInner
     }
+  },
+  components: {
+    FormInner
   }
+}
 </script>

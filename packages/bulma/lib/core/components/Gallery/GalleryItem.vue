@@ -1,36 +1,74 @@
 <template>
-  <li itemscope
-      itemtype="https://schema.org/ImageGallery"
-      class="gallery-item"
-      v-if="image() || $bwstarter.isAdmin"
+  <li
+    itemscope
+    itemtype="https://schema.org/ImageGallery"
+    class="gallery-item"
+    v-if="image() || $bwstarter.isAdmin"
   >
     <div class="gallery-thumb">
-      <figure itemprop="associatedMedia" itemscope itemtype="https://schema.org/ImageObject">
-        <a :class="{'gallery-link': true, 'is-preview': !!preview, 'no-image': noImage}"
-           :href="noImage ? '#' : getApiUrl(component.fileData.publicPath)"
-           itemprop="contentUrl"
-           @click.prevent="image() ? $photoswipe.open(index, items, $el) : null"
+      <figure
+        itemprop="associatedMedia"
+        itemscope
+        itemtype="https://schema.org/ImageObject"
+      >
+        <a
+          :class="{
+            'gallery-link': true,
+            'is-preview': !!preview,
+            'no-image': noImage
+          }"
+          :href="noImage ? '#' : getApiUrl(component.fileData.publicPath)"
+          itemprop="contentUrl"
+          @click.prevent="image() ? $photoswipe.open(index, items, $el) : null"
         >
-          <image-loader class="image gallery-image"
-                        :image="image()"
-                        :placeholder="placeholder"
-                        :cover="true"
-                        :alt="component.title"
+          <image-loader
+            class="image gallery-image"
+            :image="image()"
+            :placeholder="placeholder"
+            :cover="true"
+            :alt="component.title"
           />
-          <div class="progress-outer has-text-centered" v-if="uploading || uploadError">
-            <bulma-progress :class="['is-small', uploadError ? 'is-danger' : 'is-success']" :value="uploadPercentage"></bulma-progress>
-            <a v-if="uploading" class="button is-small is-danger" @click.stop.prevent="cancelUpload()">cancel upload</a>
-            <p v-if="uploadError" class="has-text-white help has-text-weight-bold">{{ uploadError }}</p>
+          <div
+            class="progress-outer has-text-centered"
+            v-if="uploading || uploadError"
+          >
+            <bulma-progress
+              :class="['is-small', uploadError ? 'is-danger' : 'is-success']"
+              :value="uploadPercentage"
+            ></bulma-progress>
+            <a
+              v-if="uploading"
+              class="button is-small is-danger"
+              @click.stop.prevent="cancelUpload()"
+              >cancel upload</a
+            >
+            <p
+              v-if="uploadError"
+              class="has-text-white help has-text-weight-bold"
+            >
+              {{ uploadError }}
+            </p>
           </div>
-          <meta itemprop="width" :content="imageFile ? imageFile.width : 0">
-          <meta itemprop="height" :content="imageFile ? imageFile.height : 0">
+          <meta itemprop="width" :content="imageFile ? imageFile.width : 0" />
+          <meta itemprop="height" :content="imageFile ? imageFile.height : 0" />
         </a>
-        <div v-if="$bwstarter.isAdmin && !uploading" class="file edit-button is-primary">
+        <div
+          v-if="$bwstarter.isAdmin && !uploading"
+          class="file edit-button is-primary"
+        >
           <label class="file-label">
-            <input class="file-input" type="file" name="image" accept="image/*" @change="handleFileUpload()" ref="file" :disabled="uploading"/>
+            <input
+              class="file-input"
+              type="file"
+              name="image"
+              accept="image/*"
+              @change="handleFileUpload()"
+              ref="file"
+              :disabled="uploading"
+            />
             <div class="file-cta">
               <span class="file-icon">
-                <font-awesome-icon :icon="['fas', 'upload']"/>
+                <font-awesome-icon :icon="['fas', 'upload']" />
               </span>
               <span class="file-label">
                 Upload
@@ -39,23 +77,28 @@
           </label>
         </div>
 
-        <button v-if="$bwstarter.isAdmin"
-                class="button move-button is-dark is-small">
+        <button
+          v-if="$bwstarter.isAdmin"
+          class="button move-button is-dark is-small"
+        >
           <span class="sr-only">Re-order</span>
-          <font-awesome-icon :icon="['fas', 'arrows-alt']"/>
+          <font-awesome-icon :icon="['fas', 'arrows-alt']" />
         </button>
 
-        <button v-if="$bwstarter.isAdmin"
-                class="button delete-button is-danger is-small"
-                @click="deleteItem"
+        <button
+          v-if="$bwstarter.isAdmin"
+          class="button delete-button is-danger is-small"
+          @click="deleteItem"
         >
           <span class="sr-only">Delete</span>
-          <font-awesome-icon :icon="['fas', 'trash-alt']"/>
+          <font-awesome-icon :icon="['fas', 'trash-alt']" />
         </button>
 
-        <figcaption v-if="component.caption"
-                    itemprop="caption description" class="sr-only"
-                    v-html="component.caption"
+        <figcaption
+          v-if="component.caption"
+          itemprop="caption description"
+          class="sr-only"
+          v-html="component.caption"
         />
       </figure>
     </div>
@@ -63,11 +106,12 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <admin-text-input :model="injectDynamicData(component.caption)"
-                              :componentId="endpoint"
-                              componentField="caption"
-                              placeholder="Enter caption"
-                              class="input"
+            <admin-text-input
+              :model="injectDynamicData(component.caption)"
+              :componentId="endpoint"
+              componentField="caption"
+              placeholder="Enter caption"
+              class="input"
             />
           </div>
         </div>
@@ -77,7 +121,7 @@
             <a class="button is-primary is-outlined" @click="$emit('movedown')">
               <span class="icon is-small">
                 <span class="sr-only">Move up</span>
-                <font-awesome-icon icon="chevron-down"/>
+                <font-awesome-icon icon="chevron-down" />
               </span>
             </a>
           </div>
@@ -85,12 +129,11 @@
             <a class="button is-primary is-outlined" @click="$emit('moveup')">
               <span class="icon is-small">
                 <span class="sr-only">Move down</span>
-                <font-awesome-icon icon="chevron-up"/>
+                <font-awesome-icon icon="chevron-up" />
               </span>
             </a>
           </div>
         </div>
-
       </div>
     </div>
   </li>
@@ -103,15 +146,16 @@ import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import UploadMixin from '~/.nuxt/bwstarter/bulma/components/Admin/File/UploadMixin'
 
 export default {
-  mixins: [ UploadMixin ],
-  data () {
+  mixins: [UploadMixin],
+  data() {
     return {
       file: null,
       preview: null,
       uploadPercentage: 0,
       uploading: false,
       uploadError: null,
-      transparentImage: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
+      transparentImage:
+        'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='
     }
   },
   props: {
@@ -138,7 +182,7 @@ export default {
   },
   computed: {
     ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-    imageFile () {
+    imageFile() {
       return this.component.fileData.imageData || this.preview
     },
     // image () {
@@ -154,7 +198,7 @@ export default {
     //     height: 1
     //   }
     // },
-    placeholder () {
+    placeholder() {
       if (this.preview) {
         return this.preview
       }
@@ -167,147 +211,160 @@ export default {
         height: 1
       }
     },
-    noImage () {
+    noImage() {
       return !this.preview && !this.component.filePath
     }
   },
   methods: {
-    handleFileUpload () {
-      this.file = this.$refs.file.files[ 0 ]
+    handleFileUpload() {
+      this.file = this.$refs.file.files[0]
       if (this.file && /\.(jpe?g|png|gif)$/i.test(this.file.name)) {
         let reader = new FileReader()
-        reader.addEventListener('load', function (file) {
-          const image = new Image()
-          image.src = file.target.result
-          image.onload = () => {
-            this.preview = {
-              publicPath: image.src,
-              width: image.width,
-              height: image.height
+        reader.addEventListener(
+          'load',
+          function(file) {
+            const image = new Image()
+            image.src = file.target.result
+            image.onload = () => {
+              this.preview = {
+                publicPath: image.src,
+                width: image.width,
+                height: image.height
+              }
             }
-          }
-        }.bind(this), false)
+          }.bind(this),
+          false
+        )
         reader.readAsDataURL(this.file)
       } else {
         this.preview = null
       }
       this.submitUpload()
     },
-    cancelUpload () {
+    cancelUpload() {
       this.preview = null
     },
-    submitUpload () {
+    submitUpload() {
       this.uploadError = null
       this.uploading = true
       this.uploadPercentage = 0
       const formData = new FormData()
       formData.append('file', this.file)
-      this.$axios.post('/files/filePath/' + this.component[ '@id' ],
-        formData,
-        {
+      this.$axios
+        .post('/files/filePath/' + this.component['@id'], formData, {
           progress: false,
           headers: {
             'Content-Type': 'multipart/form-data'
           },
-          onUploadProgress: function (progressEvent) {
-            this.uploadPercentage = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+          onUploadProgress: function(progressEvent) {
+            this.uploadPercentage = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
           }.bind(this)
-        }
-      )
+        })
         .then(({ data }) => {
           this.uploading = false
           this.preview = null
-          this.$bwstarter.$storage.commit('setEntity', [ { id: data[ '@id' ], data } ], entitiesModuleName)
+          this.$bwstarter.$storage.commit(
+            'setEntity',
+            [{ id: data['@id'], data }],
+            entitiesModuleName
+          )
         })
-        .catch((error) => {
+        .catch(error => {
           console.warn(error)
           this.uploading = false
-          this.uploadError = 'Server responded with status code ' + error.statusCode
+          this.uploadError =
+            'Server responded with status code ' + error.statusCode
         })
     },
-    deleteItem () {
+    deleteItem() {
       const doDelete = () => {
-        return this.$axios.delete(this.component['@id'], { progress: false })
+        return this.$axios
+          .delete(this.component['@id'], { progress: false })
           .then(() => {
             this.$emit('deleted')
           })
-          .catch((error) => {
+          .catch(error => {
             console.error('error deleting gallery item', error)
           })
       }
-      this.$dialog.confirm({
-        title: 'Are you sure?',
-        body: 'This will permanently delete this image from your gallery.'
-      })
-        .then(async (dialog) => {
+      this.$dialog
+        .confirm({
+          title: 'Are you sure?',
+          body: 'This will permanently delete this image from your gallery.'
+        })
+        .then(async dialog => {
           await doDelete()
           dialog.close()
         })
-        .catch(() => { console.log('Cancelled delete.') })
+        .catch(() => {
+          console.log('Cancelled delete.')
+        })
     }
   }
 }
 </script>
 
 <style lang="sass">
-  @import "~bulma/sass/utilities/mixins"
+@import "~bulma/sass/utilities/mixins"
 
-  .gallery-thumb
-    width: 100%
-    display: inline-block
+.gallery-thumb
+  width: 100%
+  display: inline-block
+  position: relative
+  .gallery-link
+    box-shadow: 1px 2px 3px rgba($black, .1)
     position: relative
-    .gallery-link
-      box-shadow: 1px 2px 3px rgba($black, .1)
-      position: relative
-      display: inline-block
-      overflow: hidden
-      width: 100%
-      &.is-preview
-        cursor: default
-        .gallery-image
-          opacity: .5
-      &.no-image
-        cursor: default
-        background: $green
-        &:after
-          content: 'No Image'
-          position: absolute
-          width: 100%
-          text-align: center
-          top: 50%
-          line-height: 2rem
-          margin-top: -1rem
-          font-size: 1.5rem
-          color: $white
-    /*position: absolute*/
-    /*top: 0*/
-    /*left: 0*/
-    /*width: 100%*/
-    /*height: 100%*/
-    .edit-button
-      position: absolute
-      bottom: 10px
-      right: 5px
-    .move-button
-      position: absolute
-      top: 5px
-      left: 5px
-      cursor: move
-    .delete-button
-      position: absolute
-      top: 5px
-      right: 5px
-    .image-spacer
-      line-height: 0
-      font-size: 0
-      border: 2px dashed $grey-light
-      img
+    display: inline-block
+    overflow: hidden
+    width: 100%
+    &.is-preview
+      cursor: default
+      .gallery-image
+        opacity: .5
+    &.no-image
+      cursor: default
+      background: $green
+      &:after
+        content: 'No Image'
+        position: absolute
         width: 100%
-        display: block
-        position: relative
+        text-align: center
+        top: 50%
+        line-height: 2rem
+        margin-top: -1rem
+        font-size: 1.5rem
+        color: $white
+  /*position: absolute*/
+  /*top: 0*/
+  /*left: 0*/
+  /*width: 100%*/
+  /*height: 100%*/
+  .edit-button
+    position: absolute
+    bottom: 10px
+    right: 5px
+  .move-button
+    position: absolute
+    top: 5px
+    left: 5px
+    cursor: move
+  .delete-button
+    position: absolute
+    top: 5px
+    right: 5px
+  .image-spacer
+    line-height: 0
+    font-size: 0
+    border: 2px dashed $grey-light
+    img
+      width: 100%
+      display: block
+      position: relative
 
-  .gallery-sort-input
-    min-width: 50px
-    max-width: 70px
-    text-align: center
+.gallery-sort-input
+  min-width: 50px
+  max-width: 70px
+  text-align: center
 </style>

@@ -1,12 +1,8 @@
 <template>
-  <li
-    v-if="$bwstarter.isAdmin"
-    class="feature-text-list-item">
-    <button
-      class="button is-primary is-fullwidth"
-      @click="$emit('add')">
+  <li v-if="$bwstarter.isAdmin" class="feature-text-list-item">
+    <button class="button is-primary is-fullwidth" @click="$emit('add')">
       <span class="icon is-small">
-        <font-awesome-icon :icon="['fas', 'plus']"/>
+        <font-awesome-icon :icon="['fas', 'plus']" />
       </span>
       <span>Add New</span>
     </button>
@@ -14,7 +10,9 @@
     <div class="reload-link-row has-text-centered">
       <a
         class="reload-link has-text-grey-light"
-        @click.prevent="$emit('reload')">reload features</a>
+        @click.prevent="$emit('reload')"
+        >reload features</a
+      >
     </div>
   </li>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <label class="checkbox is-custom">
-    <input type="checkbox" v-model="dataModel">
+    <input type="checkbox" v-model="dataModel" />
     <span v-if="dataModel" class="custom-control-label">
       {{ checkedLabel || label }}
     </span>
@@ -14,7 +14,7 @@
 import _Input from './_Input'
 
 export default {
-  mixins: [ _Input ],
+  mixins: [_Input],
   props: {
     label: {
       Type: String,

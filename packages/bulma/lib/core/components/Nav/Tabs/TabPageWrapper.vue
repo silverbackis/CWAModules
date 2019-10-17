@@ -8,23 +8,24 @@
       </div>
     </div>
     <slot v-else></slot>
-    <nuxt-child v-if="includeNuxtChild"
-                :key="childKey"
-                :componentGroup="component.childComponentGroup"
+    <nuxt-child
+      v-if="includeNuxtChild"
+      :key="childKey"
+      :componentGroup="component.childComponentGroup"
     />
   </div>
 </template>
 
 <script>
-  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
+import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
 
-  export default {
-    mixins: [ NuxtChildMixin ],
-    props: {
-      includeNuxtChild: {
-        type: Boolean,
-        default: true
-      }
+export default {
+  mixins: [NuxtChildMixin],
+  props: {
+    includeNuxtChild: {
+      type: Boolean,
+      default: true
     }
   }
+}
 </script>

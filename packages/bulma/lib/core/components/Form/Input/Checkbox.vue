@@ -1,25 +1,27 @@
 <template>
-  <wrapper v-bind="wrapperData"
-           :label="''"
-           :useIcons="false"
-           class="is-checkbox"
+  <wrapper
+    v-bind="wrapperData"
+    :label="''"
+    :useIcons="false"
+    class="is-checkbox"
   >
-    <form-input :formId="formId"
-                :inputName="inputName"
-                :inputType="inputType"
-                inputClass=""
+    <form-input
+      :formId="formId"
+      :inputName="inputName"
+      :inputType="inputType"
+      inputClass=""
     />
   </wrapper>
 </template>
 
 <script>
-  import InputMixin from './_Mixin'
-  import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Checkbox'
+import InputMixin from './_Mixin'
+import FormInput from '~/.nuxt/bwstarter/components/Form/Input/Checkbox'
 
-  export default {
-    mixins: [ InputMixin ],
-    components: {
-      FormInput
-    }
+export default {
+  mixins: [InputMixin],
+  components: {
+    FormInput
   }
+}
 </script>

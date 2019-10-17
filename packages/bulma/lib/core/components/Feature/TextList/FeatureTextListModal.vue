@@ -1,26 +1,21 @@
 <template>
   <div :class="['modal', { 'is-active': !!component }]">
-    <div
-      class="modal-background"
-      @click="$emit('close')"/>
+    <div class="modal-background" @click="$emit('close')" />
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Edit Feature</p>
-        <button
-          class="delete"
-          aria-label="close"
-          @click="$emit('close')"/>
+        <button class="delete" aria-label="close" @click="$emit('close')" />
       </header>
-      <section v-if="component"
-               class="modal-card-body has-text-left">
+      <section v-if="component" class="modal-card-body has-text-left">
         <div class="field">
           <label class="label">Internal route</label>
           <div class="field has-addons">
             <div class="control is-expanded">
-              <input v-model="routePath"
-                     type="text"
-                     placeholder="e.g. /contact"
-                     class="input"
+              <input
+                v-model="routePath"
+                type="text"
+                placeholder="e.g. /contact"
+                class="input"
               />
               <p
                 v-if="routeResult !== null"
@@ -31,7 +26,11 @@
             </div>
             <div class="control">
               <button
-                :class="['button', {'is-loading': validatingRoute}, 'is-success']"
+                :class="[
+                  'button',
+                  { 'is-loading': validatingRoute },
+                  'is-success'
+                ]"
                 @click="submitRoute"
               >
                 Stage Route
@@ -57,7 +56,10 @@
       <footer class="modal-card-foot">
         <button
           :class="['button', 'is-danger', deleting ? 'is-loading' : null]"
-          @click="deleteClick">Delete</button>
+          @click="deleteClick"
+        >
+          Delete
+        </button>
       </footer>
     </div>
   </div>
@@ -78,9 +80,12 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
-      routePath: this.component && this.component.route ? this.component.route.route : null,
+      routePath:
+        this.component && this.component.route
+          ? this.component.route.route
+          : null,
       confirmDelete: false,
       confirmDeleteTimeout: null,
       validatingRoute: false,
@@ -88,18 +93,21 @@ export default {
     }
   },
   computed: {
-    component () {
+    component() {
       return this.getEntity(this.componentId)
     }
   },
   watch: {
-    componentId () {
-      this.routePath = this.component && this.component.route ? this.component.route.route : null
+    componentId() {
+      this.routePath =
+        this.component && this.component.route
+          ? this.component.route.route
+          : null
       this.initRouteInput()
     }
   },
   methods: {
-    adminInputData (data = {}) {
+    adminInputData(data = {}) {
       return Object.assign(
         {
           componentId: this.component['@id'],
@@ -108,19 +116,25 @@ export default {
         data
       )
     },
-    async submitRoute () {
+    async submitRoute() {
       this.validatingRoute = true
       if (!this.routePath) {
-        this.$bwstarter.setAdminInputModel(this.adminInputData({
-          model: null
-        }))
+        this.$bwstarter.setAdminInputModel(
+          this.adminInputData({
+            model: null
+          })
+        )
         this.routeResult = null
       } else {
         try {
-          const { data } = await this.$axios.get(`/routes/${this.routePath}`, { progress: false })
-          this.$bwstarter.setAdminInputModel(this.adminInputData({
-            model: data['@id']
-          }))
+          const { data } = await this.$axios.get(`/routes/${this.routePath}`, {
+            progress: false
+          })
+          this.$bwstarter.setAdminInputModel(
+            this.adminInputData({
+              model: data['@id']
+            })
+          )
           this.routeResult = true
         } catch (err) {
           console.error(err)
@@ -129,38 +143,44 @@ export default {
       }
       this.validatingRoute = false
     },
-    deleteClick () {
+    deleteClick() {
       const doDelete = () => {
         this.deleting = true
-        return this.$axios.delete(this.component['@id'], { progress: false })
+        return this.$axios
+          .delete(this.component['@id'], { progress: false })
           .then(() => {
             this.deleting = false
             this.$emit('deleted')
             this.$emit('close')
           })
-          .catch((error) => {
+          .catch(error => {
             console.error('error deleting component', error)
           })
       }
-      this.$dialog.confirm({
-        title: 'Are you sure?',
-        body: 'This will permanently delete this feature.'
-      })
-        .then(async (dialog) => {
+      this.$dialog
+        .confirm({
+          title: 'Are you sure?',
+          body: 'This will permanently delete this feature.'
+        })
+        .then(async dialog => {
           await doDelete()
           dialog.close()
         })
-        .catch(() => { console.log('Cancelled delete.') })
+        .catch(() => {
+          console.log('Cancelled delete.')
+        })
     },
-    initRouteInput () {
+    initRouteInput() {
       if (this.component) {
-        this.$bwstarter.initAdminInput(this.adminInputData({
-          model: this.component.route ? this.component.route['@id'] : null
-        }))
+        this.$bwstarter.initAdminInput(
+          this.adminInputData({
+            model: this.component.route ? this.component.route['@id'] : null
+          })
+        )
       }
     }
   },
-  mounted () {
+  mounted() {
     this.initRouteInput()
   }
 }

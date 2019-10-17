@@ -1,44 +1,44 @@
 {
-    "private": true,
-    "workspaces": [
-        "packages/*"
-    ],
-    "scripts": {
-        "compile": "lerna run compile",
-        "clean": "lerna run clean",
-        "lint": "lerna run lint",
-        "lint-fix": "lerna run lint-fix",
-        "test": "lerna run test",
-        "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
-        "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
-        "publish-packages": "lerna publish"
-    },
-    "devDependencies": {
-        "@nuxtjs/eslint-config": "^0.0.1",
-        "@vue/test-utils": "^1.0.0-beta.27",
-        "babel-core": "^7.0.0-bridge.0",
-        "babel-eslint": "^7.2.3",
-        "eslint": "^5.15.1",
-        "eslint-config-prettier": "^4.1.0",
-        "eslint-config-standard": ">=12.0.0",
-        "eslint-loader": "^2.1.2",
-        "eslint-plugin-import": ">=2.16.0",
-        "eslint-plugin-jest": ">=22.3.0",
-        "eslint-plugin-lodash-template": "^0.13.0",
-        "eslint-plugin-node": "^8.0.1",
-        "eslint-plugin-nuxt": ">=0.4.2",
-        "eslint-plugin-prettier": "^3.0.1",
-        "eslint-plugin-promise": ">=4.0.1",
-        "eslint-plugin-standard": ">=4.0.0",
-        "eslint-plugin-vue": "^5.2.2",
-        "jest": "^24.9.0",
-        "lerna": "^2.11.0",
-        "node-sass": "^4.12.0",
-        "prettier": "1.16.4",
-        "sass-loader": "^8.0.0",
-        "vue-jest": "^2.6.0",
-        "vue-loader": "^15.7.1",
-        "vue-template-compiler": "^2.6.10"
-    },
-    "license": "MIT"
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "compile": "lerna run compile",
+    "clean": "lerna run clean",
+    "lint": "lerna run lint",
+    "lint-fix": "lerna run lint-fix",
+    "test": "lerna run test",
+    "update-version": "lerna publish --skip-git --skip-npm --force-publish '*'",
+    "check-packages": "yarn clean && yarn compile && yarn test && yarn lint",
+    "publish-packages": "lerna publish"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^0.0.1",
+    "@vue/test-utils": "^1.0.0-beta.27",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^7.2.3",
+    "eslint": "^5.15.1",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-config-standard": ">=12.0.0",
+    "eslint-loader": "^2.1.2",
+    "eslint-plugin-import": ">=2.16.0",
+    "eslint-plugin-jest": ">=22.3.0",
+    "eslint-plugin-lodash-template": "^0.13.0",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-nuxt": ">=0.4.2",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-promise": ">=4.0.1",
+    "eslint-plugin-standard": ">=4.0.0",
+    "eslint-plugin-vue": "^5.2.2",
+    "jest": "^24.9.0",
+    "lerna": "^2.11.0",
+    "node-sass": "^4.12.0",
+    "prettier": "1.16.4",
+    "sass-loader": "^8.0.0",
+    "vue-jest": "^2.6.0",
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "license": "MIT"
 }

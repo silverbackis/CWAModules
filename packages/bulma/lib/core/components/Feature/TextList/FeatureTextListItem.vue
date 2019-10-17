@@ -2,11 +2,12 @@
   <li class="feature-text-list-item" v-if="component">
     <div v-if="$bwstarter.isAdmin" class="field has-addons">
       <div class="control is-expanded has-icons-left">
-        <admin-text-input :model="component.title"
-                          :componentId="endpoint"
-                          componentField="title"
-                          placeholder="Enter feature"
-                          class="input cms-text-input"
+        <admin-text-input
+          :model="component.title"
+          :componentId="endpoint"
+          componentField="title"
+          placeholder="Enter feature"
+          class="input cms-text-input"
         />
         <span class="icon is-small is-left">
           <font-awesome-icon icon="check-circle" class="check-icon" />
@@ -47,11 +48,11 @@ export default {
 </script>
 
 <style lang="sass">
-  .feature-text-list-item
-    + .feature-text-list-item
-      margin-top: .5em
-    .cms-text-input
-      font-size: inherit
-      color: inherit
-      font-family: inherit
+.feature-text-list-item
+  + .feature-text-list-item
+    margin-top: .5em
+  .cms-text-input
+    font-size: inherit
+    color: inherit
+    font-family: inherit
 </style>

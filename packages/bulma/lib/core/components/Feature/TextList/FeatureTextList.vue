@@ -1,18 +1,26 @@
 <template>
   <component-wrapper
-    :class-name="['section', 'feature-list', className, {'is-admin': $bwstarter.isAdmin, 'is-loading': reloading}]"
+    :class-name="[
+      'section',
+      'feature-list',
+      className,
+      { 'is-admin': $bwstarter.isAdmin, 'is-loading': reloading }
+    ]"
     :extendClass="false"
     :nested="nested"
   >
     <div class="container has-text-centered">
-      <h3 class="subtitle features-title" v-if="component.title" v-html="component.title" />
+      <h3
+        class="subtitle features-title"
+        v-if="component.title"
+        v-html="component.title"
+      />
       <div class="is-inline-block-mobile">
         <div class="columns is-centered has-text-left">
-          <div v-for="(features) in featureChunks()"
-               class="column is-narrow">
+          <div v-for="features in featureChunks()" class="column is-narrow">
             <ul class="fa-ul">
               <feature-text-list-item
-                v-for="(feature) in features"
+                v-for="feature in features"
                 :key="feature['@id']"
                 :component="feature"
                 :class="injectDynamicData(feature.className)"
@@ -37,88 +45,99 @@
 </template>
 
 <script>
-  import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
-  import _ from 'lodash'
-  import FeatureTextListItem from './FeatureTextListItem'
-  import FeatureTextListModal from './FeatureTextListModal'
-  import FeatureTextListAdmin from './FeatureTextListAdmin'
+import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import _ from 'lodash'
+import FeatureTextListItem from './FeatureTextListItem'
+import FeatureTextListModal from './FeatureTextListModal'
+import FeatureTextListAdmin from './FeatureTextListAdmin'
 
-  export default {
-    mixins: [ ComponentMixin ],
-    components: {
-      FeatureTextListItem,
-      FeatureTextListModal,
-      FeatureTextListAdmin
+export default {
+  mixins: [ComponentMixin],
+  components: {
+    FeatureTextListItem,
+    FeatureTextListModal,
+    FeatureTextListAdmin
+  },
+  data() {
+    return {
+      editComponent: null,
+      reloading: false
+    }
+  },
+  computed: {
+    className() {
+      return this.injectDynamicData(this.component.className) || ''
     },
-    data () {
-      return {
-        editComponent: null,
-        reloading: false
+    componentGroup() {
+      return this.component.componentGroups[0]
+    }
+  },
+  methods: {
+    featureChunks() {
+      if (!this.childComponents.length) {
+        return []
+      }
+      return _.chunk(
+        this.childComponents[0],
+        Math.ceil(
+          this.childComponents[0].length / (this.component.columns || 1)
+        )
+      )
+    },
+    setEditComponent(editComponent) {
+      this.editComponent = editComponent
+    },
+    closeEditModal() {
+      this.editComponent = null
+    },
+    reload() {
+      if (!this.reloading) {
+        this.reloading = true
+        this.$bwstarter
+          .fetchContent(this.componentGroup)
+          .then(componentLocations => {
+            this.initAdminInputLocations(componentLocations, true)
+            this.reloading = false
+          })
+          .catch(error => {
+            this.reloading = false
+            console.error('updateContentComponents Error', error)
+          })
       }
     },
-    computed: {
-      className () {
-        return this.injectDynamicData(this.component.className) || ''
-      },
-      componentGroup () {
-        return this.component.componentGroups[0]
-      }
-    },
-    methods: {
-      featureChunks () {
-        if (!this.childComponents.length) {
-          return []
-        }
-        return _.chunk(this.childComponents[ 0 ], Math.ceil(this.childComponents[ 0 ].length / (this.component.columns || 1)))
-      },
-      setEditComponent (editComponent) {
-        this.editComponent = editComponent
-      },
-      closeEditModal () {
-        this.editComponent = null
-      },
-      reload () {
-        if (!this.reloading) {
-          this.reloading = true
-          this.$bwstarter.fetchContent(this.componentGroup)
-            .then((componentLocations) => {
-              this.initAdminInputLocations(componentLocations, true)
-              this.reloading = false
-            })
-            .catch((error) => {
-              this.reloading = false
-              console.error('updateContentComponents Error', error)
-            })
-        }
-      },
-      addNew () {
-        if (!this.reloading) {
-          this.reloading = true
-          this.$axios.post('/feature_text_list_items', {
-            title: 'New Feature',
-            parentComponentGroup: this.componentGroup
-          }, { progress: false })
-            .then(() => {
-              this.reloading = false
-              this.reload()
-            })
-            .catch((error) => {
-              this.reloading = false
-              console.error(error)
-            })
-        }
+    addNew() {
+      if (!this.reloading) {
+        this.reloading = true
+        this.$axios
+          .post(
+            '/feature_text_list_items',
+            {
+              title: 'New Feature',
+              parentComponentGroup: this.componentGroup
+            },
+            { progress: false }
+          )
+          .then(() => {
+            this.reloading = false
+            this.reload()
+          })
+          .catch(error => {
+            this.reloading = false
+            console.error(error)
+          })
       }
     }
   }
+}
 </script>
 
 <style lang="sass">
-  @import "~bulma/sass/utilities/mixins"
-  .feature-list
-    &.is-loading
-      opacity: .5
-    +mobile
-      .column
-        padding-top: 0
-        padding-bottom: 0
+@import "~bulma/sass/utilities/mixins"
+.feature-list
+  &.is-loading
+    opacity: .5
+  +mobile
+    .column
+      padding-top: 0
+      padding-bottom: 0
 </style>

@@ -4,16 +4,18 @@
       <div class="columns">
         <div class="column is-narrow">
           <aside class="menu">
-            <bulma-menu-item-group v-for="(itemGroup, index) in navItemsGrouped"
-                                   :navItems="itemGroup"
-                                   :key="index"
+            <bulma-menu-item-group
+              v-for="(itemGroup, index) in navItemsGrouped"
+              :navItems="itemGroup"
+              :key="index"
             />
           </aside>
         </div>
         <div class="column">
-          <nuxt-child :key="childKey"
-                      :componentGroup="getEntity(component.childComponentGroup['@id'])"
-                      :nested="true"
+          <nuxt-child
+            :key="childKey"
+            :componentGroup="getEntity(component.childComponentGroup['@id'])"
+            :nested="true"
           />
         </div>
       </div>
@@ -22,43 +24,43 @@
 </template>
 
 <script>
-  import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
-  import BulmaMenuItemGroup from './MenuItemGroup'
+import NuxtChildMixin from '~/.nuxt/bwstarter/bulma/components/nuxtChildMixin'
+import BulmaMenuItemGroup from './MenuItemGroup'
 
-  export default {
-    mixins: [ NuxtChildMixin ],
-    components: {
-      BulmaMenuItemGroup
+export default {
+  mixins: [NuxtChildMixin],
+  components: {
+    BulmaMenuItemGroup
+  },
+  computed: {
+    navItems() {
+      return this.childComponents[0]
     },
-    computed: {
-      navItems () {
-        return this.childComponents[ 0 ]
-      },
-      navItemsGrouped () {
-        let groups = []
-        let currentGroup = []
-        let previousItem
-        this.navItems.forEach((navItem) => {
-          navItem = this.getEntity(navItem[ '@id' ])
-          if (previousItem && (previousItem.menuLabel || navItem.menuLabel)) {
-            groups.push(currentGroup)
-            currentGroup = []
-          }
-          currentGroup.push(navItem)
-          previousItem = navItem
-        })
-        groups.push(currentGroup)
-        return groups
-      }
+    navItemsGrouped() {
+      let groups = []
+      let currentGroup = []
+      let previousItem
+      this.navItems.forEach(navItem => {
+        navItem = this.getEntity(navItem['@id'])
+        if (previousItem && (previousItem.menuLabel || navItem.menuLabel)) {
+          groups.push(currentGroup)
+          currentGroup = []
+        }
+        currentGroup.push(navItem)
+        previousItem = navItem
+      })
+      groups.push(currentGroup)
+      return groups
     }
   }
+}
 </script>
 
 <style lang="sass">
-  @import "../../../assets/css/vars"
+@import "../../../assets/css/vars"
 
-  aside.menu
-    padding: .75rem
-    border: 1px solid $grey-lighter
-    min-width: 250px
+aside.menu
+  padding: .75rem
+  border: 1px solid $grey-lighter
+  min-width: 250px
 </style>

@@ -12,21 +12,21 @@
 </template>
 
 <script>
-  import InputCommonMixin from '../_CommonMixin'
-  import ChoiceExpandedOption from './Option/ChoiceExpandedOption'
+import InputCommonMixin from '../_CommonMixin'
+import ChoiceExpandedOption from './Option/ChoiceExpandedOption'
 
-  export default {
-    mixins: [ InputCommonMixin ],
-    data () {
-      return {
-        is: 'radio'
-      }
-    },
-    components: {
-      ChoiceExpandedOption
-    },
-    created () {
-      this.displayErrors = true
+export default {
+  mixins: [InputCommonMixin],
+  data() {
+    return {
+      is: 'radio'
     }
+  },
+  components: {
+    ChoiceExpandedOption
+  },
+  created() {
+    this.displayErrors = true
   }
+}
 </script>
