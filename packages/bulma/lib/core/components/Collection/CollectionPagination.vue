@@ -93,6 +93,11 @@ export default {
     page: {
       type: Number,
       required: true
+    },
+    reloading: {
+      type: Boolean,
+      required: false,
+      default: false
     }
   },
   methods: {
