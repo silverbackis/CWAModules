@@ -51,6 +51,15 @@ export default {
       }
     }
   },
+  watch: {
+    model: {
+      handler() {
+        this.initialise()
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   methods: {
     adminInputData(data = {}) {
       return Object.assign(
@@ -60,14 +69,22 @@ export default {
         },
         data
       )
+    },
+    initialise() {
+      this.$bwstarter.initAdminInput(
+        this.adminInputData({
+          model: this.model
+        })
+      )
     }
   },
+  // for ssr
   created() {
-    this.$bwstarter.initAdminInput(
-      this.adminInputData({
-        model: this.model
-      })
-    )
+    this.initialise()
+  },
+  // for dynamic re-mounts
+  mounted() {
+    this.initialise()
   },
   beforeDestroy() {
     this.$bwstarter.destroyAdminInput(this.adminInputData())

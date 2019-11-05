@@ -1,5 +1,5 @@
 <template>
-  <li v-if="$bwstarter.isAdmin" class="feature-text-list-item">
+  <div v-if="$bwstarter.isAdmin">
     <button class="button is-primary is-fullwidth" @click="$emit('add')">
       <span class="icon is-small">
         <font-awesome-icon :icon="['fas', 'plus']" />
@@ -14,5 +14,5 @@
         >reload features</a
       >
     </div>
-  </li>
+  </div>
 </template>

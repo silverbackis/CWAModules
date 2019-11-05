@@ -18,7 +18,7 @@
       <div class="is-inline-block-mobile">
         <div class="columns is-centered has-text-left">
           <div
-            v-for="(features, index) in featureChunks()"
+            v-for="(features, index) in featureChunks"
             :key="'fc-' + index"
             class="column is-narrow"
           >
@@ -30,14 +30,14 @@
                 :class="injectDynamicData(feature.className)"
                 @edit="setEditComponent"
               />
-              <feature-text-list-admin
-                v-if="$bwstarter.isAdmin"
-                @add="addNew"
-                @reload="reload"
-              />
             </ul>
           </div>
         </div>
+        <feature-text-list-admin
+          v-if="$bwstarter.isAdmin"
+          @add="addNew"
+          @reload="reload"
+        />
       </div>
     </div>
     <feature-text-list-modal
@@ -74,9 +74,7 @@ export default {
     },
     componentGroup() {
       return this.component.componentGroups[0]
-    }
-  },
-  methods: {
+    },
     featureChunks() {
       if (!this.childComponents.length) {
         return []
@@ -87,7 +85,9 @@ export default {
           this.childComponents[0].length / (this.component.columns || 1)
         )
       )
-    },
+    }
+  },
+  methods: {
     setEditComponent(editComponent) {
       this.editComponent = editComponent
     },

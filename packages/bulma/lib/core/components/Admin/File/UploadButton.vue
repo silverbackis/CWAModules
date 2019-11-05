@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="componentId || newEntityFn"
     :class="['file', 'edit-button', 'is-primary', { 'is-disabled': uploading }]"
   >
     <label class="file-label">
@@ -35,7 +36,16 @@ export default {
     },
     componentId: {
       type: String,
-      required: true
+      required: false,
+      default: null
+    },
+    uploadField: {
+      type: String,
+      default: 'filePath'
+    },
+    newEntityFn: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -44,7 +54,8 @@ export default {
       preview: null,
       uploadPercentage: 0,
       uploading: false,
-      uploadError: null
+      uploadError: null,
+      localComponentId: this.componentId
     }
   },
   watch: {
@@ -59,6 +70,14 @@ export default {
     },
     uploadError(newValue) {
       this.$emit('uploadError', newValue)
+    }
+  },
+  created() {
+    if (!this.componentId && !this.newEntityFn) {
+      // eslint-disable-next-line no-console
+      console.error(
+        'The upload button required a componentId or newEntityFn prop'
+      )
     }
   },
   methods: {
@@ -93,14 +112,17 @@ export default {
       this.preview = null
       this.file = null
     },
-    submitUpload() {
+    async submitUpload() {
       this.uploadError = null
       this.uploading = true
       this.uploadPercentage = 0
+      if (!this.localComponentId) {
+        this.localComponentId = await this.newEntityFn()
+      }
       const formData = new FormData()
       formData.append('file', this.file)
       this.$axios
-        .post('/files/filePath/' + this.componentId, formData, {
+        .post('/files/' + this.uploadField + '/' + this.componentId, formData, {
           progress: false,
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -150,3 +172,8 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+.file.edit-button.is-disabled
+  opacity: .5
+</style>
