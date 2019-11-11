@@ -1,5 +1,8 @@
 <template>
-  <div v-html="quillModel"></div>
+  <div>
+    <div ref="quillDom" v-html="quillModel"></div>
+    <input-errors :errors="errors" :component-id="componentId" />
+  </div>
 </template>
 
 <script>
@@ -41,7 +44,7 @@ export default {
     const Quill = await import('quill')
 
     // eslint-disable-next-line new-cap
-    this.editor = new Quill.default(this.$el, {
+    this.editor = new Quill.default(this.$refs.quillDom, {
       editorOptions: this.editorOptions,
       theme: this.theme
     })

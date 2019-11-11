@@ -1,12 +1,15 @@
 <template>
-  <textarea v-if="isTextarea" v-model="dataModel" v-bind="inputProps" />
-  <input
-    v-else-if="isNumber"
-    v-model.number="dataModel"
-    type="number"
-    v-bind="inputProps"
-  />
-  <input v-else v-model="dataModel" type="text" v-bind="inputProps" />
+  <div>
+    <textarea v-if="isTextarea" v-model="dataModel" v-bind="inputProps" />
+    <input
+      v-else-if="isNumber"
+      v-model.number="dataModel"
+      type="number"
+      v-bind="inputProps"
+    />
+    <input v-else v-model="dataModel" type="text" v-bind="inputProps" />
+    <input-errors :errors="errors" :component-id="componentId" />
+  </div>
 </template>
 
 <script>

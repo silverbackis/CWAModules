@@ -306,9 +306,21 @@ export default class BWStarter {
     this.$storage.commit('setModel', [data], ADMIN_MODULE)
   }
 
+  setAdminInputErrors(data) {
+    this.$storage.commit('setErrors', [data], ADMIN_MODULE)
+  }
+
   getAdminInputModel({ componentId, componentField }) {
     return this.$storage.get(
       'getInputModel',
+      [{ componentId, componentField }],
+      ADMIN_MODULE
+    )
+  }
+
+  getAdminInputErrors({ componentId, componentField }) {
+    return this.$storage.get(
+      'getInputErrors',
       [{ componentId, componentField }],
       ADMIN_MODULE
     )

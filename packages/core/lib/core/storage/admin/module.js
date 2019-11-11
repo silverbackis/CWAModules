@@ -17,7 +17,8 @@ export const mutations = {
   ) {
     if (!state.endpoints[componentId]) {
       Vue.set(state.endpoints, componentId, {
-        inputs: {}
+        inputs: {},
+        errors: []
       })
     }
     if (force || !state.endpoints[componentId].inputs[componentField]) {
@@ -25,13 +26,17 @@ export const mutations = {
         savedModel: model,
         model,
         postSaveFn,
-        errors: null
+        errors: []
       })
     }
   },
   setModel(state, { componentId, componentField, model }) {
     const field = state.endpoints[componentId].inputs[componentField]
     field.model = model
+  },
+  setErrors(state, { componentId, componentField, errors }) {
+    const field = state.endpoints[componentId].inputs[componentField]
+    field.errors = Array.isArray(errors) ? errors : []
   },
   updateComponent(state, data) {
     const id = data['@id']
@@ -67,6 +72,37 @@ export const mutations = {
   },
   updateSaveDebounce(state, value) {
     state.saveDebounce = value
+  },
+  setEndpointErrors(state, { endpoint, violations }) {
+    if (!state.endpoints[endpoint]) {
+      // eslint-disable-next-line no-console
+      console.error('Cannot set endpoint errors. Endpoint not found', endpoint)
+    }
+    const unknownInputViolations = []
+    for (const { propertyPath, message } of violations) {
+      const inputData = state.endpoints[endpoint].inputs[propertyPath]
+      if (!inputData) {
+        unknownInputViolations.push(propertyPath + ': ' + message)
+        continue
+      }
+      inputData.errors.push(message)
+    }
+    state.endpoints[endpoint].errors.push(...unknownInputViolations)
+  },
+  resetEndpointErrors(state, endpoint) {
+    if (!state.endpoints[endpoint]) {
+      // eslint-disable-next-line no-console
+      console.error('Created endpoint data. Endpoint not found', endpoint)
+      Vue.set(state.endpoints, endpoint, {
+        inputs: {},
+        errors: []
+      })
+    }
+    state.endpoints[endpoint].errors = []
+    const inputs = state.endpoints[endpoint].inputs
+    Object.keys(inputs).forEach(inputKey => {
+      state.endpoints[endpoint].inputs[inputKey].errors = []
+    })
   }
 }
 
@@ -107,14 +143,26 @@ export const getters = {
       return null
     }
     return endpoint.inputs[componentField].model
+  },
+  getInputErrors: state => ({ componentId, componentField }) => {
+    const endpoint = state.endpoints[componentId]
+    if (!endpoint || !endpoint.inputs[componentField]) {
+      return []
+    }
+    return endpoint.inputs[componentField].errors || []
+  },
+  getEndpointErrors: state => endpointKey => {
+    const endpoint = state.endpoints[endpointKey]
+    if (!endpoint) {
+      return []
+    }
+    return endpoint.errors || []
   }
 }
 
 export const actions = {
   modifiedEndpoints({ state }) {
     const endpoints = {}
-    // eslint-disable-next-line no-console
-    console.log(state.endpoints)
     Object.keys(state.endpoints)
       .filter(endpointKey => !endpointKey.endsWith('/new'))
       .some(endpointKey => {
@@ -214,5 +262,12 @@ export const actions = {
       commit('setWaitingToSubmit', { endpointKey, value: newSaveDebounce })
     })
     newSaveDebounce()
+  },
+  updateErrors({ commit }, { response, endpoint }) {
+    commit('resetEndpointErrors', endpoint)
+    commit('setEndpointErrors', {
+      endpoint,
+      violations: response.data.violations
+    })
   }
 }

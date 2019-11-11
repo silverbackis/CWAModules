@@ -1,4 +1,7 @@
 export default {
+  components: {
+    InputErrors: () => import('./InputErrors')
+  },
   data() {
     return {
       debounce: null
@@ -26,6 +29,18 @@ export default {
     }
   },
   computed: {
+    errors: {
+      get() {
+        return this.$bwstarter.getAdminInputErrors(this.adminInputData())
+      },
+      set(errors) {
+        this.$bwstarter.setAdminInputModel(
+          this.adminInputData({
+            errors
+          })
+        )
+      }
+    },
     dataModel: {
       get() {
         return this.$bwstarter.getAdminInputModel(this.adminInputData())

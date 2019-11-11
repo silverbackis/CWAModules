@@ -1,5 +1,8 @@
 <template>
-  <input v-model="dataModel" type="text" v-bind="inputProps" />
+  <div>
+    <input v-model="dataModel" type="text" v-bind="inputProps" />
+    <input-errors :errors="errors" :component-id="componentId" />
+  </div>
 </template>
 
 <script>

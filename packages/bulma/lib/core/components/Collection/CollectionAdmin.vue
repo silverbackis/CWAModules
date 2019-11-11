@@ -1,5 +1,10 @@
 <template>
   <div v-if="!disabledAdmin && $bwstarter.isAdmin">
+    <input-errors
+      v-if="!modalComponent"
+      :errors="errors"
+      :component-id="componentId"
+    />
     <button
       class="button is-primary is-fullwidth"
       :class="{ 'is-loading': adding || isLoading }"
@@ -33,6 +38,7 @@
         </span>
         <span>Add New</span>
       </button>
+      <input-errors :errors="errors" :component-id="componentId" />
     </modal>
   </div>
 </template>
@@ -40,9 +46,10 @@
 <script>
 import Modal from '../Modal'
 import { name as adminModuleName } from '~/.nuxt/bwstarter/core/storage/admin'
+import InputErrors from '~/.nuxt/bwstarter/components/Admin/InputErrors'
 
 export default {
-  components: { Modal },
+  components: { Modal, InputErrors },
   props: {
     disabledAdmin: {
       type: Boolean,
@@ -83,9 +90,19 @@ export default {
     return {
       modalActive: false,
       adding: false,
-      newComponentData: null,
-      errors: null,
-      modalErrors: null
+      newComponentData: null
+    }
+  },
+  computed: {
+    componentId() {
+      return `${this.context}/new`
+    },
+    errors() {
+      return this.$bwstarter.$storage.get(
+        'getEndpointErrors',
+        [this.componentId],
+        adminModuleName
+      )
     }
   },
   watch: {
@@ -113,7 +130,7 @@ export default {
         }
         return newComponent
       },
-      { '@id': `${this.context}/new` }
+      { '@id': this.componentId }
     )
   },
   methods: {
@@ -128,19 +145,29 @@ export default {
       this.$emit('reload', evt)
     },
     addCollectionItem(evt) {
-      const isModal = this.modalActive
       this.$emit('addCollectionItem', evt)
       if (this.addCollectionItemFn) {
         return this.addCollectionItemFn()
       }
-      const resourceInputs = this.$bwstarter.$storage.getState(adminModuleName)
-        .endpoints[this.newComponentData['@id']].inputs
-      const resourceData = Object.keys(resourceInputs).reduce((obj, key) => {
-        obj[key] = resourceInputs[key].model
-        return obj
-      }, {})
+      const endpointData = this.$bwstarter.$storage.getState(adminModuleName)
+        .endpoints[this.componentId]
+      let resourceData
+      if (!endpointData) {
+        resourceData = {}
+      } else {
+        const resourceInputs = endpointData.inputs
+        resourceData = Object.keys(resourceInputs).reduce((obj, key) => {
+          obj[key] = resourceInputs[key].model
+          return obj
+        }, {})
+      }
       if (!this.adding) {
         this.adding = true
+        this.$bwstarter.$storage.commit(
+          'resetEndpointErrors',
+          this.componentId,
+          adminModuleName
+        )
         this.$axios
           .post(this.addItemRoute, resourceData, { progress: false })
           .then(() => {
@@ -150,8 +177,14 @@ export default {
           })
           .catch(error => {
             this.adding = false
-            // eslint-disable-next-line no-console
-            console.error(error.response)
+            this.$bwstarter.$storage.dispatch(
+              'updateErrors',
+              {
+                response: error.response,
+                endpoint: this.componentId
+              },
+              adminModuleName
+            )
           })
       }
     }
