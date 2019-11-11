@@ -24,7 +24,8 @@ export const mutations = {
       Vue.set(state.endpoints[componentId].inputs, componentField, {
         savedModel: model,
         model,
-        postSaveFn
+        postSaveFn,
+        errors: null
       })
     }
   },
@@ -72,6 +73,9 @@ export const mutations = {
 export const getters = {
   isModified: state => (endpointKey = null) => {
     const checkEndpoint = endpointKey => {
+      if (endpointKey.endsWith('/new')) {
+        return false
+      }
       const inputs = state.endpoints[endpointKey].inputs
       return Object.keys(inputs).some(inputKey => {
         const input = inputs[inputKey]
@@ -109,20 +113,24 @@ export const getters = {
 export const actions = {
   modifiedEndpoints({ state }) {
     const endpoints = {}
-    Object.keys(state.endpoints).some(endpointKey => {
-      const stateInputs = state.endpoints[endpointKey].inputs
-      const modifiedInputKeys = Object.keys(stateInputs).filter(inputKey => {
-        const input = stateInputs[inputKey]
-        return input.model !== input.savedModel
-      })
-      if (modifiedInputKeys.length) {
-        const endpoint = {}
-        modifiedInputKeys.forEach(inputKey => {
-          endpoint[inputKey] = stateInputs[inputKey].model
+    // eslint-disable-next-line no-console
+    console.log(state.endpoints)
+    Object.keys(state.endpoints)
+      .filter(endpointKey => !endpointKey.endsWith('/new'))
+      .some(endpointKey => {
+        const stateInputs = state.endpoints[endpointKey].inputs
+        const modifiedInputKeys = Object.keys(stateInputs).filter(inputKey => {
+          const input = stateInputs[inputKey]
+          return input.model !== input.savedModel
         })
-        endpoints[endpointKey] = endpoint
-      }
-    })
+        if (modifiedInputKeys.length) {
+          const endpoint = {}
+          modifiedInputKeys.forEach(inputKey => {
+            endpoint[inputKey] = stateInputs[inputKey].model
+          })
+          endpoints[endpointKey] = endpoint
+        }
+      })
     return endpoints
   },
   cancelSubmits({ state }, patchEndpoints) {

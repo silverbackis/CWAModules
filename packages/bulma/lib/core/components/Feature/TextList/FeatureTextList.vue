@@ -14,7 +14,7 @@
         v-if="component.title"
         class="subtitle features-title"
         v-html="component.title"
-      />
+      ></h3>
       <div class="is-inline-block-mobile">
         <div class="columns is-centered has-text-left">
           <div

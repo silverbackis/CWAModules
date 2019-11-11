@@ -42,10 +42,8 @@
         @goToPageLabel="goToPageLabel"
       />
       <collection-admin
-        :disabled-admin="disabledAdmin"
-        :adding="adding"
-        @addCollectionItem="addCollectionItem"
-        @reloadCollection="reloadCollection"
+        v-bind="collectionAdminProps"
+        @reload="reloadCollection"
       />
     </div>
   </component-wrapper>
@@ -113,6 +111,15 @@ export default {
       return this.component.collection['hydra:member'].filter(
         item => !!this.getEntity(item)
       )
+    },
+    collectionAdminProps() {
+      return {
+        'disabled-admin': this.disabledAdmin,
+        adding: this.adding,
+        'add-item-route': this.component.collectionRoutes.post,
+        'current-page': this.page,
+        context: `/contexts/${this.component.resource.split('\\').pop()}`
+      }
     }
   },
   created() {
@@ -168,23 +175,6 @@ export default {
             this.reloading = false
             // eslint-disable-next-line no-console
             console.error('updateContentComponents Error', error)
-          })
-      }
-    },
-    addCollectionItem() {
-      if (!this.adding) {
-        this.adding = true
-        this.$axios
-          .post(this.component.collectionRoutes.post, {}, { progress: false })
-          .then(() => {
-            this.adding = false
-            this.page = 1
-            this.reloadCollection()
-          })
-          .catch(error => {
-            this.adding = false
-            // eslint-disable-next-line no-console
-            console.error(error)
           })
       }
     }

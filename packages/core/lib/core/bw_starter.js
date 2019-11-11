@@ -499,7 +499,7 @@ const getEntitiesFromLocations = function(locations) {
         // eslint-disable-next-line no-console
         console.log(
           'component found as string. it is probably already registered',
-          component
+          location.component
         )
       return
     }

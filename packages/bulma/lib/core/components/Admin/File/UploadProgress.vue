@@ -39,6 +39,11 @@ export default {
       type: Number,
       required: true
     }
+  },
+  methods: {
+    cancelUpload() {
+      this.$emit('cancel')
+    }
   }
 }
 </script>
