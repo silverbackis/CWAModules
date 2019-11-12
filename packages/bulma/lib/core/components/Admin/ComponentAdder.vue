@@ -1,9 +1,25 @@
 <template>
   <div :class="['component-adder', !!component ? 'has-component' : null]">
+    <div v-if="location" class="location-move-container">
+      <div class="button-group">
+        <button
+          class="button is-secondary is-fullwidth"
+          @click="moveLocation(-1)"
+        >
+          Up
+        </button>
+        <button
+          class="button is-secondary is-fullwidth"
+          @click="moveLocation(+1)"
+        >
+          Down
+        </button>
+      </div>
+    </div>
     <button
       v-if="component"
       class="button is-secondary is-radiusless is-modify"
-      @click="modifyComponent(component)"
+      @click="modifyComponent(component, location)"
     >
       Modify
     </button>
@@ -46,11 +62,17 @@ export default {
     addComponent(page, location) {
       this.$emit('add', { page, location })
     },
-    modifyComponent(component) {
-      this.$emit('modify', { component })
+    modifyComponent(component, location) {
+      this.$emit('modify', { component, location })
     },
     deleteComponent(component) {
       this.$emit('delete', { component })
+    },
+    moveLocation(moveBy) {
+      this.$emit('moveLocation', {
+        oldSort: this.location.sort,
+        newSort: this.location.sort + moveBy
+      })
     }
   }
 }
@@ -90,6 +112,25 @@ export default {
     left: 0
     width: 100%
     margin: 0
+  .location-move-container
+    position: absolute
+    top: 50%
+    left: 0
+    transform: translateY(-50%)
+    .button-group
+      width: 60px
+    .button
+      position: relative
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+      border-left: 0
+      &:not(:first-child)
+        border-top-left-radius: 0
+        border-top-right-radius: 0
+      &:not(:last-child)
+        border-bottom: 0
+        border-bottom-left-radius: 0
+        border-bottom-right-radius: 0
 .component-adder:first-child .button.is-add
   transform: translateY(0)
   border-top: 0

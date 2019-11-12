@@ -34,6 +34,16 @@
         <input v-model="componentClassNames" class="input" type="text" />
       </div>
     </div>
+    <div v-if="location" class="field location-move-container">
+      <div class="button-group">
+        <button class="button is-secondary" @click="moveLocation(-1)">
+          Move Up
+        </button>
+        <button class="button is-secondary" @click="moveLocation(+1)">
+          Move Down
+        </button>
+      </div>
+    </div>
     <div class="field">
       <div class="control">
         <button class="button is-primary" @click="submit">Submit</button>
@@ -106,6 +116,10 @@ export default {
               ? component.componentName
               : null
           this.componentClassNames = component.className
+        } else {
+          this.componentType = null
+          this.componentName = null
+          this.componentClassNames = null
         }
       },
       deep: true,
@@ -159,6 +173,12 @@ export default {
         console.error(e)
       }
       this.isLoading = false
+    },
+    moveLocation(moveBy) {
+      this.$emit('moveLocation', {
+        oldSort: this.location.sort,
+        newSort: this.location.sort + moveBy
+      })
     }
   }
 }
