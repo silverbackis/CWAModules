@@ -25,7 +25,6 @@
             :editor-toolbar="['bold', 'italic', 'underline']"
             component-field="description"
             placeholder="Enter feature description here"
-            class="input"
           />
         </div>
         <p v-else v-html="realComponentData.description"></p>

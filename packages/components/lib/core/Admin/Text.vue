@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="input-wrapper">
     <textarea v-if="isTextarea" v-model="dataModel" v-bind="inputProps" />
     <input
       v-else-if="isNumber"
@@ -27,6 +27,8 @@ export default {
 </script>
 
 <style lang="sass">
+.input-wrapper
+  width: 100%
 .cms-text-input
   text-align: inherit
   font-size: inherit

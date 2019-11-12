@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div ref="quillDom" v-html="quillModel"></div>
+    <div ref="quillDom" :class="inputClass" v-html="quillModel"></div>
     <input-errors :errors="errors" :component-id="componentId" />
   </div>
 </template>

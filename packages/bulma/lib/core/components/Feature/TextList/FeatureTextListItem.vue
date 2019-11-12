@@ -7,7 +7,7 @@
           :component-id="endpoint"
           component-field="title"
           placeholder="Enter feature"
-          class="input cms-text-input"
+          input-class="input cms-text-input"
         />
         <span class="icon is-small is-left">
           <font-awesome-icon icon="check-circle" class="check-icon" />

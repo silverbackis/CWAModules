@@ -17,7 +17,7 @@
         :component-id="endpoint"
         component-field="description"
         placeholder="Enter feature description here"
-        class="input"
+        input-class="input"
       />
       <template v-else>{{ realComponentData.description }}</template>
     </h5>

@@ -1,0 +1,188 @@
+<template>
+  <modal
+    :active="active"
+    :class="['component-modal', isLoading ? 'is-loading' : null]"
+    @close="closeModal"
+  >
+    <h2 class="title">{{ component ? 'Modify' : 'Add' }} Component</h2>
+    <div class="field">
+      <label class="label">Component</label>
+      <div class="control">
+        <div class="select">
+          <select v-model="componentType" :disabled="!!component">
+            <option :value="null" disabled>Please select</option>
+            <option
+              v-for="(name, index) of availableComponents"
+              :key="`${name}-${index}`"
+              :value="name"
+            >
+              {{ name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Custom UI component</label>
+      <div class="control">
+        <input v-model="componentName" class="input" type="text" />
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Class name(s)</label>
+      <div class="control">
+        <input v-model="componentClassNames" class="input" type="text" />
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <button class="button is-primary" @click="submit">Submit</button>
+      </div>
+    </div>
+    <ul v-if="errors" class="help is-danger">
+      <li v-for="(error, errorIndex) in errors" :key="'error' + errorIndex">
+        {{ error }}
+      </li>
+    </ul>
+  </modal>
+</template>
+
+<script>
+import componentsMixin from '../../components'
+import Modal from '../Modal'
+import { name as entitiesModuleName } from '~/.nuxt/bwstarter/core/storage/entities'
+
+export default {
+  components: { Modal },
+  props: {
+    active: {
+      type: Boolean,
+      required: true
+    },
+    component: {
+      type: Object,
+      required: false,
+      default: null
+    },
+    page: {
+      type: Object,
+      required: false,
+      default: null
+    },
+    location: {
+      type: Object,
+      required: false,
+      default: null
+    }
+  },
+  data() {
+    return {
+      components: Object.keys(componentsMixin.components),
+      componentType: null,
+      apiComponents: null,
+      isLoading: false,
+      componentName: null,
+      componentClassNames: null,
+      errors: null
+    }
+  },
+  computed: {
+    availableComponents() {
+      if (!this.apiComponents) {
+        return []
+      }
+      return this.components.filter(
+        componentType => this.apiComponents.indexOf(componentType) !== -1
+      )
+    }
+  },
+  watch: {
+    component: {
+      handler(component) {
+        if (component) {
+          this.componentType = component['@type']
+          this.componentName =
+            component.componentName !== component['@type']
+              ? component.componentName
+              : null
+          this.componentClassNames = component.className
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    active: {
+      async handler(isActive) {
+        if (isActive && !this.apiComponents) {
+          this.isLoading = true
+          const { data } = await this.$axios.get('/docs.jsonld')
+          this.apiComponents = data['hydra:supportedClass']
+            .map(cls => cls['rdfs:label'])
+            .filter(data => !!data)
+          this.isLoading = false
+        }
+      }
+    }
+  },
+  methods: {
+    closeModal() {
+      this.$emit('close')
+    },
+    async submit() {
+      this.isLoading = true
+      this.errors = null
+      const componentData = {
+        componentName: this.componentName,
+        className: this.componentClassNames
+      }
+      try {
+        if (this.component) {
+          const { data } = await this.$axios.put(
+            this.component['@id'],
+            componentData
+          )
+          this.$bwstarter.$storage.commit(
+            'setEntity',
+            [{ id: this.component['@id'], data }],
+            entitiesModuleName
+          )
+          this.closeModal()
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('is new... working on that!', this.location, this.page)
+        }
+      } catch (e) {
+        this.errors = [
+          'There was an error. Please check the developer logs. This is not intended for use by a regular website admin. Please contact your web developers for more information or assistance.'
+        ]
+        // eslint-disable-next-line no-console
+        console.error(e)
+      }
+      this.isLoading = false
+    }
+  }
+}
+</script>
+
+<style lang="sass">
+.component-modal
+  &.is-loading
+    .modal-content .card
+      position: relative
+      &:before
+        content: ''
+        position: absolute
+        top: 0
+        left: 0
+        right: 0
+        bottom: 0
+        background: $grey
+        z-index: 10
+      &:after
+        +loader
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translate(-50%, -50%)
+        z-index: 11
+</style>

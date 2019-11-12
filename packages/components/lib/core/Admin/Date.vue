@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input v-model="dataModel" type="text" v-bind="inputProps" />
+    <input ref="input" v-model="dataModel" type="text" v-bind="inputProps" />
     <input-errors :errors="errors" :component-id="componentId" />
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
     }
   },
   mounted() {
-    this.flatpickr = flatpickr(this.$el, {
+    this.flatpickr = flatpickr(this.$refs.input, {
       altInput: true,
       altFormat: 'D F j, Y H:i',
       dateFormat: 'Y-m-d H:i:S',

@@ -26,6 +26,11 @@ export default {
     isNumber: {
       type: Boolean,
       default: false
+    },
+    inputClass: {
+      type: [String, Array],
+      required: false,
+      default: 'input'
     }
   },
   computed: {
@@ -62,7 +67,7 @@ export default {
     inputProps() {
       return {
         placeholder: this.placeholder,
-        class: 'cms-text-input'
+        class: ['cms-text-input', this.inputClass]
       }
     }
   },
