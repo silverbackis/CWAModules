@@ -34,7 +34,7 @@
         <input v-model="componentClassNames" class="input" type="text" />
       </div>
     </div>
-    <div v-if="location" class="field location-move-container">
+    <div v-if="!!component" class="field location-move-container">
       <div class="button-group">
         <button class="button is-secondary" @click="moveLocation(-1)">
           Move Up
@@ -46,7 +46,9 @@
     </div>
     <div class="field">
       <div class="control">
-        <button class="button is-primary" @click="submit">Submit</button>
+        <button class="button is-primary" :disabled="!endpoint" @click="submit">
+          Submit
+        </button>
       </div>
     </div>
     <ul v-if="errors" class="help is-danger">
@@ -101,9 +103,15 @@ export default {
       if (!this.apiComponents) {
         return []
       }
+      const apiComponentKeys = Object.keys(this.apiComponents)
       return this.components.filter(
-        componentType => this.apiComponents.indexOf(componentType) !== -1
+        componentType => apiComponentKeys.indexOf(componentType) !== -1
       )
+    },
+    endpoint() {
+      return this.apiComponents
+        ? this.apiComponents[this.componentType] || null
+        : null
     }
   },
   watch: {
@@ -129,10 +137,29 @@ export default {
       async handler(isActive) {
         if (isActive && !this.apiComponents) {
           this.isLoading = true
-          const { data } = await this.$axios.get('/docs.jsonld')
-          this.apiComponents = data['hydra:supportedClass']
-            .map(cls => cls['rdfs:label'])
-            .filter(data => !!data)
+          const { data: contexts } = await this.$axios.get('/index.jsonld', {
+            progress: false
+          })
+          const camelContexts = Object.keys(contexts).reduce((obj, ctxKey) => {
+            const newKey = ctxKey.charAt(0).toUpperCase() + ctxKey.slice(1)
+            obj[newKey] = contexts[ctxKey]
+            return obj
+          }, {})
+
+          const { data } = await this.$axios.get('/docs.jsonld', {
+            progress: false
+          })
+
+          this.apiComponents = data['hydra:supportedClass'].reduce(
+            (obj, cls) => {
+              if (!cls['rdfs:label']) {
+                return obj
+              }
+              obj[cls['rdfs:label']] = camelContexts[cls['rdfs:label']]
+              return obj
+            },
+            {}
+          )
           this.isLoading = false
         }
       }
@@ -162,8 +189,25 @@ export default {
           )
           this.closeModal()
         } else {
-          // eslint-disable-next-line no-console
-          console.log('is new... working on that!', this.location, this.page)
+          try {
+            const { data } = await this.$axios.post(this.endpoint, {
+              location: {
+                sort: this.location ? this.location.sort + 1 : 0,
+                content: this.page['@id']
+              },
+              component: {
+                componentData
+              }
+            })
+            // eslint-disable-next-line no-console
+            console.log(data)
+          } catch (e) {
+            this.errors = [
+              'An error has occurred, please check developer logs.'
+            ]
+            // eslint-disable-next-line no-console
+            console.error(e)
+          }
         }
       } catch (e) {
         this.errors = [
