@@ -282,6 +282,11 @@ export default class BWStarter {
     return this.$storage.get('hasRole', ['ROLE_ADMIN'])
   }
 
+  hasRole(args) {
+    if (!Array.isArray(args)) args = [args]
+    return this.$storage.get('hasRole', args)
+  }
+
   addNotification(message) {
     this.$storage.commit('addNotification', [message])
   }

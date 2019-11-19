@@ -3,7 +3,11 @@
     v-if="_components"
     :class="['bulma-components', isLoading ? 'is-loading' : null]"
   >
-    <component-adder :page="pageData" @add="showModal" />
+    <component-adder
+      v-if="$bwstarter.hasRole('ROLE_SUPER_ADMIN')"
+      :page="pageData"
+      @add="showModal"
+    />
     <template v-for="component in _components">
       <div :key="component.entity['@id']" class="bulma-component">
         <component
@@ -14,7 +18,7 @@
           :dynamic-data="dynamicData"
         />
         <component-adder
-          v-if="$bwstarter.isAdmin"
+          v-if="$bwstarter.hasRole('ROLE_SUPER_ADMIN')"
           :page="pageData"
           :location="component.location"
           :component="component.entity"
@@ -25,7 +29,7 @@
       </div>
     </template>
     <component-modal
-      v-if="$bwstarter.isAdmin"
+      v-if="$bwstarter.hasRole('ROLE_SUPER_ADMIN')"
       v-bind="modalProps"
       @close="closeModal"
       @moveLocation="updateLocationOrder"

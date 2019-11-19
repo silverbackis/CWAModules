@@ -34,6 +34,20 @@
         <input v-model="componentClassNames" class="input" type="text" />
       </div>
     </div>
+    <div
+      v-for="property of requiredProperties"
+      :key="property['hydra:property']['@id']"
+      class="field"
+    >
+      <label class="label">{{ property['hydra:title'] }} *</label>
+      <div class="control">
+        <input
+          v-model="componentPropData[property['hydra:title']]"
+          class="input"
+          type="text"
+        />
+      </div>
+    </div>
     <div v-if="!!component" class="field location-move-container">
       <div class="button-group">
         <button class="button is-secondary" @click="moveLocation(-1)">
@@ -95,10 +109,17 @@ export default {
       isLoading: false,
       componentName: null,
       componentClassNames: null,
-      errors: null
+      errors: null,
+      componentPropData: {}
     }
   },
   computed: {
+    selectedComponent() {
+      if (!this.apiComponents || !this.apiComponents[this.componentType]) {
+        return null
+      }
+      return this.apiComponents[this.componentType]
+    },
     availableComponents() {
       if (!this.apiComponents) {
         return []
@@ -109,9 +130,17 @@ export default {
       )
     },
     endpoint() {
-      return this.apiComponents
-        ? this.apiComponents[this.componentType] || null
+      return this.selectedComponent
+        ? this.selectedComponent.endpoint || null
         : null
+    },
+    requiredProperties() {
+      if (!this.selectedComponent) {
+        return null
+      }
+      return this.selectedComponent.properties.filter(
+        prop => prop['hydra:required']
+      )
     }
   },
   watch: {
@@ -129,9 +158,15 @@ export default {
           this.componentName = null
           this.componentClassNames = null
         }
+        this.componentPropData = {}
       },
       deep: true,
       immediate: true
+    },
+    componentType: {
+      handler() {
+        this.componentPropData = {}
+      }
     },
     active: {
       async handler(isActive) {
@@ -155,7 +190,10 @@ export default {
               if (!cls['rdfs:label']) {
                 return obj
               }
-              obj[cls['rdfs:label']] = camelContexts[cls['rdfs:label']]
+              obj[cls['rdfs:label']] = {
+                endpoint: camelContexts[cls['rdfs:label']],
+                properties: cls['hydra:supportedProperty']
+              }
               return obj
             },
             {}
@@ -172,10 +210,13 @@ export default {
     async submit() {
       this.isLoading = true
       this.errors = null
-      const componentData = {
-        componentName: this.componentName,
-        className: this.componentClassNames
-      }
+      const componentData = Object.assign(
+        {
+          componentName: this.componentName,
+          className: this.componentClassNames
+        },
+        this.componentPropData
+      )
       try {
         if (this.component) {
           const { data } = await this.$axios.put(
@@ -190,17 +231,27 @@ export default {
           this.closeModal()
         } else {
           try {
-            const { data } = await this.$axios.post(this.endpoint, {
-              location: {
-                sort: this.location ? this.location.sort + 1 : 0,
-                content: this.page['@id']
-              },
-              component: {
+            const { data } = await this.$axios.post(
+              this.endpoint,
+              Object.assign(
+                {
+                  locations: [
+                    {
+                      sort: this.location ? this.location.sort : 0
+                    }
+                  ]
+                },
                 componentData
-              }
+              )
+            )
+            const newLocation = data.locations[0]
+            await this.$axios.patch(this.page['@id'], {
+              componentLocations: [
+                newLocation['@id'],
+                ...this.page.componentLocations
+              ]
             })
-            // eslint-disable-next-line no-console
-            console.log(data)
+            this.$route.reload()
           } catch (e) {
             this.errors = [
               'An error has occurred, please check developer logs.'
