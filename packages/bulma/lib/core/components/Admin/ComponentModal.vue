@@ -4,67 +4,92 @@
     :class="['component-modal', isLoading ? 'is-loading' : null]"
     @close="closeModal"
   >
-    <h2 class="title">{{ component ? 'Modify' : 'Add' }} Component</h2>
-    <div class="field">
-      <label class="label">Component</label>
-      <div class="control">
-        <div class="select">
-          <select v-model="componentType" :disabled="!!component">
-            <option :value="null" disabled>Please select</option>
-            <option
-              v-for="(name, index) of availableComponents"
-              :key="`${name}-${index}`"
-              :value="name"
-            >
-              {{ name }}
-            </option>
-          </select>
+    <h2 class="title">{{ title }}</h2>
+    <template v-if="remove">
+      <div class="field">
+        <div class="control">
+          <button
+            class="button is-fullwidth is-danger"
+            @click="deleteComponent"
+          >
+            Delete component (and all locations)
+          </button>
         </div>
       </div>
-    </div>
-    <div class="field">
-      <label class="label">Custom UI component</label>
-      <div class="control">
-        <input v-model="componentName" class="input" type="text" />
+      <div class="field">
+        <div class="control">
+          <button class="button is-fullwidth is-danger" @click="deleteLocation">
+            Remove component from this location
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="field">
-      <label class="label">Class name(s)</label>
-      <div class="control">
-        <input v-model="componentClassNames" class="input" type="text" />
+    </template>
+    <template v-else>
+      <div class="field">
+        <label class="label">Component</label>
+        <div class="control">
+          <div class="select">
+            <select v-model="componentType" :disabled="!!component">
+              <option :value="null" disabled>Please select</option>
+              <option
+                v-for="(name, index) of availableComponents"
+                :key="`${name}-${index}`"
+                :value="name"
+              >
+                {{ name }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
-    <div
-      v-for="property of requiredProperties"
-      :key="property['hydra:property']['@id']"
-      class="field"
-    >
-      <label class="label">{{ property['hydra:title'] }} *</label>
-      <div class="control">
-        <input
-          v-model="componentPropData[property['hydra:title']]"
-          class="input"
-          type="text"
-        />
+      <div class="field">
+        <label class="label">Custom UI component</label>
+        <div class="control">
+          <input v-model="componentName" class="input" type="text" />
+        </div>
       </div>
-    </div>
-    <div v-if="!!component" class="field location-move-container">
-      <div class="button-group">
-        <button class="button is-secondary" @click="moveLocation(-1)">
-          Move Up
-        </button>
-        <button class="button is-secondary" @click="moveLocation(+1)">
-          Move Down
-        </button>
+      <div class="field">
+        <label class="label">Class name(s)</label>
+        <div class="control">
+          <input v-model="componentClassNames" class="input" type="text" />
+        </div>
       </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <button class="button is-primary" :disabled="!endpoint" @click="submit">
-          Submit
-        </button>
+      <div
+        v-for="property of requiredProperties"
+        :key="property['hydra:property']['@id']"
+        class="field"
+      >
+        <label class="label">{{ property['hydra:title'] }} *</label>
+        <div class="control">
+          <input
+            v-model="componentPropData[property['hydra:title']]"
+            class="input"
+            type="text"
+          />
+        </div>
       </div>
-    </div>
+      <div v-if="!!component" class="field location-move-container">
+        <div class="button-group">
+          <button class="button is-secondary" @click="moveLocation(-1)">
+            Move Up
+          </button>
+          <button class="button is-secondary" @click="moveLocation(+1)">
+            Move Down
+          </button>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button
+            class="button is-primary"
+            :disabled="!endpoint"
+            @click="submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </template>
     <ul v-if="errors" class="help is-danger">
       <li v-for="(error, errorIndex) in errors" :key="'error' + errorIndex">
         {{ error }}
@@ -99,6 +124,10 @@ export default {
       type: Object,
       required: false,
       default: null
+    },
+    remove: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -141,6 +170,10 @@ export default {
       return this.selectedComponent.properties.filter(
         prop => prop['hydra:required']
       )
+    },
+    title() {
+      const prefix = this.remove ? 'Delete' : this.component ? 'Modify' : 'Add'
+      return prefix + ' Component'
     }
   },
   watch: {
@@ -251,13 +284,15 @@ export default {
                 ...this.page.componentLocations
               ]
             })
-            this.$route.reload()
+            this.reloadPage()
+            return
           } catch (e) {
             this.errors = [
               'An error has occurred, please check developer logs.'
             ]
             // eslint-disable-next-line no-console
             console.error(e)
+            this.errors = [e]
           }
         }
       } catch (e) {
@@ -274,6 +309,35 @@ export default {
         oldSort: this.location.sort,
         newSort: this.location.sort + moveBy
       })
+    },
+    async deleteComponent() {
+      this.isLoading = true
+      try {
+        await this.$axios.delete(this.component['@id'])
+        this.reloadPage()
+        return
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+        this.errors = [e]
+      }
+      this.isLoading = false
+    },
+    async deleteLocation() {
+      this.isLoading = true
+      try {
+        await this.$axios.delete(this.location['@id'])
+        this.reloadPage()
+        return
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.error(e)
+        this.errors = [e]
+      }
+      this.isLoading = false
+    },
+    reloadPage() {
+      window.location.reload()
     }
   }
 }

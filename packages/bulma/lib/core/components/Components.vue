@@ -24,6 +24,7 @@
           :component="component.entity"
           @add="showModal"
           @modify="showModal"
+          @delete="showModal"
           @moveLocation="updateLocationOrder"
         />
       </div>
@@ -103,9 +104,9 @@ export default {
     }
   },
   methods: {
-    showModal({ page, location, component }) {
+    showModal({ page, location, component, remove = false }) {
       this.componentModalActive = true
-      this.modalComponentData = { page, location, component }
+      this.modalComponentData = { page, location, component, remove }
     },
     closeModal() {
       this.componentModalActive = false

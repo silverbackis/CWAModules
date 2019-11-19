@@ -26,7 +26,7 @@
     <button
       v-if="component"
       class="button is-secondary is-danger is-delete"
-      @click="deleteComponent(component)"
+      @click="deleteComponent(component, location)"
     >
       Delete
     </button>
@@ -65,8 +65,8 @@ export default {
     modifyComponent(component, location) {
       this.$emit('modify', { component, location })
     },
-    deleteComponent(component) {
-      this.$emit('delete', { component })
+    deleteComponent(component, location) {
+      this.$emit('delete', { component, location, remove: true })
     },
     moveLocation(moveBy) {
       this.$emit('moveLocation', {
