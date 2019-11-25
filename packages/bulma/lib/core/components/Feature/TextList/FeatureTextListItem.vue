@@ -23,10 +23,7 @@
       <span class="fa-li">
         <font-awesome-icon icon="check-circle" class="check-icon" />
       </span>
-      <app-link v-if="component.route" :to="component.route.route">
-        <strong>{{ injectDynamicData(component.title) }}</strong>
-      </app-link>
-      <app-link v-else-if="component.url" :to="component.url">
+      <app-link v-if="toRoute" :to="toRoute">
         <strong>{{ injectDynamicData(component.title) }}</strong>
       </app-link>
       <span v-else>

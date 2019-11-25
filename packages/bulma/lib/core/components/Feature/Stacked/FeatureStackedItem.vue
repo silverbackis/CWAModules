@@ -62,15 +62,6 @@ export default {
     },
     className() {
       return ['column', this.component.className || '']
-    },
-    toRoute() {
-      if (!this.component) {
-        return null
-      }
-      return (
-        this.component.url ||
-        (this.component.route ? this.component.route.route : null)
-      )
     }
   }
 }

@@ -42,12 +42,6 @@ export default {
     },
     className() {
       return ['column', this.injectDynamicData(this.component.className) || '']
-    },
-    toRoute() {
-      return (
-        this.component.url ||
-        (this.component.route ? this.component.route.route : null)
-      )
     }
   },
   methods: {

@@ -68,6 +68,18 @@ export default {
         }
       }
       return tempComponent
+    },
+    toRoute() {
+      if (!this.component) {
+        return null
+      }
+      return (
+        this.component.url ||
+        (this.component.route ? this.component.route.route : null) ||
+        (this.component.routes && this.component.routes.length
+          ? this.component.routes[0].route || this.component.routes[0]
+          : null)
+      )
     }
   },
   methods: {

@@ -28,7 +28,7 @@ export default {
       default: false
     },
     inputClass: {
-      type: [String, Array],
+      type: [String, Array, Object],
       required: false,
       default: 'input'
     }

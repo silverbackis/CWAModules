@@ -15,6 +15,11 @@ export default {
       type: Array,
       required: false,
       default: null
+    },
+    inputClass: {
+      type: [String, Array, Object],
+      required: false,
+      default: null
     }
   },
   data() {

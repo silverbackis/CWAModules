@@ -8,19 +8,19 @@
         ref="file"
         class="file-input"
         type="file"
-        name="image"
-        accept="image/*"
+        name="upload_file"
+        :accept="accept"
         :disabled="uploading"
         @change="handleFileUpload()"
       />
-      <div class="file-cta">
+      <span class="file-cta">
         <span class="file-icon">
           <font-awesome-icon :icon="['fas', 'upload']" />
         </span>
         <span class="file-label">
           {{ buttonText }}
         </span>
-      </div>
+      </span>
     </label>
   </div>
 </template>
@@ -46,6 +46,10 @@ export default {
     newEntityFn: {
       type: Function,
       default: null
+    },
+    accept: {
+      type: String,
+      default: 'image/*'
     }
   },
   data() {
