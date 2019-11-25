@@ -98,8 +98,7 @@
           v-if="component.caption"
           itemprop="caption description"
           class="sr-only"
-          v-html="component.caption"
-        />
+        >{{ component.caption }}</figcaption>
       </figure>
     </div>
     <div v-if="$bwstarter.isAdmin" class="field">

@@ -27,7 +27,7 @@
             placeholder="Enter feature description here"
           />
         </div>
-        <p v-else v-html="realComponentData.description"></p>
+        <div v-else v-html="realComponentData.description"></div>
 
         <app-link
           v-if="toRoute && component.buttonText"
