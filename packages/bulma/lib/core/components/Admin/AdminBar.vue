@@ -33,7 +33,7 @@
                 :checked-label="publishedLabel"
                 component-field="published"
                 label="Draft"
-                class="checkbox-autosave has-padding is-toggle is-warning"
+                input-class="checkbox-autosave has-padding is-toggle is-warning"
               />
             </div>
           </div>

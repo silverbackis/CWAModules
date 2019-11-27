@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="checkbox is-custom">
+    <label class="checkbox is-custom" :class="inputClass">
       <input v-model="dataModel" type="checkbox" />
       <span v-if="dataModel" class="custom-control-label">
         {{ checkedLabel || label }}
