@@ -1,11 +1,7 @@
 <template>
   <div>
     <figure class="column is-narrow">
-      <component
-        :is="dynamicComponent"
-        :to="toRoute"
-        class="feature-stacked-item has-text-centered"
-      >
+      <div class="feature-stacked-item has-text-centered">
         <image-loader
           v-if="getImageData()"
           class="image-loader"
@@ -13,7 +9,7 @@
           :placeholder="getImageData('placeholder', true)"
           :alt="injectDynamicData(component.title)"
         />
-      </component>
+      </div>
     </figure>
     <div class="column has-text-centered-mobile">
       <div class="content">
@@ -44,7 +40,7 @@
 </template>
 
 <script>
-import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
+import ComponentMixin from '../../componentMixin'
 import ImageDataMixin from '~/.nuxt/bwstarter/bulma/components/imageDataMixin'
 import ImageLoader from '~/.nuxt/bwstarter/components/Utils/ImageLoader'
 import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
@@ -52,14 +48,13 @@ import AppLink from '~/.nuxt/bwstarter/components/Utils/AppLink'
 export default {
   components: {
     ImageLoader,
-    AppLink,
-    AdminTextInput: () => import('~/.nuxt/bwstarter/components/Admin/Text')
+    AppLink
   },
   mixins: [ComponentMixin, ImageDataMixin],
   computed: {
-    dynamicComponent() {
-      return this.toRoute ? AppLink : 'div'
-    },
+    // dynamicComponent() {
+    //   return this.toRoute ? 'app-link' : 'div'
+    // },
     className() {
       return ['column', this.component.className || '']
     }
