@@ -6,7 +6,7 @@ export default class Utilities {
       JWT_COOKIE: env.JWT_COOKIE || 'TKN',
       XSRF_COOKIE: env.XSRF_HEADER || 'XSRF-TOKEN',
       IS_DEV: (env.NODE_ENV || 'production') === 'development',
-      COOKIE_DOMAIN: env.COOKIE_DOMAIN || 'localhost'
+      COOKIE_DOMAIN: env.COOKIE_DOMAIN || null
     }
   }
 
@@ -29,7 +29,7 @@ export default class Utilities {
       path: '/',
       domain: this.env.COOKIE_DOMAIN,
       secure: !this.env.IS_DEV,
-      httpOnly: true
+      httpOnly: false // required for the admin front-end app to access so we can stay logged in across websites
     })
   }
 

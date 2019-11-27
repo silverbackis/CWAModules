@@ -4,10 +4,10 @@ module.exports = [
   {
     mode: 'production',
     entry: {
-      index: ['@babel/polyfill', path.resolve(__dirname, '/src/index.js')]
+      index: ['@babel/polyfill', path.resolve('./src/index.js')]
     },
     output: {
-      path: path.resolve(__dirname, '/dist/'),
+      path: path.resolve('./dist/'),
       filename: '[name].js',
       sourceMapFilename: '[name].map',
       libraryTarget: 'commonjs2'
@@ -20,7 +20,7 @@ module.exports = [
           options: {
             presets: ['@babel/preset-env']
           },
-          include: __dirname,
+          include: path.resolve('./'),
           exclude: [/node_modules/]
         }
       ]
