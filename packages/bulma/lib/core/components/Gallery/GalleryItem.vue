@@ -19,7 +19,7 @@
           }"
           :href="noImage ? '#' : getApiUrl(component.fileData.publicPath)"
           itemprop="contentUrl"
-          @click.prevent="image() ? $photoswipe.open(index, items, $el) : null"
+          @click.prevent="image() ? photoswipe.open(index, items, $el) : null"
         >
           <image-loader
             class="image gallery-image"
@@ -110,7 +110,6 @@
               :component-id="endpoint"
               component-field="caption"
               placeholder="Enter caption"
-              class="input"
             />
           </div>
         </div>

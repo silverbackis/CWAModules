@@ -111,7 +111,6 @@
                   :model="rootPageData.title"
                   component-field="title"
                   placeholder="Enter the title for the page"
-                  class="input"
                 />
               </div>
             </div>
@@ -123,7 +122,6 @@
                   :model="rootPageData.meta_description"
                   component-field="meta_description"
                   placeholder="Enter the meta description for the page"
-                  class="input"
                 />
               </div>
             </div>
@@ -138,7 +136,6 @@
                   :model="publishData.publishedDate"
                   component-field="publishedDate"
                   placeholder="Enter the date this page was published"
-                  class="input"
                 />
               </div>
             </div>

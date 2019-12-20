@@ -52,9 +52,9 @@ export default {
   },
   mixins: [ComponentMixin, ImageDataMixin],
   computed: {
-    // dynamicComponent() {
-    //   return this.toRoute ? 'app-link' : 'div'
-    // },
+    dynamicComponent() {
+      return this.toRoute ? 'app-link' : 'div'
+    },
     className() {
       return ['column', this.component.className || '']
     }

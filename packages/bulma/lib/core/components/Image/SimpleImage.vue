@@ -96,7 +96,6 @@
                   :component-id="endpoint"
                   :component-field="dynamicCaptionField"
                   placeholder="Enter caption"
-                  class="input"
                 />
               </div>
             </div>

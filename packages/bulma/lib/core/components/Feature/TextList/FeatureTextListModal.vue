@@ -15,7 +15,6 @@
                 v-model="routePath"
                 type="text"
                 placeholder="e.g. /contact"
-                class="input"
               />
               <p
                 v-if="routeResult !== null"
@@ -47,7 +46,6 @@
                 :model="component.url"
                 component-field="url"
                 placeholder="e.g. https://www.website.com"
-                class="input"
               />
             </div>
           </div>

@@ -13,7 +13,7 @@
         :items="psItems"
         :component="getEntity(location.component)"
         :location="location"
-        :$photoswipe="$photoswipe"
+        :photoswipe="photoswipe"
         :index="index"
         @moveup="moveLocationUp(location)"
         @movedown="moveLocationDown(location)"
@@ -130,7 +130,7 @@ export default {
     containerProps() {
       if (this.$bwstarter && this.$bwstarter.isAdmin) {
         return {
-          is: 'draggable',
+          is: 'ul',
           element: 'ul',
           options: {
             handle: '.move-button',

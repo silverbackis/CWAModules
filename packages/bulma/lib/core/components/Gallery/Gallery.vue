@@ -7,7 +7,7 @@
     >
       <gallery-group
         :component-group="group"
-        :$photoswipe="$photoswipe"
+        :photoswipe="photoswipe"
       ></gallery-group>
     </div>
   </component-wrapper>
@@ -26,31 +26,31 @@ export default {
   mixins: [ComponentMixin],
   data() {
     return {
-      $photoswipe: null
+      photoswipe: null
     }
   },
   created() {
     this.initPhotoswipe()
   },
   beforeDestroy() {
-    if (this.$photoswipe) {
-      document.body.removeChild(this.$photoswipe.$el)
-      this.$photoswipe = null
+    if (this.photoswipe) {
+      document.body.removeChild(this.photoswipe.$el)
+      this.photoswipe = null
     }
   },
   methods: {
     initPhotoswipe() {
       if (process.browser) {
         const PhotoSwipe = Vue.extend(PhotoSwipeComponent, 0)
-        this.$photoswipe = new PhotoSwipe({ el: document.createElement('div') })
-        document.body.appendChild(this.$photoswipe.$el)
+        this.photoswipe = new PhotoSwipe({ el: document.createElement('div') })
+        document.body.appendChild(this.photoswipe.$el)
       } else {
         // Create dummy functions for SSR to avoid errors
         const f = () => {
           // eslint-disable-next-line no-console
-          console.log('$photoswipe not initialised yet (SSR)')
+          console.log('photoswipe not initialised yet (SSR)')
         }
-        this.$photoswipe = { open: f, close: f }
+        this.photoswipe = { open: f, close: f }
       }
     }
   }
