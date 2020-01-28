@@ -465,7 +465,9 @@ export default class BWStarter {
         this.setEntities(collectionObj)
         component.collection['hydra:member'] = component.collection[
           'hydra:member'
-        ].map(item => item['@id'] || item)
+        ]
+          .filter(item => !!item)
+          .map(item => item['@id'] || item)
       }
       if (componentId) {
         this.$storage.commit(
