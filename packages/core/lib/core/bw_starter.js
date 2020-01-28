@@ -456,6 +456,9 @@ export default class BWStarter {
           component.collection['hydra:member']
         )
         const collectionObj = collectionEntities.reduce((obj, item) => {
+          if (!item) {
+            return obj
+          }
           obj[item['@id']] = item
           return obj
         }, {})
