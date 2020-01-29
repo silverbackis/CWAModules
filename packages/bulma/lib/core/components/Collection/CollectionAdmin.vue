@@ -19,7 +19,7 @@
       <a
         class="reload-link has-text-grey-light"
         @click.prevent="reloadCollection"
-        >reload collection</a
+      >reload collection</a
       >
     </div>
     <modal
@@ -27,7 +27,7 @@
       :active="modalActive"
       @close="modalActive = false"
     >
-      <component :is="modalComponent" :component="newComponentData" />
+      <component v-if="renderModalComponent" :is="modalComponent" :component="newComponentData" />
       <button
         class="button is-primary is-fullwidth"
         :class="{ 'is-loading': adding || isLoading }"
@@ -90,7 +90,9 @@ export default {
     return {
       modalActive: false,
       adding: false,
-      newComponentData: null
+      newComponentData: null,
+      originalComponentData: null,
+      renderModalComponent: true
     }
   },
   computed: {
@@ -111,17 +113,25 @@ export default {
     }
   },
   async created() {
-    const { data } = await this.$axios.get(`${this.context}`)
-    const context = data['@context']
-    this.newComponentData = Object.keys(context).reduce(
+    const classLabel = this.context.split('contexts/')[1]
+    const { data: contextData } = await this.$axios.get(`${this.context}`)
+    const { data: docsData } = await this.$axios.get(`docs.jsonld`)
+    const context = Object.keys(contextData['@context'])
+    const docsProperties = docsData['hydra:supportedClass'].find(item => classLabel === item['hydra:title'])['hydra:supportedProperty']
+    this.newComponentData = context.reduce(
       function(newComponent, key) {
+        const propMeta = docsProperties.find(prop => prop['hydra:title'] === key)
         if (
-          Object.prototype.hasOwnProperty.call(context, key) &&
+          context.indexOf(key) !== -1 &&
           key.substr(0, 1) !== '@' &&
           key !== 'hydra'
         ) {
-          if (typeof context[key] === 'string') {
+          const range = propMeta['hydra:property'].range
+          const type = range ? range.split('xmls:')[1] : null
+          if (type === 'string') {
             newComponent[key] = ''
+          } else if (type === 'integer') {
+            newComponent[key] = 0
           } else if (Array.isArray(context[key])) {
             newComponent[key] = []
           } else {
@@ -132,6 +142,7 @@ export default {
       },
       { '@id': this.componentId }
     )
+    this.originalComponentData = Object.assign({}, this.newComponentData)
   },
   methods: {
     addToCollection(evt) {
@@ -144,10 +155,22 @@ export default {
     reloadCollection(evt) {
       this.$emit('reload', evt)
     },
+    componentAddedListener() {
+      this.adding = false
+      this.modalActive = false
+      this.newComponentData = this.originalComponentData
+      this.renderModalComponent = false
+      this.$nextTick(() => {
+        this.renderModalComponent = true
+      })
+    },
     addCollectionItem(evt) {
       this.$emit('addCollectionItem', evt)
       if (this.addCollectionItemFn) {
-        return this.addCollectionItemFn()
+        this.addCollectionItemFn().then(res => {
+          this.componentAddedListener()
+          return res
+        })
       }
       const endpointData = this.$bwstarter.$storage.getState(adminModuleName)
         .endpoints[this.componentId]
@@ -171,9 +194,9 @@ export default {
         this.$axios
           .post(this.addItemRoute, resourceData, { progress: false })
           .then(() => {
-            this.adding = false
             this.page = 1
             this.reloadCollection()
+            this.componentAddedListener()
           })
           .catch(error => {
             this.adding = false

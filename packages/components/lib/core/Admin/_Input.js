@@ -51,6 +51,7 @@ export default {
         return this.$bwstarter.getAdminInputModel(this.adminInputData())
       },
       set(model) {
+        if (model === '') model = null
         const isFocussed = this.$el === document.activeElement
         this.$bwstarter.setAdminInputModel(
           this.adminInputData({
