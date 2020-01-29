@@ -18,7 +18,8 @@ Middleware.routeLoader = async function({
   redirect,
   error,
   res,
-  $bwstarter
+  $bwstarter,
+  isClient
 }) {
   const currentPath = $bwstarter.$storage.get(
     'getCurrentRoute',
@@ -35,7 +36,11 @@ Middleware.routeLoader = async function({
         'Page not loading from API. Not required: already loaded current path',
         path
       )
-    await $bwstarter.$storage.state[contentModuleName].pageLoadPromise
+    const currentPromise =
+      $bwstarter.$storage.state[contentModuleName].pageLoadPromise
+    if (currentPromise) {
+      await $bwstarter.$storage.state[contentModuleName].pageLoadPromise
+    }
     return
   }
   // eslint-disable-next-line no-console
@@ -99,9 +104,11 @@ Middleware.routeLoader = async function({
     await $bwstarter.initRoute(routeData)
     resolve()
   })
-  $bwstarter.$storage.commit(
-    'setPageLoadPromise',
-    [pageLoadPromise],
-    contentModuleName
-  )
+  if (isClient)
+    $bwstarter.$storage.commit(
+      'setPageLoadPromise',
+      [pageLoadPromise],
+      contentModuleName
+    )
+  return pageLoadPromise
 }

@@ -1,6 +1,10 @@
 <template>
-  <div>
-    <div ref="quillDom" :class="inputClass" v-html="quillModel"></div>
+  <div @click.prevent>
+    <div
+      ref="quillDom"
+      :class="inputClass"
+      v-html="quillModel"
+    ></div>
     <input-errors :errors="errors" :component-id="componentId" />
   </div>
 </template>
@@ -78,6 +82,6 @@ export default {
 .ql-container
   font-size: inherit
   height: auto
-.ql-editor
-  text-align: inherit
+  .ql-editor
+    text-align: inherit
 </style>
