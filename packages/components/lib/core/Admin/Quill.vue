@@ -1,10 +1,6 @@
 <template>
   <div @click.prevent>
-    <div
-      ref="quillDom"
-      :class="inputClass"
-      v-html="quillModel"
-    ></div>
+    <div ref="quillDom" :class="inputClass" v-html="quillModel"></div>
     <input-errors :errors="errors" :component-id="componentId" />
   </div>
 </template>

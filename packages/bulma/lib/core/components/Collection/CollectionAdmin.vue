@@ -84,6 +84,11 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+    query: {
+      type: String,
+      required: false,
+      default: null
     }
   },
   data() {

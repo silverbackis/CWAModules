@@ -142,8 +142,12 @@ export default {
     reloadCollection() {
       if (!this.reloading) {
         this.reloading = true
+        let query = `page=${this.page}`
+        if (this.component.defaultQueryString) {
+          query += `&${this.component.defaultQueryString}`
+        }
         this.$axios
-          .get(`${this.component.collectionRoutes.get}?page=${this.page}`, {
+          .get(`${this.component.collectionRoutes.get}?${query}`, {
             progress: false
           })
           .then(({ data }) => {
