@@ -149,7 +149,7 @@ export default {
           this.$emit('uploadSuccess', data)
         })
         .catch(error => {
-          let status = 'An unknown error occurred'
+          let status = error.message || 'An unknown error occurred'
           let response
           if ((response = error.response)) {
             const responseData = response.data
