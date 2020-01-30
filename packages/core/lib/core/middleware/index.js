@@ -57,10 +57,12 @@ Middleware.routeLoader = async function({
         response = await $bwstarter.fetchAndStoreLayout(null, true)
       } catch (err) {
         $bwstarter.setResponseErrorPage(err)
+        resolve()
         return
       }
       process.server && Utilities.setResponseCookies(res, response)
       $bwstarter.setResponseErrorPage(err)
+      resolve()
       return
     }
     process.server && Utilities.setResponseCookies(res, response)
@@ -72,12 +74,14 @@ Middleware.routeLoader = async function({
         statusCode: 500,
         message: 'Error fetching from API - No Route Data'
       })
+      resolve()
       return
     }
     if (typeof routeData !== 'object') {
       // eslint-disable-next-line no-console
       console.warn(routeData)
       error({ statusCode: 500, message: 'API returned invalid JSON' })
+      resolve()
       return
     }
 
@@ -89,6 +93,7 @@ Middleware.routeLoader = async function({
       }
       if (redirects > 0) {
         redirect(routeData.route)
+        resolve()
         return
       }
     }
@@ -99,6 +104,7 @@ Middleware.routeLoader = async function({
         message: 'Page Not Found',
         url: 'No content available'
       })
+      resolve()
       return
     }
     await $bwstarter.initRoute(routeData)

@@ -6,12 +6,12 @@
     <label class="file-label">
       <input
         ref="file"
-        class="file-input"
-        type="file"
-        name="upload_file"
         :accept="accept"
         :disabled="uploading"
         @change="handleFileUpload()"
+        class="file-input"
+        type="file"
+        name="upload_file"
       />
       <span class="file-cta">
         <span class="file-icon">
