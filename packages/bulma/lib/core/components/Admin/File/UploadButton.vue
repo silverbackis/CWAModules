@@ -146,6 +146,7 @@ export default {
             [{ id: data['@id'], data }],
             entitiesModuleName
           )
+          this.$emit('uploadSuccess', data)
         })
         .catch(error => {
           let status = 'An unknown error occurred'
