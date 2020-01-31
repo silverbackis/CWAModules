@@ -6,9 +6,9 @@
       :component-id="componentId"
     />
     <button
-      class="button is-primary is-fullwidth"
       :class="{ 'is-loading': adding || isLoading }"
       @click="addToCollection"
+      class="button is-primary is-fullwidth"
     >
       <span class="icon is-small">
         <font-awesome-icon icon="plus" />
@@ -17,9 +17,9 @@
     </button>
     <div class="reload-link-row has-text-centered">
       <a
-        class="reload-link has-text-grey-light"
         @click.prevent="reloadCollection"
-      >reload collection</a
+        class="reload-link has-text-grey-light"
+        >reload collection</a
       >
     </div>
     <modal
@@ -27,11 +27,15 @@
       :active="modalActive"
       @close="modalActive = false"
     >
-      <component v-if="renderModalComponent" :is="modalComponent" :component="newComponentData" />
+      <component
+        v-if="renderModalComponent"
+        :is="modalComponent"
+        :component="newComponentData"
+      />
       <button
-        class="button is-primary is-fullwidth"
         :class="{ 'is-loading': adding || isLoading }"
         @click="addCollectionItem"
+        class="button is-primary is-fullwidth"
       >
         <span class="icon is-small">
           <font-awesome-icon icon="plus" />
@@ -122,25 +126,30 @@ export default {
     const { data: contextData } = await this.$axios.get(`${this.context}`)
     const { data: docsData } = await this.$axios.get(`docs.jsonld`)
     const context = Object.keys(contextData['@context'])
-    const docsProperties = docsData['hydra:supportedClass'].find(item => classLabel === item['hydra:title'])['hydra:supportedProperty']
+    const docsProperties = docsData['hydra:supportedClass'].find(
+      item => classLabel === item['hydra:title']
+    )['hydra:supportedProperty']
     this.newComponentData = context.reduce(
       function(newComponent, key) {
-        const propMeta = docsProperties.find(prop => prop['hydra:title'] === key)
+        const propMeta = docsProperties.find(
+          prop => prop['hydra:title'] === key
+        )
         if (
           context.indexOf(key) !== -1 &&
           key.substr(0, 1) !== '@' &&
           key !== 'hydra'
         ) {
-          const range = propMeta['hydra:property'].range
+          const hydraProp = propMeta['hydra:property']
+          const range = hydraProp.range
           const type = range ? range.split('xmls:')[1] : null
-          if (type === 'string') {
+          if (['string', 'dateTime'].indexOf(type) !== -1) {
             newComponent[key] = ''
           } else if (type === 'integer') {
             newComponent[key] = 0
-          } else if (Array.isArray(context[key])) {
-            newComponent[key] = []
-          } else {
+          } else if (hydraProp['owl:maxCardinality'] === 1) {
             newComponent[key] = {}
+          } else {
+            newComponent[key] = []
           }
         }
         return newComponent
