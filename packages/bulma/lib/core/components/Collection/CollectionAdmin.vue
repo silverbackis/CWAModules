@@ -93,6 +93,12 @@ export default {
       type: String,
       required: false,
       default: null
+    },
+    defaultComponentData: {
+      type: Object,
+      default() {
+        return {}
+      }
     }
   },
   data() {
@@ -129,7 +135,7 @@ export default {
     const docsProperties = docsData['hydra:supportedClass'].find(
       item => classLabel === item['hydra:title']
     )['hydra:supportedProperty']
-    this.newComponentData = context.reduce(
+    const newComponentData = context.reduce(
       function(newComponent, key) {
         const propMeta = docsProperties.find(
           prop => prop['hydra:title'] === key
@@ -155,6 +161,11 @@ export default {
         return newComponent
       },
       { '@id': this.componentId }
+    )
+    this.newComponentData = Object.assign(
+      {},
+      newComponentData,
+      this.defaultComponentData
     )
     this.originalComponentData = Object.assign({}, this.newComponentData)
   },
@@ -188,15 +199,13 @@ export default {
       }
       const endpointData = this.$bwstarter.$storage.getState(adminModuleName)
         .endpoints[this.componentId]
-      let resourceData
-      if (!endpointData) {
-        resourceData = {}
-      } else {
+      let resourceData = this.defaultComponentData
+      if (endpointData) {
         const resourceInputs = endpointData.inputs
         resourceData = Object.keys(resourceInputs).reduce((obj, key) => {
           obj[key] = resourceInputs[key].model
           return obj
-        }, {})
+        }, resourceData)
       }
       if (!this.adding) {
         this.adding = true

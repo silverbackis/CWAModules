@@ -81,7 +81,9 @@ export default {
       itemComponent: null,
       reloading: false,
       adding: false,
-      page: 1
+      page: 1,
+      modalComponent: null,
+      defaultComponentData: null
     }
   },
   computed: {
@@ -118,7 +120,9 @@ export default {
         adding: this.adding,
         'add-item-route': this.component.collectionRoutes.post,
         'current-page': this.page,
-        context: `/contexts/${this.component.resource.split('\\').pop()}`
+        context: `/contexts/${this.component.resource.split('\\').pop()}`,
+        modalComponent: this.modalComponent,
+        defaultComponentData: this.defaultComponentData
       }
     }
   },
