@@ -126,17 +126,21 @@ export default {
       const formData = new FormData()
       formData.append('file', this.file)
       this.$axios
-        .post('/files/' + this.uploadField + '/' + this.componentId, formData, {
-          progress: false,
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          },
-          onUploadProgress: function(progressEvent) {
-            this.uploadPercentage = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            )
-          }.bind(this)
-        })
+        .post(
+          '/files/' + this.uploadField + '/' + this.localComponentId,
+          formData,
+          {
+            progress: false,
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            },
+            onUploadProgress: function(progressEvent) {
+              this.uploadPercentage = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              )
+            }.bind(this)
+          }
+        )
         .then(({ data }) => {
           this.uploading = false
           this.preview = null
