@@ -83,7 +83,7 @@ export default {
       adding: false,
       page: 1,
       modalComponent: null,
-      defaultComponentData: null
+      defaultComponentData: {}
     }
   },
   computed: {

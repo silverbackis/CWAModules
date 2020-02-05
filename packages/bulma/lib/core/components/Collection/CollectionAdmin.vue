@@ -199,7 +199,7 @@ export default {
       }
       const endpointData = this.$bwstarter.$storage.getState(adminModuleName)
         .endpoints[this.componentId]
-      let resourceData = this.defaultComponentData
+      let resourceData = this.defaultComponentData || {}
       if (endpointData) {
         const resourceInputs = endpointData.inputs
         resourceData = Object.keys(resourceInputs).reduce((obj, key) => {
