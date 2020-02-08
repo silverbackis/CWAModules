@@ -348,7 +348,7 @@ export default class BWStarter {
       promises.push(this.storeAndFetchLayout(content.parent.layout, false))
       content = content.parent
     }
-    const dynamicData = _omit(dynamicContent, ['dynamicPage'])
+    const dynamicData = _omit(dynamicContent || staticPage, ['dynamicPage'])
     if (dynamicData) {
       this.$storage.commit(
         'setEntity',
