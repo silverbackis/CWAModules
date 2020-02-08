@@ -40,8 +40,8 @@ Middleware.routeLoader = async function({
       $bwstarter.$storage.state[contentModuleName].pageLoadPromise
     if (currentPromise) {
       await $bwstarter.$storage.state[contentModuleName].pageLoadPromise
+      return
     }
-    return
   }
   // eslint-disable-next-line no-console
   logging && console.log('Page loading ' + path)
