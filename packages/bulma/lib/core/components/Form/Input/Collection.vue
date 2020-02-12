@@ -1,5 +1,5 @@
 <template>
-  <wrapper v-bind="wrapperData" :use-icons="true" class="is-simple">
+  <wrapper v-bind="wrapperData" :useIcons="false" class="is-simple">
     <form-input
       :form-id="formId"
       :input-name="inputName"

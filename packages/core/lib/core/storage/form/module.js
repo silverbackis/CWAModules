@@ -90,6 +90,22 @@ export const getters = {
     const searchResult = splitFormName(inputName)
     const submitObj = {}
     _.set(submitObj, searchResult, value)
+
+    // If a collection, we want to ensure the other array values are not null otherwise API will validate as the first entry always
+    for (const [partIndex, partKey] of searchResult.entries()) {
+      const keyAsNumber = partKey / 1
+      if (!isNaN(keyAsNumber) && Number.isInteger(keyAsNumber)) {
+        let countdown = partKey - 1
+        while(countdown >= 0) {
+          let newSearchResult = searchResult
+          newSearchResult[partIndex] = countdown
+          newSearchResult.length = partIndex + 1
+          _.set(submitObj, newSearchResult, {})
+          countdown--;
+        }
+      }
+    }
+
     return submitObj
   }
 }
@@ -197,8 +213,8 @@ export const actions = {
       const errors = form
         ? form.vars.errors
         : data.message
-        ? [data.message]
-        : []
+          ? [data.message]
+          : []
       commit('setFormData', {
         formId,
         data: {
@@ -240,12 +256,12 @@ export const actions = {
             valid: false,
             errors: [
               '<b>' +
-                error.response.status +
-                ' ' +
-                error.response.statusText +
-                ': </b> ' +
-                (error.response.data['hydra:description'] ||
-                  error.response.data.message)
+              error.response.status +
+              ' ' +
+              error.response.statusText +
+              ': </b> ' +
+              (error.response.data['hydra:description'] ||
+                error.response.data.message)
             ]
           }
         })
@@ -336,8 +352,8 @@ export const mutations = {
     const value = inputVars.multiple
       ? []
       : inputVars.block_prefixes[1] === 'checkbox'
-      ? inputVars.checked
-      : inputVars.value
+        ? inputVars.checked
+        : inputVars.value
     const inputData = {
       cancelToken: null,
       debounceValidate: null,
@@ -386,6 +402,9 @@ export const mutations = {
   },
   setInputData(state, { formId, inputName, data }) {
     const input = getNestedInput(state, formId, inputName)
+    // eslint-disable-next-line no-console
+    console.log(formId, inputName, input)
+    if (!input || !input.vars) return
     setData(input, data)
   },
   setFormDisplayErrors(state, { formId, displayErrors, valid = null }) {

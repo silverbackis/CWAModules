@@ -9,6 +9,7 @@
       :disable-validation="disableValidation"
       :css-framework="'bulma'"
       :parents="[input, ...parents]"
+      class="collection-item"
     />
     <div>
       <button @click="addPrototype" class="button" type="button">Add X</button>
@@ -48,6 +49,7 @@ export default {
           '__name__',
           currentCount
         )
+        newItem.vars.id = newItem.vars.id.replace('__name__', currentCount)
         return newItem
       })
       this.collectionChildren.push(
