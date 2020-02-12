@@ -414,6 +414,19 @@ export default class BWStarter {
   }
 
   async fetchLayout(url) {
+    const currentLayout = this.$storage.get(
+      'getEntity',
+      [url],
+      entitiesModuleName
+    )
+    if (currentLayout) {
+      logging &&
+        // eslint-disable-next-line no-console
+        console.log('Found layout in store - will not fetch again', url)
+      return {
+        data: currentLayout
+      }
+    }
     // eslint-disable-next-line no-console
     logging && console.log('Fetch layout', url)
     const response = await this.request({ url })

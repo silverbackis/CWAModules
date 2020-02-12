@@ -62,6 +62,20 @@ export default {
         })
       )
 
+      // https://github.com/quilljs/quill/issues/1184#issuecomment-384935594
+      this.editor.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+        const ops = []
+        delta.ops.forEach(op => {
+          if (op.insert && typeof op.insert === 'string') {
+            ops.push({
+              insert: op.insert
+            })
+          }
+        })
+        delta.ops = ops
+        return delta
+      })
+
       // We will add the update event here
       this.editor.on('text-change', () => {
         this.dataModel = this.editor.root.innerHTML

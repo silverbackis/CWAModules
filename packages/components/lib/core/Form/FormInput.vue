@@ -2,14 +2,14 @@
   <div :class="{ field: !input.hidden && inputType !== 'hidden' }">
     <component
       :is="inputComponent"
-      v-if="input.vars.expanded || (!input.children || !input.children.length)"
+      v-if="expandedOrCollection || (!input.children || !input.children.length)"
       :form-id="formId"
       :input-name="inputName"
       :wrapped="wrapped"
       :input-type="inputType"
       :parents="parents"
     />
-    <template v-if="!input.vars.expanded">
+    <template v-if="!expandedOrCollection">
       <form-input
         v-for="(child, index) of input.children"
         :key="index"
@@ -64,7 +64,8 @@ export default {
         'textarea',
         'choice',
         'button',
-        'checkbox'
+        'checkbox',
+        'collection'
       ],
       inputComponent: null
     }
@@ -75,6 +76,9 @@ export default {
     },
     inputName() {
       return this.input.vars.full_name
+    },
+    expandedOrCollection() {
+      return !!this.input.vars.expanded || this.inputType === 'collection'
     }
   },
   created() {
@@ -84,8 +88,13 @@ export default {
       children: this.input.children,
       disableValidation: this.disableValidation
     }
-    this.$bwstarter.$storage.commit('initInput', args, FORMS_MODULE)
-    this.resolveInputComponent()
+    const inputComponentType = this.getInputComponentType()
+    this.$bwstarter.$storage.commit(
+      'initInput',
+      Object.assign({ inputType: this.inputType }, args),
+      FORMS_MODULE
+    )
+    this.resolveInputComponent(inputComponentType)
   },
   methods: {
     isInputType(InputType) {
@@ -99,7 +108,7 @@ export default {
         })
         .join('')
     },
-    resolveInputComponent() {
+    getInputComponentType() {
       let inputComponentType = this.availableComponents[0]
       for (const bp of this.input.vars.block_prefixes) {
         if (this.isInputType(bp)) {
@@ -109,6 +118,9 @@ export default {
           this.inputType = bp
         }
       }
+      return inputComponentType
+    },
+    resolveInputComponent(inputComponentType) {
       this.inputComponent = () => ({
         component: import('~/.nuxt/bwstarter/' +
           this.inputComponentDir +

@@ -319,7 +319,10 @@ export const mutations = {
   destroy(state, formId) {
     if (state[formId]) Vue.delete(state, formId)
   },
-  initInput(state, { formId, inputVars, children, disableValidation }) {
+  initInput(
+    state,
+    { formId, inputVars, children, disableValidation, inputType }
+  ) {
     /*
      * Ignore if this is already initialised
      */
@@ -373,7 +376,12 @@ export const mutations = {
     Vue.set(
       currentNestedObj,
       finalObjectKey,
-      Object.assign(inputData.vars.expanded ? { children } : {}, inputData)
+      Object.assign(
+        inputType === 'collection' || inputData.vars.expanded
+          ? { children }
+          : {},
+        inputData
+      )
     )
   },
   setInputData(state, { formId, inputName, data }) {
