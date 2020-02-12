@@ -1,6 +1,5 @@
 <template>
   <div>
-    COLLECTION...
     <form-input
       v-for="(child, index) of collectionChildren"
       :key="index"
@@ -18,10 +17,10 @@
 </template>
 
 <script>
+import _cloneDeep from 'lodash/cloneDeep'
 import FormInput from '../FormInput'
 import InputCommonMixin from './_CommonMixin'
 import InputMixin from './Mixin'
-import _cloneDeep from 'lodash/cloneDeep'
 
 export default {
   components: { FormInput },

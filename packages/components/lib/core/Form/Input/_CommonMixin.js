@@ -47,7 +47,10 @@ export default {
       return this.input ? this.input.vars : {}
     },
     firstRepeatInput() {
-      if (!this.parents.length) {
+      if (
+        !this.parents.length ||
+        this.parents[0].vars.block_prefixes[1] !== 'repeated'
+      ) {
         return this.input
       }
       const firstInputName = this.parents[0].children[0].vars.full_name
