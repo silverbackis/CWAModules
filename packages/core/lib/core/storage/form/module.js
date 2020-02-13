@@ -1,6 +1,7 @@
 import axios from 'axios'
 import _ from 'lodash'
 import Vue from 'vue'
+import _cloneDeep from 'lodash/cloneDeep'
 import { Utilities } from '../../server/index'
 
 const AxiosCancelToken = axios.CancelToken
@@ -78,7 +79,7 @@ export const getters = {
   },
   getInputSubmitData: state => ({ formId, inputName }) => {
     const model = getNestedInput(state, formId, inputName)
-    if (!model) {
+    if (!model || !model.vars) {
       return {}
     }
     const value = model.vars.value
@@ -96,12 +97,12 @@ export const getters = {
       const keyAsNumber = partKey / 1
       if (!isNaN(keyAsNumber) && Number.isInteger(keyAsNumber)) {
         let countdown = partKey - 1
-        while(countdown >= 0) {
-          let newSearchResult = searchResult
+        while (countdown >= 0) {
+          const newSearchResult = searchResult
           newSearchResult[partIndex] = countdown
           newSearchResult.length = partIndex + 1
           _.set(submitObj, newSearchResult, {})
-          countdown--;
+          countdown--
         }
       }
     }
@@ -213,8 +214,8 @@ export const actions = {
       const errors = form
         ? form.vars.errors
         : data.message
-          ? [data.message]
-          : []
+        ? [data.message]
+        : []
       commit('setFormData', {
         formId,
         data: {
@@ -256,12 +257,12 @@ export const actions = {
             valid: false,
             errors: [
               '<b>' +
-              error.response.status +
-              ' ' +
-              error.response.statusText +
-              ': </b> ' +
-              (error.response.data['hydra:description'] ||
-                error.response.data.message)
+                error.response.status +
+                ' ' +
+                error.response.statusText +
+                ': </b> ' +
+                (error.response.data['hydra:description'] ||
+                  error.response.data.message)
             ]
           }
         })
@@ -352,8 +353,8 @@ export const mutations = {
     const value = inputVars.multiple
       ? []
       : inputVars.block_prefixes[1] === 'checkbox'
-        ? inputVars.checked
-        : inputVars.value
+      ? inputVars.checked
+      : inputVars.value
     const inputData = {
       cancelToken: null,
       debounceValidate: null,
@@ -377,6 +378,7 @@ export const mutations = {
       state[formId].vars.block_prefixes[1]
     )
     const finalObjectKey = OBJECT_PATH.splice(-1)[0]
+
     // Create the parents if they do not currently exist
     let currentNestedObj = state[formId].children
     OBJECT_PATH.forEach(pathItem => {
@@ -386,24 +388,20 @@ export const mutations = {
       currentNestedObj = currentNestedObj[pathItem]
     })
 
+    inputData.prototype = inputType === 'collection' ? children[0] : null
+    if (inputData.vars.expanded) {
+      inputData.children = children
+    } else if (inputType === 'collection') {
+      inputData.children = {}
+    }
+
     /*
      * Finally set the initial input data nested correctly
      */
-    Vue.set(
-      currentNestedObj,
-      finalObjectKey,
-      Object.assign(
-        inputType === 'collection' || inputData.vars.expanded
-          ? { children }
-          : {},
-        inputData
-      )
-    )
+    Vue.set(currentNestedObj, finalObjectKey, Object.assign({}, inputData))
   },
   setInputData(state, { formId, inputName, data }) {
     const input = getNestedInput(state, formId, inputName)
-    // eslint-disable-next-line no-console
-    console.log(formId, inputName, input)
     if (!input || !input.vars) return
     setData(input, data)
   },
@@ -454,5 +452,45 @@ export const mutations = {
   },
   setFormCancelToken(state, { formId, cancelToken }) {
     Vue.set(state[formId], 'cancelToken', cancelToken)
+  },
+  deleteCollectionChild(state, { formId, inputName, childName }) {
+    const input = getNestedInput(state, formId, inputName)
+    console.log(formId, inputName, input)
+    const children = _cloneDeep(input.children)
+    const replaceKeys = ['full_name', 'id', 'label', 'name']
+    let previousName = null
+    for (const [name, child] of Object.entries(children)) {
+      if (!previousName) {
+        if (name === childName) {
+          delete children[name]
+          previousName = name
+        }
+        continue
+      }
+
+      // Move up
+      const newChildren = Object.entries(child.children).reduce(
+        (obj, [key, value]) => {
+          const newKey = key.replace(name, previousName)
+          for (const replaceKey of replaceKeys) {
+            value.vars[replaceKey] = value.vars[replaceKey].replace(
+              name,
+              previousName
+            )
+          }
+          obj[newKey] = value
+          return obj
+        },
+        {}
+      )
+      children[previousName] = Object.assign(child, {
+        children: newChildren
+      })
+      previousName = name
+    }
+    if (previousName) {
+      delete children[previousName]
+    }
+    setData(input, Object.assign({}, input, { children }))
   }
 }

@@ -1,5 +1,10 @@
 <template>
-  <wrapper v-bind="wrapperData" :useIcons="false" class="is-simple">
+  <wrapper
+    v-bind="wrapperData"
+    :useIcons="false"
+    :label="null"
+    class="is-simple"
+  >
     <form-input
       :form-id="formId"
       :input-name="inputName"
