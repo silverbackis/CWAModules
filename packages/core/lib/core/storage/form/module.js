@@ -455,7 +455,6 @@ export const mutations = {
   },
   deleteCollectionChild(state, { formId, inputName, childName }) {
     const input = getNestedInput(state, formId, inputName)
-    console.log(formId, inputName, input)
     const children = _cloneDeep(input.children)
     const replaceKeys = ['full_name', 'id', 'label', 'name']
     let previousName = null
