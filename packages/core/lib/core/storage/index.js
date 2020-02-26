@@ -132,7 +132,7 @@ export class Storage {
   }
 
   getState(key) {
-    return this.state[key]
+    return this.ctx.store.state[this.options.vuex.namespace][key]
   }
 
   getRootState() {
