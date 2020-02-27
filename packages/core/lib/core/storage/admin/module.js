@@ -58,6 +58,11 @@ export const mutations = {
       }
     }
   },
+  destroyAdminEndpoint(state, { endpoint }) {
+    if (state.endpoints[endpoint]) {
+      Vue.delete(state.endpoints, endpoint)
+    }
+  },
   setSubmitting(state, { endpointKey, value }) {
     Vue.set(state.submitting, endpointKey, value)
   },
