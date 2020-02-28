@@ -16,7 +16,7 @@ export default {
       return this.getInputSubmitData(this.extendInputId())
     },
     form() {
-      return this.$bwstarter.$storage.state[FORMS_MODULE][this.formId]
+      return this.$bwstarter.$storage.state[FORMS_MODULE][this.formId] || { vars: {} }
     },
     action() {
       return this.form.vars.action
