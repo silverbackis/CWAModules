@@ -63,9 +63,9 @@ export default {
     convertAnchor(anchor) {
       // console.log(anchor, anchor.attributes, anchor.innerHTML)
       const newLink = document.createElement('app-link')
-      newLink.setAttribute('to', anchor.href)
+      newLink.setAttribute('to', anchor.getAttribute('href'))
       for (const attr of anchor.attributes) {
-        if (attr.name !== 'href') {
+        if (['href', 'target', 'rel'].indexOf(attr.name) === -1) {
           newLink.setAttribute(attr.name, anchor[attr.name])
         }
       }
