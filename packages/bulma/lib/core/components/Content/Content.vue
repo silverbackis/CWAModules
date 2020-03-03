@@ -37,11 +37,16 @@ import ComponentMixin from '~/.nuxt/bwstarter/bulma/components/componentMixin'
 
 export default {
   mixins: [ComponentMixin],
+  data() {
+    return {
+      isClient: false
+    }
+  },
   computed: {
     transformed() {
       // Inject dynamic data
       let converted = this.realComponentData.content
-      if (process.client) {
+      if (this.isClient) {
         const div = document.createElement('div')
         div.innerHTML = converted
         const anchors = div.getElementsByTagName('a')
@@ -58,6 +63,9 @@ export default {
         }
       }
     }
+  },
+  mounted() {
+    this.isClient = true
   },
   methods: {
     convertAnchor(anchor) {
