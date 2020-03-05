@@ -32,8 +32,8 @@
         />
       </transition-group>
       <canvas
-        v-show="loadedRes === 'low'"
         ref="canvas_dom"
+        v-show="loadedRes === 'low'"
         :key="'canvas'"
         class="image-small"
       />
@@ -54,7 +54,8 @@ export default {
   props: {
     image: {
       type: Object,
-      required: true
+      required: false,
+      default: null
     },
     placeholder: {
       type: Object,
@@ -86,6 +87,9 @@ export default {
       ]
     },
     isDataString() {
+      if (!this.image) {
+        return false
+      }
       return this.image.publicPath
         ? this.image.publicPath.substring(0, 5) === 'data:'
         : false
@@ -148,7 +152,7 @@ export default {
         const loResImg = new Image()
         // HTML5 - send Origin header - no credentials though
         loResImg.crossOrigin = 'anonymous'
-        const loResCanvas = this.$refs.canvas
+        const loResCanvas = this.$refs.canvas_dom
 
         loResImg.onload = () => {
           const matchSizeEl = this.cover ? this.$el : loResImg
@@ -170,6 +174,10 @@ export default {
       return null
     },
     initImage() {
+      if (!this.image) {
+        this.loadedRes = 'high'
+        return
+      }
       this.loadedRes = null
       this.portrait = this.image.width < this.image.height
 
@@ -184,7 +192,6 @@ export default {
         this.currentSrc = this.imagePath
         this.loadedRes = 'high'
       }
-
       hiResImg.src = this.imagePath
     }
   }
