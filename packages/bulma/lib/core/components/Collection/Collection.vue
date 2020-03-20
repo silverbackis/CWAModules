@@ -100,13 +100,15 @@ export default {
         return page.split('&')[0] / 1
       }
       const hydraView = this.component.collection['hydra:view']
-      const keys = ['first', 'last', 'next', 'previous']
+      const keys = ['first', 'last']
       const data = {
         totalItems: this.component.collection['hydra:totalItems']
       }
       for (const key of keys) {
         data[key] = hydraView ? parseURL(hydraView[`hydra:${key}`]) : null
       }
+      data.next = Math.min(this.page + 1, data.last)
+      data.previous = Math.max(this.page - 1, data.first)
       return data
     },
     collectionItems() {
@@ -131,11 +133,11 @@ export default {
   },
   methods: {
     goToPageLabel(pageNumber) {
-      return (this.page === pageNumber ? 'Page ' : 'Go to page ') + pageNumber
+      return this.page === (pageNumber ? 'Page ' : 'Go to page ') + pageNumber
     },
     async goToPage(pageNumber) {
       this.page = pageNumber
-      await this.reloadCollection()
+      // await this.reloadCollection()
     },
     resolveItemComponent() {
       const resourceParts = this.component.resource.split('\\')

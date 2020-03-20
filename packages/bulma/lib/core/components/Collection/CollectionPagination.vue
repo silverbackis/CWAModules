@@ -6,24 +6,24 @@
     aria-label="pagination"
   >
     <a
-      class="pagination-previous"
       :disabled="!paginationData.previous || page === paginationData.previous"
       @click="goToPage(paginationData.previous)"
-      >Previous</a
+      class="pagination-previous"
+    >Previous</a
     >
     <a
-      class="pagination-next"
       :disabled="!paginationData.next || page === paginationData.next"
       @click="goToPage(paginationData.next)"
-      >Next</a
+      class="pagination-next"
+    >Next</a
     >
     <ul class="pagination-list">
       <li v-if="page !== paginationData.first">
         <a
-          class="pagination-link"
           :aria-label="goToPageLabel(paginationData.first)"
           @click="goToPage(paginationData.first)"
-          >{{ paginationData.first }}</a
+          class="pagination-link"
+        >{{ paginationData.first }}</a
         >
       </li>
 
@@ -33,22 +33,24 @@
             paginationData.previous !== paginationData.first
         "
       >
-        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li v-if="paginationData.previous > paginationData.first + 1"><span class="pagination-ellipsis">&hellip;</span></li>
         <li>
           <a
-            class="pagination-link"
             :aria-label="goToPageLabel(paginationData.previous)"
-            >{{ paginationData.previous }}</a
+            @click="goToPage(paginationData.previous)"
+            class="pagination-link"
+          >{{ paginationData.previous }}</a
           >
         </li>
       </template>
 
       <li>
         <a
-          class="pagination-link is-current"
           :aria-label="goToPageLabel(page)"
+          @click="goToPage(page)"
+          class="pagination-link is-current"
           aria-current="page"
-          >{{ page }}</a
+        >{{ page }}</a
         >
       </li>
 
@@ -59,20 +61,21 @@
       >
         <li>
           <a
-            class="pagination-link"
             :aria-label="goToPageLabel(paginationData.next)"
-            >{{ paginationData.next }}</a
+            @click="goToPage(paginationData.next)"
+            class="pagination-link"
+          >{{ paginationData.next }}</a
           >
         </li>
-        <li><span class="pagination-ellipsis">&hellip;</span></li>
+        <li v-if="paginationData.next < paginationData.last - 1"><span class="pagination-ellipsis">&hellip;</span></li>
       </template>
 
       <li v-if="page !== paginationData.last">
         <a
-          class="pagination-link"
           :aria-label="goToPageLabel(paginationData.last)"
           @click="goToPage(paginationData.last)"
-          >{{ paginationData.last }}</a
+          class="pagination-link"
+        >{{ paginationData.last }}</a
         >
       </li>
     </ul>
