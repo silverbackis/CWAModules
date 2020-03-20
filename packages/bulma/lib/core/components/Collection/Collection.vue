@@ -137,7 +137,7 @@ export default {
     },
     async goToPage(pageNumber) {
       this.page = pageNumber
-      // await this.reloadCollection()
+      await this.reloadCollection()
     },
     resolveItemComponent() {
       const resourceParts = this.component.resource.split('\\')
