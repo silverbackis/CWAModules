@@ -83,7 +83,8 @@ export default {
       adding: false,
       page: 1,
       modalComponent: null,
-      defaultComponentData: {}
+      defaultComponentData: {},
+      cancelReload: null
     }
   },
   computed: {
@@ -145,48 +146,55 @@ export default {
         component: import('./Item/' + resourceParts[resourceParts.length - 1])
       })
     },
-    reloadCollection() {
-      if (!this.reloading) {
-        this.reloading = true
-        let query = `page=${this.page}`
-        if (this.component.defaultQueryString) {
-          query += `&${this.component.defaultQueryString}`
-        }
-        this.$axios
-          .get(`${this.component.collectionRoutes.get}?${query}`, {
-            progress: false
+    async reloadCollection() {
+      if (this.cancelReload) {
+        await this.cancelReload()
+      }
+      this.reloading = true
+      let query = `page=${this.page}`
+      if (this.component.defaultQueryString) {
+        query += `&${this.component.defaultQueryString}`
+      }
+      this.$axios
+        .get(`${this.component.collectionRoutes.get}?${query}`, {
+          progress: false,
+          cancelToken: new this.$axios.CancelToken(c => {
+            // An executor function receives a cancel function as a parameter
+            this.cancelReload = c
           })
-          .then(({ data }) => {
-            const members = data['hydra:member'].map(item => {
-              this.$bwstarter.$storage.commit(
-                'setEntity',
-                [{ id: item['@id'], data: item }],
-                entitiesModuleName
-              )
-              return item['@id']
-            })
+        })
+        .then(({ data }) => {
+          const members = data['hydra:member'].map(item => {
             this.$bwstarter.$storage.commit(
               'setEntity',
-              [
-                {
-                  id: this.component['@id'],
-                  data: Object.assign({}, this.component, {
-                    collection: Object.assign({}, data, {
-                      'hydra:member': members
-                    })
-                  })
-                }
-              ],
+              [{ id: item['@id'], data: item }],
               entitiesModuleName
             )
-            this.reloading = false
+            return item['@id']
           })
-          .catch(error => {
+          this.$bwstarter.$storage.commit(
+            'setEntity',
+            [
+              {
+                id: this.component['@id'],
+                data: Object.assign({}, this.component, {
+                  collection: Object.assign({}, data, {
+                    'hydra:member': members
+                  })
+                })
+              }
+            ],
+            entitiesModuleName
+          )
+          this.reloading = false
+        })
+        .catch(error => {
+          if (!this.$axios.isCancel(error)) {
             this.reloading = false
             // eslint-disable-next-line no-console
             console.error('updateContentComponents Error', error)
-          })
-      }
+          }
+        })
     }
   }
 }
