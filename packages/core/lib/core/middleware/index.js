@@ -46,11 +46,14 @@ Middleware.routeLoader = async function({
   // eslint-disable-next-line no-console
   logging && console.log('Page loading ' + path)
 
+  const qsSplit = route.fullPath.split('?')
+  const query = qsSplit.length > 1 ? qsSplit[1] : null
+
   $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName)
   const pageLoadPromise = new Promise(async resolve => {
     let routeData, response
     try {
-      response = await $bwstarter.getRoute(path)
+      response = await $bwstarter.getRoute(path, query)
       routeData = response.data
     } catch (err) {
       try {
@@ -107,7 +110,7 @@ Middleware.routeLoader = async function({
       resolve()
       return
     }
-    await $bwstarter.initRoute(routeData)
+    await $bwstarter.initRoute(routeData, query)
     resolve()
   })
   if (isClient)

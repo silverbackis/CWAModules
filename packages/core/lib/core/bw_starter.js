@@ -339,7 +339,7 @@ export default class BWStarter {
     )
   }
 
-  initRoute({ route, staticPage, dynamicContent, redirectedFrom, id }) {
+  initRoute({ route, staticPage, dynamicContent, redirectedFrom, id }, query) {
     let content = staticPage || dynamicContent.dynamicPage
     const contentData = [stripContent(content)]
     const promises = [this.storeAndFetchLayout(content.layout, true)]
@@ -375,7 +375,7 @@ export default class BWStarter {
     // --------
     contentData.forEach(content => {
       if (content.componentLocations && content.componentLocations.length) {
-        promises.push(this.fetchContent(content['@id']))
+        promises.push(this.fetchContent(content['@id'], query))
       }
     })
     return Promise.all(promises)
@@ -444,7 +444,10 @@ export default class BWStarter {
     return response
   }
 
-  async fetchContent(id) {
+  async fetchContent(id, query) {
+    if (query) {
+      id += '?' + query
+    }
     const { data } = await this.request({ url: id })
     const entities = getEntitiesFromLocations(data.componentLocations)
     // When reloading component group, we want the group itself to update as well with new locations
