@@ -413,7 +413,7 @@ export default class BWStarter {
     }
   }
 
-  async fetchLayout(url) {
+  fetchLayout(url) {
     const currentLayout = this.$storage.get(
       'getEntity',
       [url],
@@ -427,21 +427,33 @@ export default class BWStarter {
         data: currentLayout
       }
     }
-    // eslint-disable-next-line no-console
-    logging && console.log('Fetch layout', url)
-    const response = await this.request({ url })
-    const layout = response.data
-    this.$storage.commit(
-      'setEntity',
-      [{ id: layout['@id'], data: layout }],
-      entitiesModuleName
-    )
-    if (layout.navBar) {
-      const locations = [{ component: layout.navBar }]
-      const entities = getEntitiesFromLocations(locations)
-      this.setEntities(entities)
+    const existingPromise = this.$storage.state[entitiesModuleName].loading[url]
+    if (existingPromise) {
+      return existingPromise
     }
-    return response
+    const promise = new Promise(resolve => {
+      ;(async () => {
+        // eslint-disable-next-line no-console
+        logging && console.log('Fetch layout', url)
+        const response = await this.request({ url })
+        const layout = response.data
+        this.$storage.commit(
+          'setEntity',
+          [{ id: layout['@id'], data: layout }],
+          entitiesModuleName
+        )
+        this.$storage.commit('removeLoading', [url], entitiesModuleName)
+        if (layout.navBar) {
+          const locations = [{ component: layout.navBar }]
+          const entities = getEntitiesFromLocations(locations)
+          this.setEntities(entities)
+        }
+        resolve(response)
+      })()
+    })
+
+    this.$storage.commit('addLoading', [{ url, promise }], entitiesModuleName)
+    return promise
   }
 
   async fetchContent(id, query) {

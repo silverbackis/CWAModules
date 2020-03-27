@@ -3,7 +3,9 @@ import Vue from 'vue'
 export const name = ['_entities']
 
 export const store = {
-  state: () => ({}),
+  state: () => ({
+    loading: {}
+  }),
   getters: {
     getEntity: state => id => {
       return state[id] || false
@@ -30,6 +32,12 @@ export const store = {
     },
     setEntityProperty(state, { id, property, data }) {
       Vue.set(state[id], property, data)
+    },
+    addLoading(state, { url, promise }) {
+      Vue.set(state.loading, url, promise)
+    },
+    removeLoading(state, url) {
+      Vue.delete(state.loading, url)
     }
   }
 }

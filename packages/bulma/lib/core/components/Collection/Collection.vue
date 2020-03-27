@@ -42,6 +42,7 @@
         @goToPageLabel="goToPageLabel"
       />
       <collection-admin
+        v-if="!disabledAdmin && $bwstarter.isAdmin"
         v-bind="collectionAdminProps"
         @reload="reloadCollection"
       />
