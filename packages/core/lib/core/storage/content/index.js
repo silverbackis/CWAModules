@@ -10,7 +10,8 @@ export const store = rootNamespace => {
       currentRoute: null,
       routes: {},
       currentLayout: null,
-      layouts: {}
+      layouts: {},
+      pageLoadPromise: null
     }),
     getters: {
       getCurrentRoute: state => {
@@ -76,6 +77,9 @@ export const store = rootNamespace => {
       },
       setCurrentLayout(state, layout) {
         state.currentLayout = layout
+      },
+      setPageLoadPromise(state, promise) {
+        state.pageLoadPromise = promise
       }
     }
   }

@@ -49,7 +49,7 @@ Middleware.routeLoader = async function({
 
   $bwstarter.$storage.commit('setCurrentRoute', [path], contentModuleName)
   const pageLoadPromise = new Promise(resolve => {
-    const fn = (async () => {
+    ;(async () => {
       let routeData, response
       try {
         response = await $bwstarter.getRoute(path, query)
