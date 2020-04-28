@@ -40,6 +40,9 @@ export class Storage {
       getters: {
         user: state => (state.token ? jwtDecode(state.token) : null),
         getApiUrl: state => path => {
+          if (path.indexOf('://') !== -1 || path.indexOf('//') === 0) {
+            return path
+          }
           return state.apiUrl + _trimStart(path, '/')
         },
         userRoles: (state, getters) => {
