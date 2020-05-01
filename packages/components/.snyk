@@ -1,0 +1,10 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.14.1
+ignore: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-LODASH-567746:
+    - '@cwamodules/core > lodash':
+        patched: '2020-05-01T01:31:35.124Z'
+    - '@cwamodules/core > @nuxtjs/axios > @nuxtjs/proxy > http-proxy-middleware > lodash':
+        patched: '2020-05-01T01:31:35.124Z'
