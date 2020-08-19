@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import { CancelToken } from 'axios'
 import _debounce from 'lodash/debounce'
+import _isEqual from 'lodash/isEqual'
 import { name as ENTITIES_MODULE } from '../entities'
 
 export const state = () => ({
@@ -12,8 +13,8 @@ export const state = () => ({
 
 export const mutations = {
   initAdminInput(
-    state,
-    { componentId, componentField, model, postSaveFn, force = false }
+      state,
+      { componentId, componentField, model, postSaveFn, force = false }
   ) {
     if (!state.endpoints[componentId]) {
       Vue.set(state.endpoints, componentId, {
@@ -120,7 +121,7 @@ export const getters = {
       const inputs = state.endpoints[endpointKey].inputs
       return Object.keys(inputs).some(inputKey => {
         const input = inputs[inputKey]
-        return input.model !== input.savedModel
+        return !_isEqual(input.model, input.savedModel)
       })
     }
     if (!endpointKey) {
@@ -133,13 +134,13 @@ export const getters = {
   isSubmitting: state => (endpointKey = null) => {
     if (!endpointKey) {
       return (
-        Object.keys(state.submitting).length > 0 ||
-        Object.keys(state.waitingToSubmit).length > 0
+          Object.keys(state.submitting).length > 0 ||
+          Object.keys(state.waitingToSubmit).length > 0
       )
     }
     return (
-      Boolean(state.submitting[endpointKey]) ||
-      Boolean(state.waitingToSubmit[endpointKey])
+        Boolean(state.submitting[endpointKey]) ||
+        Boolean(state.waitingToSubmit[endpointKey])
     )
   },
   getInputModel: state => ({ componentId, componentField }) => {
@@ -169,28 +170,28 @@ export const actions = {
   modifiedEndpoints({ state }) {
     const endpoints = {}
     Object.keys(state.endpoints)
-      .filter(endpointKey => !endpointKey.endsWith('/new'))
-      .some(endpointKey => {
-        const stateInputs = state.endpoints[endpointKey].inputs
-        const modifiedInputKeys = Object.keys(stateInputs).filter(inputKey => {
-          const input = stateInputs[inputKey]
-          return input.model !== input.savedModel
-        })
-        if (modifiedInputKeys.length) {
-          const endpoint = {}
-          modifiedInputKeys.forEach(inputKey => {
-            endpoint[inputKey] = stateInputs[inputKey].model
+        .filter(endpointKey => !endpointKey.endsWith('/new'))
+        .some(endpointKey => {
+          const stateInputs = state.endpoints[endpointKey].inputs
+          const modifiedInputKeys = Object.keys(stateInputs).filter(inputKey => {
+            const input = stateInputs[inputKey]
+            return !_isEqual(input.model, input.savedModel)
           })
-          endpoints[endpointKey] = endpoint
-        }
-      })
+          if (modifiedInputKeys.length) {
+            const endpoint = {}
+            modifiedInputKeys.forEach(inputKey => {
+              endpoint[inputKey] = stateInputs[inputKey].model
+            })
+            endpoints[endpointKey] = endpoint
+          }
+        })
     return endpoints
   },
   cancelSubmits({ state }, patchEndpoints) {
     Object.keys(state.submitting).forEach(async submittingKey => {
       if (submittingKey in patchEndpoints) {
         await state.submitting[submittingKey].cancel(
-          'Original request cancelled, a new request will be made'
+            'Original request cancelled, a new request will be made'
         )
       }
     })
@@ -208,46 +209,46 @@ export const actions = {
       const cancel = CancelToken.source()
       commit('setSubmitting', { endpointKey, value: cancel })
       this.$axios
-        .put(endpointKey, patchEndpoints[endpointKey], {
-          cancelToken: cancel.token,
-          progress: false
-        })
-        .then(({ data }) => {
-          if (data.route) {
-            data.route = data.route['@id']
-          }
+          .put(endpointKey, patchEndpoints[endpointKey], {
+            cancelToken: cancel.token,
+            progress: false
+          })
+          .then(({ data }) => {
+            if (data.route) {
+              data.route = data.route['@id']
+            }
 
-          if (data.componentGroups) {
-            data.componentGroups = data.componentGroups.map(group => {
-              return group['@id']
-            })
-          }
-          commit('updateComponent', data)
-          commit('deleteSubmitting', endpointKey)
-          const component = this.$bwstarter.$storage.get(
-            'getEntity',
-            [endpointKey],
-            ENTITIES_MODULE
-          )
-          if (component) {
-            this.$bwstarter.$storage.commit(
-              'setEntity',
-              [{ id: endpointKey, data }],
-              ENTITIES_MODULE
+            if (data.componentGroups) {
+              data.componentGroups = data.componentGroups.map(group => {
+                return group['@id']
+              })
+            }
+            commit('updateComponent', data)
+            commit('deleteSubmitting', endpointKey)
+            const component = this.$bwstarter.$storage.get(
+                'getEntity',
+                [endpointKey],
+                ENTITIES_MODULE
             )
-          }
-          const content = this.$bwstarter.$storage.get('getContentById', [
-            endpointKey
-          ])
-          if (content) {
-            this.$bwstarter.$storage.commit('setContentById', [
-              { id: endpointKey, data }
+            if (component) {
+              this.$bwstarter.$storage.commit(
+                  'setEntity',
+                  [{ id: endpointKey, data }],
+                  ENTITIES_MODULE
+              )
+            }
+            const content = this.$bwstarter.$storage.get('getContentById', [
+              endpointKey
             ])
-          }
-        })
-        .catch(() => {
-          commit('deleteSubmitting', endpointKey)
-        })
+            if (content) {
+              this.$bwstarter.$storage.commit('setContentById', [
+                { id: endpointKey, data }
+              ])
+            }
+          })
+          .catch(() => {
+            commit('deleteSubmitting', endpointKey)
+          })
     })
   },
   async debouncedSave({ dispatch, commit, state: { saveDebounce } }) {
