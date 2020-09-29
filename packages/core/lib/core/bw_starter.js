@@ -431,24 +431,28 @@ export default class BWStarter {
     if (existingPromise) {
       return existingPromise
     }
-    const promise = new Promise(resolve => {
+    const promise = new Promise((resolve, reject) => {
       ;(async () => {
         // eslint-disable-next-line no-console
         logging && console.log('Fetch layout', url)
-        const response = await this.request({ url })
-        const layout = response.data
-        this.$storage.commit(
-          'setEntity',
-          [{ id: layout['@id'], data: layout }],
-          entitiesModuleName
-        )
-        this.$storage.commit('removeLoading', [url], entitiesModuleName)
-        if (layout.navBar) {
-          const locations = [{ component: layout.navBar }]
-          const entities = getEntitiesFromLocations(locations)
-          this.setEntities(entities)
+        try {
+          const response = await this.request({ url })
+          const layout = response.data
+          this.$storage.commit(
+            'setEntity',
+            [{ id: layout['@id'], data: layout }],
+            entitiesModuleName
+          )
+          this.$storage.commit('removeLoading', [url], entitiesModuleName)
+          if (layout.navBar) {
+            const locations = [{ component: layout.navBar }]
+            const entities = getEntitiesFromLocations(locations)
+            this.setEntities(entities)
+          }
+          resolve(response)
+        } catch (error) {
+          reject(error)
         }
-        resolve(response)
       })()
     })
 
