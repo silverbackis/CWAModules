@@ -11,9 +11,9 @@ export const DESTROY_CANCEL_MESSAGE = 'destroyed'
 
 export const splitFormName = path => {
   return path
-      .replace(/\[\]$/, '')
-      .split(/\[(.*?)\]/)
-      .filter(String)
+    .replace(/\[\]$/, '')
+    .split(/\[(.*?)\]/)
+    .filter(String)
 }
 
 const getInputNameNestedPath = (inputName, formPrefix = null) => {
@@ -33,8 +33,8 @@ const getNestedInput = (state, formId, inputName) => {
   const form = state[formId]
   if (!form) return null
   const OBJECT_PATH = getInputNameNestedPath(
-      inputName,
-      form.vars.block_prefixes[1]
+    inputName,
+    form.vars.block_prefixes[1]
   )
   return _.get(form.children, OBJECT_PATH, null)
 }
@@ -62,8 +62,8 @@ export const getters = {
       let submitData = {}
       for (const [inputName, child] of Object.entries(item.children)) {
         submitData = _.merge(
-            submitData,
-            getters.getInputSubmitData({ formId, inputName })
+          submitData,
+          getters.getInputSubmitData({ formId, inputName })
         )
         if (child.children) {
           submitData = _.merge(submitData, getDeepFormData(child))
@@ -72,9 +72,9 @@ export const getters = {
       return submitData
     }
     return Object.assign(
-        form && form.vars.post_app_proxy ? { _action: form.vars.action } : {},
-        form.extraData,
-        getDeepFormData(form)
+      form && form.vars.post_app_proxy ? { _action: form.vars.action } : {},
+      form.extraData,
+      getDeepFormData(form)
     )
   },
   getInputSubmitData: state => ({ formId, inputName }) => {
@@ -121,21 +121,21 @@ export const actions = {
     }
   },
   applyFormResultValidation(
-      { commit },
-      { formId, formData, isSubmit, simulatedInputNames = [] }
+    { commit },
+    { formId, formData, isSubmit, simulatedInputNames = [] }
   ) {
     const setValidation = (child, parent) => {
       if (child.vars.valid === undefined) {
         return
       }
       if (
-          parent &&
-          parent.vars.full_name === child.vars.full_name.replace('[]', '')
+        parent &&
+        parent.vars.full_name === child.vars.full_name.replace('[]', '')
       ) {
         return
       }
       const childNameExists =
-          simulatedInputNames.indexOf(child.vars.full_name) === -1
+        simulatedInputNames.indexOf(child.vars.full_name) === -1
       if (childNameExists) {
         commit('setInputData', {
           formId,
@@ -173,8 +173,8 @@ export const actions = {
     doValidation(formData)
   },
   async submitForm(
-      { commit, state, getters, dispatch },
-      { formId, apiAction = null, successFn = null }
+    { commit, state, getters, dispatch },
+    { formId, apiAction = null, successFn = null }
   ) {
     commit('setFormSubmitting', {
       formId: formId,
@@ -198,9 +198,9 @@ export const actions = {
       progress: false
     }
     if (
-        form.vars.api_request === false ||
-        form.vars.post_app_proxy ||
-        apiAction === false
+      form.vars.api_request === false ||
+      form.vars.post_app_proxy ||
+      apiAction === false
     ) {
       ops.baseURL = null
     }
@@ -212,10 +212,10 @@ export const actions = {
       }
       const form = data.form
       const errors = form
-          ? form.vars.errors
-          : data.message
-              ? [data.message]
-              : []
+        ? form.vars.errors
+        : data.message
+        ? [data.message]
+        : []
       commit('setFormData', {
         formId,
         data: {
@@ -257,11 +257,11 @@ export const actions = {
             valid: false,
             errors: [
               '<b>' +
-              error.response.status +
-              ' ' +
-              error.response.statusText +
-              ': </b> ' +
-              (error.response.data['hydra:description'] ||
+                error.response.status +
+                ' ' +
+                error.response.statusText +
+                ': </b> ' +
+                (error.response.data['hydra:description'] ||
                   error.response.data.message)
             ]
           }
@@ -281,7 +281,7 @@ export const actions = {
 const setPathValue = (stateObject, path, value) => {
   if (typeof path === 'string') {
     const basePath =
-        stateObject.vars[path] !== undefined ? stateObject.vars : stateObject
+      stateObject.vars[path] !== undefined ? stateObject.vars : stateObject
     Vue.set(basePath, path, value)
   } else if (Array.isArray(path)) {
     const lastPathItem = path.splice(-1)
@@ -309,11 +309,11 @@ const setData = (stateObject, data) => {
 
 export const mutations = {
   initForm(
-      state,
-      {
-        form: { vars },
-        extraData = {}
-      }
+    state,
+    {
+      form: { vars },
+      extraData = {}
+    }
   ) {
     const formId = Utilities.getFormId(vars)
     if (state[formId]) {
@@ -337,8 +337,8 @@ export const mutations = {
     if (state[formId]) Vue.delete(state, formId)
   },
   initInput(
-      state,
-      { formId, inputVars, children, disableValidation, inputType }
+    state,
+    { formId, inputVars, children, disableValidation, inputType }
   ) {
     /*
      * Ignore if this is already initialised
@@ -351,7 +351,7 @@ export const mutations = {
      * Create the data object
      */
     let value = null
-    if(inputVars.block_prefixes[1] === 'checkbox' && !inputVars.multiple) {
+    if (inputVars.block_prefixes[1] === 'checkbox' && !inputVars.multiple) {
       value = inputVars.checked
     } else {
       value = inputVars.value
@@ -378,8 +378,8 @@ export const mutations = {
      * Create children of parents if required
      */
     const OBJECT_PATH = getInputNameNestedPath(
-        inputData.vars.full_name,
-        state[formId].vars.block_prefixes[1]
+      inputData.vars.full_name,
+      state[formId].vars.block_prefixes[1]
     )
     const finalObjectKey = OBJECT_PATH.splice(-1)[0]
 
@@ -473,18 +473,18 @@ export const mutations = {
 
       // Move up
       const newChildren = Object.entries(child.children).reduce(
-          (obj, [key, value]) => {
-            const newKey = key.replace(name, previousName)
-            for (const replaceKey of replaceKeys) {
-              value.vars[replaceKey] = value.vars[replaceKey].replace(
-                  name,
-                  previousName
-              )
-            }
-            obj[newKey] = value
-            return obj
-          },
-          {}
+        (obj, [key, value]) => {
+          const newKey = key.replace(name, previousName)
+          for (const replaceKey of replaceKeys) {
+            value.vars[replaceKey] = value.vars[replaceKey].replace(
+              name,
+              previousName
+            )
+          }
+          obj[newKey] = value
+          return obj
+        },
+        {}
       )
       children[previousName] = Object.assign(child, {
         children: newChildren
