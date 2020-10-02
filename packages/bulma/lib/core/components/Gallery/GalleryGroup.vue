@@ -9,7 +9,6 @@
       <gallery-item
         v-for="(location, index) in sortedLocations"
         :key="location['@id']"
-        class="column is-4 is-3-desktop"
         :items="psItems"
         :component="getEntity(location.component)"
         :location="location"
@@ -18,10 +17,11 @@
         @moveup="moveLocationUp(location)"
         @movedown="moveLocationDown(location)"
         @deleted="reloadCollection"
+        class="column is-4 is-3-desktop"
       />
     </component>
     <div v-if="$bwstarter.isAdmin">
-      <button class="button is-primary is-fullwidth" @click="addGalleryItem">
+      <button @click="addGalleryItem" class="button is-primary is-fullwidth">
         <span class="icon is-small">
           <font-awesome-icon :icon="['fas', 'plus']" />
         </span>
@@ -29,8 +29,8 @@
       </button>
       <div class="reload-link-row has-text-centered">
         <a
-          class="reload-link has-text-grey-light"
           @click.prevent="reloadCollection"
+          class="reload-link has-text-grey-light"
           >reload gallery</a
         >
       </div>
@@ -115,7 +115,9 @@ export default {
       return this.sortedLocations
         .map(({ component }) => {
           const entityComponent = this.getEntity(component)
-          const image = entityComponent.fileData ? entityComponent.fileData.imageData : null
+          const image = entityComponent.fileData
+            ? entityComponent.fileData.imageData
+            : null
           if (!image) {
             return null
           }
