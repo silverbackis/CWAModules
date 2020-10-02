@@ -18,15 +18,15 @@
             'no-image': noImage
           }"
           :href="noImage ? '#' : getApiUrl(component.fileData.publicPath)"
-          @click.prevent="image() ? photoswipe.open(index, items, $el) : null"
           itemprop="contentUrl"
+          @click.prevent="image() ? photoswipe.open(index, items, $el) : null"
         >
           <image-loader
-            :image="preview || image()"
+            class="image gallery-image"
+            :image="image()"
             :placeholder="placeholder"
             :cover="true"
             :alt="component.title"
-            class="image gallery-image"
           />
           <div
             v-if="uploading || uploadError"
@@ -38,8 +38,8 @@
             ></bulma-progress>
             <a
               v-if="uploading"
-              @click.stop.prevent="cancelUpload()"
               class="button is-small is-danger"
+              @click.stop.prevent="cancelUpload()"
               >cancel upload</a
             >
             <p
@@ -49,8 +49,8 @@
               {{ uploadError }}
             </p>
           </div>
-          <meta :content="imageFile ? imageFile.width : 0" itemprop="width" />
-          <meta :content="imageFile ? imageFile.height : 0" itemprop="height" />
+          <meta itemprop="width" :content="imageFile ? imageFile.width : 0" />
+          <meta itemprop="height" :content="imageFile ? imageFile.height : 0" />
         </a>
         <div
           v-if="$bwstarter.isAdmin && !uploading"
@@ -59,12 +59,12 @@
           <label class="file-label">
             <input
               ref="file"
-              :disabled="uploading"
-              @change="handleFileUpload()"
               class="file-input"
               type="file"
               name="image"
               accept="image/*"
+              :disabled="uploading"
+              @change="handleFileUpload()"
             />
             <div class="file-cta">
               <span class="file-icon">
@@ -87,8 +87,8 @@
 
         <button
           v-if="$bwstarter.isAdmin"
-          @click="deleteItem"
           class="button delete-button is-danger is-small"
+          @click="deleteItem"
         >
           <span class="sr-only">Delete</span>
           <font-awesome-icon :icon="['fas', 'trash-alt']" />
@@ -98,9 +98,7 @@
           v-if="component.caption"
           itemprop="caption description"
           class="sr-only"
-        >
-          {{ component.caption }}
-        </figcaption>
+        >{{ component.caption }}</figcaption>
       </figure>
     </div>
     <div v-if="$bwstarter.isAdmin" class="field">
@@ -118,7 +116,7 @@
 
         <div class="field is-narrow has-addons">
           <div class="control">
-            <a @click="$emit('movedown')" class="button is-primary is-outlined">
+            <a class="button is-primary is-outlined" @click="$emit('movedown')">
               <span class="icon is-small">
                 <span class="sr-only">Move up</span>
                 <font-awesome-icon icon="chevron-down" />
@@ -126,7 +124,7 @@
             </a>
           </div>
           <div class="control">
-            <a @click="$emit('moveup')" class="button is-primary is-outlined">
+            <a class="button is-primary is-outlined" @click="$emit('moveup')">
               <span class="icon is-small">
                 <span class="sr-only">Move down</span>
                 <font-awesome-icon icon="chevron-up" />
@@ -184,31 +182,15 @@ export default {
   },
   computed: {
     ...mapGetters({ getApiUrl: 'bwstarter/getApiUrl' }),
-    fileData() {
-      return this.component.fileData || {}
-    },
     imageFile() {
-      return this.fileData.imageData || this.preview
+      return this.component.fileData ? this.component.fileData.imageData : this.preview
     },
-    // image () {
-    //   if (this.preview) {
-    //     return this.preview
-    //   }
-    //   if (this.component.fileData.imagineData) {
-    //     return this.component.fileData.imagineData.thumbnail
-    //   }
-    //   return {
-    //     publicPath: this.transparentImage,
-    //     width: 1,
-    //     height: 1
-    //   }
-    // },
     placeholder() {
       if (this.preview) {
         return this.preview
       }
-      if (this.fileData.imagineData) {
-        return this.fileData.imagineData.placeholderSquare
+      if (this.component.fileData && this.component.fileData.imagineData) {
+        return this.component.fileData.imagineData.placeholderSquare
       }
       return {
         publicPath: this.transparentImage,

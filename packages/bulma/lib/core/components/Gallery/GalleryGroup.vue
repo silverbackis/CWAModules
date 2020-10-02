@@ -114,18 +114,15 @@ export default {
     psItems() {
       return this.sortedLocations
         .map(({ component }) => {
-          const { fileData } = this.getEntity(component)
-          if (!fileData) {
-            return null
-          }
-          const imageData = fileData.imageData
-          if (!imageData) {
+          const entityComponent = this.getEntity(component)
+          const image = entityComponent.fileData ? entityComponent.fileData.imageData : null
+          if (!image) {
             return null
           }
           return {
-            src: this.getApiUrl(imageData.publicPath),
-            w: imageData.width,
-            h: imageData.height
+            src: this.getApiUrl(image.publicPath),
+            w: image.width,
+            h: image.height
           }
         })
         .filter(data => data !== null)
