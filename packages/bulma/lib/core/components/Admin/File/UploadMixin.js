@@ -21,7 +21,7 @@ export default {
       if (this.preview) {
         return this.preview
       }
-      return this.image()
+      return this.image('main')
     },
     uploaderPlaceholder() {
       if (this.preview) {
