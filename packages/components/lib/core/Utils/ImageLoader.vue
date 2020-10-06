@@ -288,10 +288,10 @@ export default {
           left: 50%
           top: 50%
           .image
-            min-height: 100%
+            height: 100%
             max-width: none
             max-height: none
-            height: auto
+            // height: auto
             transform: translate(-50%, -50%)
   &.portrait
     .image-placeholder
