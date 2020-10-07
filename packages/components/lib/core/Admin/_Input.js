@@ -79,6 +79,13 @@ export default {
       },
       deep: true,
       immediate: true
+    },
+    componentId: {
+      handler() {
+        this.initialise()
+      },
+      deep: false,
+      immediate: false
     }
   },
   methods: {
