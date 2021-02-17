@@ -1,7 +1,7 @@
 {
   "name": "@cwamodules/server",
   "licence": "MIT",
-  "version": "0.7.41",
+  "version": "0.7.42",
   "description": "Express server routes and common utilities for server and BW Starter front-end application",
   "author": "Daniel West <daniel@silverback.is> (https://silverback.is)",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
     "lint-fix": "eslint -c ../../.eslintrc.js --fix ./src"
   },
   "dependencies": {
-    "axios": "^0.20.1",
+    "axios": "^0.21.1",
     "eslint-plugin-import": "^2.10.0",
     "set-cookie-parser": "^2.1.1"
   },
