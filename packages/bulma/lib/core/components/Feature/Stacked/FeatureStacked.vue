@@ -7,7 +7,7 @@
     >
       <feature-stacked-item
         v-for="(feature, count) in components"
-        :key="feature"
+        :key="feature['@id']"
         :component="feature"
         :class="columnsClass(count)"
       />
