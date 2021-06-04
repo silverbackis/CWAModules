@@ -63,6 +63,9 @@ export default {
     }
   },
   watch: {
+    componentId(newValue) {
+      this.localComponentId = newValue
+    },
     preview(newValue) {
       this.$emit('preview', newValue)
     },
