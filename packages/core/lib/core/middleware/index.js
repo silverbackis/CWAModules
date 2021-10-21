@@ -38,9 +38,10 @@ Middleware.routeLoader = async function({
           'Page not loading from API. Not required: already loaded current path',
           path
         )
-      await $bwstarter.$storage.state[contentModuleName].pageLoadPromise
       return
     }
+    await currentPromise
+    return
   }
   // eslint-disable-next-line no-console
   logging && console.log('Page loading ' + path)

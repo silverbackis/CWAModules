@@ -1,55 +1,28 @@
-0 silly input [ 'lint-fix' ]
-1 silly flags {
-1 silly flags   _: [ 'run' ],
-1 silly flags   'reject-cycles': false,
-1 silly flags   rejectCycles: false,
-1 silly flags   script: 'lint-fix',
-1 silly flags   args: []
-1 silly flags }
-2 verbose rootPath /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules
+0 silly input [ 'publish' ]
+1 silly flags { _: [ 'publish' ], 'reject-cycles': false, rejectCycles: false }
+2 verbose rootPath /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules
 3 info version 2.11.0
-4 silly existsSync /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/VERSION
-5 silly initialize attempt
-6 silly initialize success
-7 silly execute attempt
-8 silly runScriptInDir lint-fix [] server
-9 silly getExecOpts {
-9 silly getExecOpts   cwd: '/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/packages/server'
-9 silly getExecOpts }
-10 silly runScriptInDir lint-fix [] core
-11 silly getExecOpts {
-11 silly getExecOpts   cwd: '/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/packages/core'
-11 silly getExecOpts }
-12 error lint-fix Errored while running script in '@cwamodules/core'
-13 error execute callback with error
-14 error Error: Command failed: yarn run lint-fix
-14 error warning package.json: No license field
-14 error [error] lib/module/plugin.template.js: SyntaxError: Unexpected token (4:25)
-14 error [error]   2 | import './middleware'
-14 error [error]   3 |
-14 error [error] > 4 | export const options = <%= JSON.stringify(options) %>
-14 error [error]     |                         ^
-14 error [error]   5 |
-14 error [error]   6 | export default function (ctx, inject) {
-14 error [error]   7 | // Create a new instance
-14 error error Command failed with exit code 2.
-14 error $ eslint -c ../../.eslintrc.js --fix ./lib && prettier --write './lib/**'
-14 error lib/core/bw_starter.js 183ms
-14 error lib/core/middleware/index.js 28ms
-14 error lib/core/server/index.js 7ms
-14 error lib/core/storage/admin/index.js 6ms
-14 error lib/core/storage/admin/module.js 60ms
-14 error lib/core/storage/content/index.js 29ms
-14 error lib/core/storage/entities/index.js 10ms
-14 error lib/core/storage/form/index.js 8ms
-14 error lib/core/storage/form/module.js 88ms
-14 error lib/core/storage/index.js 32ms
-14 error lib/module/defaults.js 5ms
-14 error lib/module/index.js 11ms
-14 error
-14 error lib/module/rreaddir.js 8ms
-14 error lib/plugins/mixin.js 7ms
-14 error lib/plugins/vue-cookie.js 5ms
-14 error info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
-14 error
-14 error     at /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/CWAModules/node_modules/lerna/node_modules/execa/index.js:236:11
+4 silly isInitialized
+5 silly isInitialized true
+6 silly existsSync /Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/VERSION
+7 silly initialize attempt
+8 info current version 0.7.43
+9 silly isDetachedHead
+10 silly getCurrentBranch
+11 verbose getCurrentBranch master
+12 verbose isDetachedHead false
+13 silly getCurrentBranch
+14 verbose getCurrentBranch master
+15 silly getUpdates
+16 info Checking for updated packages...
+17 silly hasTags
+18 verbose hasTags true
+19 silly getLastTag
+20 error initialize caught error
+21 error Error
+21 error     at Function.module.exports.sync (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/node_modules/execa/index.js:303:26)
+21 error     at Function.execSync (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/lib/ChildProcessUtilities.js:59:30)
+21 error     at Function.getLastTag (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/lib/GitUtilities.js:162:53)
+21 error     at UpdatedPackagesCollector.collectUpdatedPackages (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/lib/UpdatedPackagesCollector.js:112:42)
+21 error     at UpdatedPackagesCollector.getUpdates (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/lib/UpdatedPackagesCollector.js:88:35)
+21 error     at PublishCommand.initialize (/Volumes/Samsung_T5/GitHub/_ComponentsWebApp/ZZ_OLD/CWAModules/node_modules/lerna/lib/commands/PublishCommand.js:275:67)
