@@ -195,11 +195,4 @@ export default {
       text-align: left
       +tablet
         max-width: 350px
-/*.card-image*/
-  /*height: 100px*/
-  /*.image,*/
-  /*.image-loader .image-placeholder,*/
-  /*.image-small*/
-    /*width: 100%*/
-    /*min-height: 50px*/
 </style>
