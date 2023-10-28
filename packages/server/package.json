@@ -13,7 +13,7 @@
     "lint-fix": "eslint -c ../../.eslintrc.js --fix ./src"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "eslint-plugin-import": "^2.10.0",
     "set-cookie-parser": "^2.1.1"
   },
